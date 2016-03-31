@@ -6,25 +6,44 @@
 //  Copyright © 2016 William Snook. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import CoreData
+
+
+protocol SubstitutableDetailViewProtocol {
+    var navigationPaneBarButtonItem: UIBarButtonItem?  { get set }
+}
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
 
+    var currentDetailViewController: UIViewController?
+    
+    var navigationPaneButtonItem: UIBarButtonItem?
+    
+    var splitViewController: UISplitViewController?
+
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        let splitViewController = self.window!.rootViewController as! UISplitViewController
-        let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
-        navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
-        splitViewController.delegate = self
+        if let splitViewControllerTemp = self.window!.rootViewController as? UISplitViewController {
+            splitViewController = splitViewControllerTemp
+            print( "vc count = \(splitViewControllerTemp.viewControllers.count)" )
+            let navigationController = splitViewControllerTemp.viewControllers[splitViewControllerTemp.viewControllers.count-1] as! UINavigationController
+//            navigationPaneButtonItem = splitViewControllerTemp.displayModeButtonItem()
+//            print( "didFinishLaunchingWithOptions, displayModeButtonItem: \(navigationPaneButtonItem!.title), enabled: \(navigationPaneButtonItem!.enabled)" )
+//            navigationController.topViewController!.navigationItem.leftBarButtonItem =  navigationPaneButtonItem
+            splitViewControllerTemp.delegate = self
+//            let masterNavigationController = splitViewControllerTemp.viewControllers[0] as! UINavigationController
+//            let controller = masterNavigationController.topViewController as! MasterViewController
+//            controller.managedObjectContext = self.managedObjectContext
+            currentDetailViewController = navigationController.topViewController!
+        }
 
-        let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
-        let controller = masterNavigationController.topViewController as! MasterViewController
-        controller.managedObjectContext = self.managedObjectContext
         return true
     }
 
@@ -36,6 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        self.saveManagedObjectContext()
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
@@ -49,20 +69,62 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
-        self.saveContext()
+        self.saveManagedObjectContext()
     }
 
     // MARK: - Split view
-
-    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
-        guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-        guard let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController else { return false }
-        if topAsDetailController.detailItem == nil {
-            // Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-            return true
+    
+    func setDetailViewController( detailViewController: UIViewController ) {
+        // Clear any bar button item from the detail view controller that is about to
+        // no longer be displayed.
+        guard currentDetailViewController != detailViewController else { return }
+        if var currentVC = currentDetailViewController as? SubstitutableDetailViewProtocol {
+//            navigationPaneButtonItem = currentVC.navigationPaneBarButtonItem
+            currentVC.navigationPaneBarButtonItem = nil
+        } else {
+            print( "Error: detailViewController is not a SubstitutableDetailViewProtocol" )
+//            abort()
         }
-        return false
+    
+        currentDetailViewController = detailViewController
+
+        // Set the new currentDetailViewController's navigationPaneBarButtonItem to the value of our
+        // navigationPaneButtonItem.  If navigationPaneButtonItem is not nil, then the button
+        // will be displayed.
+        if let detailNavigationViewController = detailViewController as? UINavigationController {
+            print( "displayModeButtonItem: \(splitViewController?.displayModeButtonItem().title), enabled: \(splitViewController?.displayModeButtonItem().enabled)" )
+            if var detailVC = detailNavigationViewController.topViewController as? SubstitutableDetailViewProtocol {
+                detailVC.navigationPaneBarButtonItem = navigationPaneButtonItem
+            }
+        } else if var detailVC = detailViewController as? SubstitutableDetailViewProtocol {
+            detailVC.navigationPaneBarButtonItem = navigationPaneButtonItem
+        }
+        
+        // Update the split view controller's view controllers array.
+        // This causes the new detail view controller to be displayed.
+//        print( "vc count = \(splitViewController!.viewControllers.count)" )
+        let masterNavigationViewController = self.splitViewController!.viewControllers[0]
+        if splitViewController!.viewControllers.count > 1 {
+//            let detailNavigationViewController = self.splitViewController!.viewControllers[1]
+//            if let navVC = detailNavigationViewController as? UINavigationController {
+//                navVC.viewControllers[0] = currentDetailViewController!
+                let viewControllers = [masterNavigationViewController, currentDetailViewController!]
+                splitViewController!.viewControllers = viewControllers
+//            }
+        }
+        
     }
+    
+    // MARK: - Split view
+
+//    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
+////        guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
+////        if let _ = secondaryAsNavController.topViewController as? listPeripheralsTVC { return true }
+////        if let _ = secondaryAsNavController.topViewController as? makePeripheralsTVC { return true }
+//       return false
+//    }
+    
+    
     // MARK: - Core Data stack
 
     lazy var applicationDocumentsDirectory: NSURL = {
@@ -81,22 +143,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
+        let URLPersistentStore = self.applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
-            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+            let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
+            try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: URLPersistentStore, options: options)
         } catch {
-            // Report any error we got.
-            var dict = [String: AnyObject]()
-            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
-            dict[NSLocalizedFailureReasonErrorKey] = failureReason
-
-            dict[NSUnderlyingErrorKey] = error as NSError
-            let wrappedError = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
-            // Replace this with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            NSLog("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
-            abort()
+            let fm = NSFileManager.defaultManager()
+            
+            if fm.fileExistsAtPath(URLPersistentStore.path!) {
+                let nameIncompatibleStore = self.nameForIncompatibleStore()
+                let URLCorruptPersistentStore = self.applicationIncompatibleStoresDirectory().URLByAppendingPathComponent(nameIncompatibleStore)
+                
+                do {
+                    // Move Incompatible Store
+                    try fm.moveItemAtURL(URLPersistentStore, toURL: URLCorruptPersistentStore)
+                    
+                    do {
+                        // Declare Options
+                        let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
+                        
+                        // Add Persistent Store to Persistent Store Coordinator
+                        try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: URLPersistentStore, options: options)
+                        
+                    } catch {
+                        let storeError = error as NSError
+                        print("\(storeError), \(storeError.userInfo)")
+                        // Update User Defaults
+                        let userDefaults = NSUserDefaults.standardUserDefaults()
+                        userDefaults.setBool(true, forKey: "didDetectIncompatibleStore")                    }
+                } catch {
+                    let moveError = error as NSError
+                    print("\(moveError), \(moveError.userInfo)")
+                }
+            }
         }
         
         return coordinator
@@ -112,7 +192,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     // MARK: - Core Data Saving support
 
-    func saveContext () {
+    func saveManagedObjectContext () {
         if managedObjectContext.hasChanges {
             do {
                 try managedObjectContext.save()
@@ -121,10 +201,63 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nserror = error as NSError
                 NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
             }
         }
     }
-
+    
+    private func applicationStoresDirectory() -> NSURL {
+        let fm = NSFileManager.defaultManager()
+        
+        // Fetch Application Support Directory
+        let URLs = fm.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+        let applicationSupportDirectory = URLs[(URLs.count - 1)]
+        
+        // Create Application Stores Directory
+        let URL = applicationSupportDirectory.URLByAppendingPathComponent("Stores")
+        
+        if !fm.fileExistsAtPath(URL.path!) {
+            do {
+                // Create Directory for Stores
+                try fm.createDirectoryAtURL(URL, withIntermediateDirectories: true, attributes: nil)
+                
+            } catch {
+                let createError = error as NSError
+                print("\(createError), \(createError.userInfo)")
+            }
+        }
+        
+        return URL
+    }
+    
+    private func applicationIncompatibleStoresDirectory() -> NSURL {
+        let fm = NSFileManager.defaultManager()
+        
+        // Create Application Incompatible Stores Directory
+        let URL = applicationStoresDirectory().URLByAppendingPathComponent("Incompatible")
+        
+        if !fm.fileExistsAtPath(URL.path!) {
+            do {
+                // Create Directory for Stores
+                try fm.createDirectoryAtURL(URL, withIntermediateDirectories: true, attributes: nil)
+                
+            } catch {
+                let createError = error as NSError
+                print("\(createError), \(createError.userInfo)")
+            }
+        }
+        
+        return URL
+    }
+    
+    private func nameForIncompatibleStore() -> String {
+        // Initialize Date Formatter
+        let dateFormatter = NSDateFormatter()
+        
+        // Configure Date Formatter
+        dateFormatter.formatterBehavior = .Behavior10_4
+        dateFormatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+        
+        return "\(dateFormatter.stringFromDate(NSDate())).sqlite"
+    }
 }
 

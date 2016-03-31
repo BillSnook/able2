@@ -7,15 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A925C67D1CAB4A1600FAE766 /* PeripheralCell.swift */; };
+		A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A925C6801CAB58C700FAE766 /* MessageCell.swift */; };
 		A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */; };
 		A93B1A8D1CA5AD46004F9B4F /* able2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8B1CA5AD46004F9B4F /* able2.xcdatamodeld */; };
 		A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */; };
-		A93B1A911CA5AD46004F9B4F /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A901CA5AD46004F9B4F /* DetailViewController.swift */; };
 		A93B1A941CA5AD46004F9B4F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A93B1A921CA5AD46004F9B4F /* Main.storyboard */; };
 		A93B1A961CA5AD46004F9B4F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A93B1A951CA5AD46004F9B4F /* Assets.xcassets */; };
 		A93B1A991CA5AD46004F9B4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A93B1A971CA5AD46004F9B4F /* LaunchScreen.storyboard */; };
 		A93B1AA41CA5AD46004F9B4F /* able2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1AA31CA5AD46004F9B4F /* able2Tests.swift */; };
 		A93B1AAF1CA5AD46004F9B4F /* able2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1AAE1CA5AD46004F9B4F /* able2UITests.swift */; };
+		A93B1ABD1CA5E588004F9B4F /* BLEView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1ABC1CA5E588004F9B4F /* BLEView.swift */; };
+		A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */; };
+		A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */; };
+		A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981659A1CA9A59300D0E65E /* Scanner.swift */; };
+		A981659F1CA9BCE700D0E65E /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A901CA5AD46004F9B4F /* DetailViewController.swift */; };
+		A9ABE1931CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */; };
+		A9ABE1941CAC500D004C1EF7 /* Sighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1901CAC500D004C1EF7 /* Sighting.swift */; };
+		A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
+		A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +46,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A925C67D1CAB4A1600FAE766 /* PeripheralCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeripheralCell.swift; path = cells/PeripheralCell.swift; sourceTree = "<group>"; };
+		A925C6801CAB58C700FAE766 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageCell.swift; path = cells/MessageCell.swift; sourceTree = "<group>"; };
 		A93B1A861CA5AD46004F9B4F /* able2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = able2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A93B1A8C1CA5AD46004F9B4F /* able2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = able2.xcdatamodel; sourceTree = "<group>"; };
@@ -51,6 +63,14 @@
 		A93B1AAA1CA5AD46004F9B4F /* able2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = able2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A93B1AAE1CA5AD46004F9B4F /* able2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = able2UITests.swift; sourceTree = "<group>"; };
 		A93B1AB01CA5AD46004F9B4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A93B1ABC1CA5E588004F9B4F /* BLEView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEView.swift; sourceTree = "<group>"; };
+		A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listPeripheralsTVC.swift; path = controllers/listPeripheralsTVC.swift; sourceTree = "<group>"; };
+		A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = makePeripheralsTVC.swift; path = controllers/makePeripheralsTVC.swift; sourceTree = "<group>"; };
+		A981659A1CA9A59300D0E65E /* Scanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scanner.swift; path = managers/Scanner.swift; sourceTree = "<group>"; };
+		A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Sighting+CoreDataProperties.swift"; path = "managedClasses/Sighting+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A9ABE1901CAC500D004C1EF7 /* Sighting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sighting.swift; path = managedClasses/Sighting.swift; sourceTree = "<group>"; };
+		A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Peripheral+CoreDataProperties.swift"; path = "managedClasses/Peripheral+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Peripheral.swift; path = managedClasses/Peripheral.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +98,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A925C67F1CAB4A1C00FAE766 /* cells */ = {
+			isa = PBXGroup;
+			children = (
+				A925C67D1CAB4A1600FAE766 /* PeripheralCell.swift */,
+				A925C6801CAB58C700FAE766 /* MessageCell.swift */,
+			);
+			name = cells;
+			sourceTree = "<group>";
+		};
 		A93B1A7D1CA5AD46004F9B4F = {
 			isa = PBXGroup;
 			children = (
@@ -104,11 +133,16 @@
 				A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */,
 				A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */,
 				A93B1A901CA5AD46004F9B4F /* DetailViewController.swift */,
+				A98165991CA9A58300D0E65E /* controllers */,
+				A981659C1CA9A59A00D0E65E /* managers */,
+				A925C67F1CAB4A1C00FAE766 /* cells */,
+				A93B1ABC1CA5E588004F9B4F /* BLEView.swift */,
 				A93B1A921CA5AD46004F9B4F /* Main.storyboard */,
 				A93B1A951CA5AD46004F9B4F /* Assets.xcassets */,
 				A93B1A971CA5AD46004F9B4F /* LaunchScreen.storyboard */,
 				A93B1A9A1CA5AD46004F9B4F /* Info.plist */,
 				A93B1A8B1CA5AD46004F9B4F /* able2.xcdatamodeld */,
+				A98165941CA99E3A00D0E65E /* managedClasses */,
 			);
 			path = able2;
 			sourceTree = "<group>";
@@ -129,6 +163,34 @@
 				A93B1AB01CA5AD46004F9B4F /* Info.plist */,
 			);
 			path = able2UITests;
+			sourceTree = "<group>";
+		};
+		A98165941CA99E3A00D0E65E /* managedClasses */ = {
+			isa = PBXGroup;
+			children = (
+				A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */,
+				A9ABE1901CAC500D004C1EF7 /* Sighting.swift */,
+				A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */,
+				A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */,
+			);
+			name = managedClasses;
+			sourceTree = "<group>";
+		};
+		A98165991CA9A58300D0E65E /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */,
+				A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */,
+			);
+			name = controllers;
+			sourceTree = "<group>";
+		};
+		A981659C1CA9A59A00D0E65E /* managers */ = {
+			isa = PBXGroup;
+			children = (
+				A981659A1CA9A59300D0E65E /* Scanner.swift */,
+			);
+			name = managers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,6 +261,7 @@
 				TargetAttributes = {
 					A93B1A851CA5AD46004F9B4F = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = D84KDEPN2N;
 					};
 					A93B1A9E1CA5AD46004F9B4F = {
 						CreatedOnToolsVersion = 7.3;
@@ -262,10 +325,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A981659F1CA9BCE700D0E65E /* DetailViewController.swift in Sources */,
+				A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */,
+				A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */,
 				A93B1A8D1CA5AD46004F9B4F /* able2.xcdatamodeld in Sources */,
+				A9ABE1941CAC500D004C1EF7 /* Sighting.swift in Sources */,
+				A93B1ABD1CA5E588004F9B4F /* BLEView.swift in Sources */,
+				A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */,
+				A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */,
+				A9ABE1931CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift in Sources */,
+				A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */,
+				A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */,
+				A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */,
 				A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */,
 				A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */,
-				A93B1A911CA5AD46004F9B4F /* DetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,7 +482,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = able2/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -420,7 +495,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = able2/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -492,6 +569,7 @@
 				A93B1AB51CA5AD46004F9B4F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A93B1AB61CA5AD46004F9B4F /* Build configuration list for PBXNativeTarget "able2Tests" */ = {
 			isa = XCConfigurationList;
@@ -500,6 +578,7 @@
 				A93B1AB81CA5AD46004F9B4F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A93B1AB91CA5AD46004F9B4F /* Build configuration list for PBXNativeTarget "able2UITests" */ = {
 			isa = XCConfigurationList;
@@ -508,6 +587,7 @@
 				A93B1ABB1CA5AD46004F9B4F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
