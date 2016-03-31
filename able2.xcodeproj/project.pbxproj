@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A925C67D1CAB4A1600FAE766 /* PeripheralCell.swift */; };
 		A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A925C6801CAB58C700FAE766 /* MessageCell.swift */; };
+		A928D12E1CADEB0400859168 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = A928D12D1CADEB0400859168 /* README.md */; };
 		A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */; };
 		A93B1A8D1CA5AD46004F9B4F /* able2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8B1CA5AD46004F9B4F /* able2.xcdatamodeld */; };
 		A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */; };
@@ -48,6 +49,7 @@
 /* Begin PBXFileReference section */
 		A925C67D1CAB4A1600FAE766 /* PeripheralCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeripheralCell.swift; path = cells/PeripheralCell.swift; sourceTree = "<group>"; };
 		A925C6801CAB58C700FAE766 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageCell.swift; path = cells/MessageCell.swift; sourceTree = "<group>"; };
+		A928D12D1CADEB0400859168 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A93B1A861CA5AD46004F9B4F /* able2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = able2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A93B1A8C1CA5AD46004F9B4F /* able2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = able2.xcdatamodel; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 		A93B1A881CA5AD46004F9B4F /* able2 */ = {
 			isa = PBXGroup;
 			children = (
+				A928D12D1CADEB0400859168 /* README.md */,
 				A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */,
 				A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */,
 				A93B1A901CA5AD46004F9B4F /* DetailViewController.swift */,
@@ -337,6 +340,7 @@
 				A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */,
 				A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */,
 				A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */,
+				A928D12E1CADEB0400859168 /* README.md in Sources */,
 				A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */,
 				A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */,
 			);
