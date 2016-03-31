@@ -112,6 +112,7 @@
 		A93B1A7D1CA5AD46004F9B4F = {
 			isa = PBXGroup;
 			children = (
+				A928D12D1CADEB0400859168 /* README.md */,
 				A93B1A881CA5AD46004F9B4F /* able2 */,
 				A93B1AA21CA5AD46004F9B4F /* able2Tests */,
 				A93B1AAD1CA5AD46004F9B4F /* able2UITests */,
@@ -132,7 +133,6 @@
 		A93B1A881CA5AD46004F9B4F /* able2 */ = {
 			isa = PBXGroup;
 			children = (
-				A928D12D1CADEB0400859168 /* README.md */,
 				A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */,
 				A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */,
 				A93B1A901CA5AD46004F9B4F /* DetailViewController.swift */,
