@@ -6,10 +6,23 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		A91763921CADF13800816D15 /* MoGenerator */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = A91763931CADF13800816D15 /* Build configuration list for PBXAggregateTarget "MoGenerator" */;
+			buildPhases = (
+				A91763961CADF15300816D15 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = MoGenerator;
+			productName = MoGenerator;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A925C67D1CAB4A1600FAE766 /* PeripheralCell.swift */; };
 		A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A925C6801CAB58C700FAE766 /* MessageCell.swift */; };
-		A928D12E1CADEB0400859168 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = A928D12D1CADEB0400859168 /* README.md */; };
 		A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */; };
 		A93B1A8D1CA5AD46004F9B4F /* able2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8B1CA5AD46004F9B4F /* able2.xcdatamodeld */; };
 		A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */; };
@@ -262,6 +275,9 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "William Snook";
 				TargetAttributes = {
+					A91763921CADF13800816D15 = {
+						CreatedOnToolsVersion = 7.3;
+					};
 					A93B1A851CA5AD46004F9B4F = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = D84KDEPN2N;
@@ -292,6 +308,7 @@
 				A93B1A851CA5AD46004F9B4F /* able2 */,
 				A93B1A9E1CA5AD46004F9B4F /* able2Tests */,
 				A93B1AA91CA5AD46004F9B4F /* able2UITests */,
+				A91763921CADF13800816D15 /* MoGenerator */,
 			);
 		};
 /* End PBXProject section */
@@ -323,6 +340,22 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A91763961CADF15300816D15 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mogenerator -m able2/able2.xcdatamodeld/able2.xcdatamodel -O able2/managedClasses --swift --template-var arc=true";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A93B1A821CA5AD46004F9B4F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -340,7 +373,6 @@
 				A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */,
 				A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */,
 				A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */,
-				A928D12E1CADEB0400859168 /* README.md in Sources */,
 				A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */,
 				A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */,
 			);
@@ -397,6 +429,20 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		A91763941CADF13800816D15 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A91763951CADF13800816D15 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		A93B1AB11CA5AD46004F9B4F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -487,11 +533,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = able2/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -500,11 +548,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = able2/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -557,6 +607,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A91763931CADF13800816D15 /* Build configuration list for PBXAggregateTarget "MoGenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A91763941CADF13800816D15 /* Debug */,
+				A91763951CADF13800816D15 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		A93B1A811CA5AD46004F9B4F /* Build configuration list for PBXProject "able2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
