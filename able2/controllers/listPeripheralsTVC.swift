@@ -30,31 +30,30 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         return fetchedResultsController
     }()
 
-    var scanner: Scanner?
+    var scanner: Scanner = Scanner.sharedInstance
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        scanner.startScan()
+        
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        let didDetectIncompatibleStore = userDefaults.boolForKey("didDetectIncompatibleStore")
+        if didDetectIncompatibleStore {
+            // Show Alert
+            let applicationName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleDisplayName")
+            let message = "A serious application error occurred while \(applicationName) tried to read your data. Please contact support for help."
+            self.showAlertWithTitle("Warning", message: message, cancelButtonTitle: "OK")
+        }
+    
         managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-        print( "viewDidLoad, listPeripheralsTVC, managedObjectContext: \(managedObjectContext)")
+//        print( "viewDidLoad, listPeripheralsTVC, managedObjectContext: \(managedObjectContext)")
         do {
             try self.fetchedResultsController.performFetch()
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
 
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        let didDetectIncompatibleStore = userDefaults.boolForKey("didDetectIncompatibleStore")
-        
-        if didDetectIncompatibleStore {
-            // Show Alert
-            let applicationName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleDisplayName")
-            let message = "A serious application error occurred while \(applicationName) tried to read your data. Please contact support for help."
-            
-            self.showAlertWithTitle("Warning", message: message, cancelButtonTitle: "OK")
-        }
-    
-        scanner = Scanner.sharedInstance;
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -63,9 +62,8 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
         managedObjectContext = appDelegate!.managedObjectContext
     
-        scanner?.startScan()
 
-//        tableView.reloadData()
+        tableView.reloadData()
     }
     
     
@@ -73,11 +71,14 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     
         super.viewWillDisappear( animated )
     
-        scanner?.stopScan()
+    }
+    
+    deinit {
+        scanner.stopScan()
     }
     
     
-    // MARK: Helper Methods
+// MARK: - Helper Methods
     
     private func showAlertWithTitle(title: String, message: String, cancelButtonTitle: String) {
         // Initialize Alert Controller
@@ -94,7 +95,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     }
     
     
-    // MARK - Fetched Results Controller delegate methods
+    // MARK: - Fetched Results Controller delegate methods
     
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         tableView.beginUpdates()
@@ -118,10 +119,10 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         case .Update:
             if let indexPath = indexPath {
 //                print( "didChangeObject, Update at indexPath section: \(indexPath.section), row: \(indexPath.row)" )
-//                if let cell = tableView.cellForRowAtIndexPath( indexPath ) as! PeripheralCell? {
-//                    configureCell( cell, atIndexPath: indexPath )
-//                }
-                tableView.reloadData()
+                if let cell = tableView.dequeueReusableCellWithIdentifier( "peripheralCell", forIndexPath: indexPath ) as? PeripheralCell {
+                    configureCell( cell, atIndexPath: indexPath )
+                }
+//                tableView.reloadData()
             }
         case .Move:
             if let indexPath = indexPath {
@@ -136,18 +137,67 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     }
     
     
-    // MARK - Scanner support
+// MARK: - TableView support
     
     func configureCell( cell: PeripheralCell, atIndexPath indexPath: NSIndexPath ) {
         let peripheralEntity = fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral
         let name = peripheralEntity.name
         if ( ( name == nil ) || ( name!.characters.count == 0 ) ) {
-            cell.peripheralName.text = "~ Missing name ~"
+            cell.peripheralName.text = "Missing name"
         } else {
-            cell.peripheralName.text = name
+            let prefix = name![name!.startIndex]
+            if prefix == "~" {
+                cell.peripheralName.text = name!.substringFromIndex(name!.startIndex.successor())
+            } else {
+                cell.peripheralName.text = name
+            }
         }
         cell.peripheralIdentifier.text = peripheralEntity.mainUUID
-        let rssi = peripheralEntity.rssi
+        
+        let sightings = peripheralEntity.sightings as! Set<Sighting>?
+        var timeStamp: NSTimeInterval = 0
+        var recentSighting: Sighting?
+//        print("set count: \(sightings!.count)" )
+        for sighting in sightings! {
+            let timeValue = sighting.date
+//            print("timeValue: \(timeValue)" )
+            if timeValue > timeStamp {
+                timeStamp = timeValue
+                recentSighting = sighting
+            }
+        }
+        var rssi: Int16 = 0
+        if let foundSighting = recentSighting {
+            rssi = foundSighting.rssi
+            
+            let now = NSDate().timeIntervalSince1970
+            let minute = 60.0
+            let tenMinute = minute * 10
+            let hour = minute * 60.0
+            let day = hour * 24.0
+            
+            if timeStamp + day > now {
+                if timeStamp + hour > now {
+                    if timeStamp + tenMinute > now {
+                        if timeStamp + minute > now {
+                            cell.peripheralRSSI.textColor = UIColor.greenColor()    // Last minute
+                        } else {
+                            cell.peripheralRSSI.textColor = UIColor.cyanColor()     // Last 10 minutes
+                        }
+                    } else {
+                        cell.peripheralRSSI.textColor = UIColor.orangeColor()       // Last hour
+                    }
+                } else {
+                    cell.peripheralRSSI.textColor = UIColor.magentaColor()           // Last day
+                }
+            } else {
+                cell.peripheralRSSI.textColor = UIColor.redColor()                  // Over a day
+            }
+        } else {
+            rssi = peripheralEntity.rssi
+            cell.peripheralRSSI.textColor = UIColor.blackColor()                    // Unknown
+        }
+        
         if ( rssi == 127 ) {
             cell.peripheralRSSI.text = "---"
         } else {
@@ -160,8 +210,38 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         }
     }
     
+// MARK: - Segues
     
-// MARK - Table view data source
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "toServices" {
+            NSLog( "toServices" )
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral
+                let controller = segue.destinationViewController as! ListServicesTVC
+                controller.perp = object
+            }
+        }
+    }
+    
+    @IBAction func clearData(sender: UIBarButtonItem) {
+//        print( "clearData" )
+        scanner.stopScan()
+        fetchedResultsController.delegate = nil
+
+        appDelegate?.deleteAllPeripherals()
+
+        fetchedResultsController.delegate = self
+        do {
+            try self.fetchedResultsController.performFetch()
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+
+        tableView.reloadData()
+        scanner.startScan()
+    }
+    
+// MARK: - Table view data source
     
     override func numberOfSectionsInTableView( tableView: UITableView ) -> Int {
         // Return the number of rows in the section.
@@ -175,40 +255,42 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         // Return the number of rows in the section.
         if let sections = fetchedResultsController.sections {
             let sectionInfo = sections[section]
-            if sectionInfo.numberOfObjects == 0 {
-                return 1
-            } else {
+//            if sectionInfo.numberOfObjects == 0 {
+//                return 1
+//            } else {
                 return sectionInfo.numberOfObjects
-            }
+//            }
         }
         return 0
     }
     
     override func tableView( tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath ) -> CGFloat {
     
-        if let sections = fetchedResultsController.sections {
-            let sectionInfo = sections[indexPath.section]
-            if sectionInfo.numberOfObjects > 0 {
+//        if let sections = fetchedResultsController.sections {
+//            let sectionInfo = sections[indexPath.section]
+//            if sectionInfo.numberOfObjects > 0 {
                 return 66.0
-            }
-        }
-        return 44.0
+//            }
+//        }
+//        return 44.0
     }
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath ) -> UITableViewCell {
     
         // Configure the cell...
-        if let sections = fetchedResultsController.sections {
-            let sectionInfo = sections[indexPath.section]
-            if sectionInfo.numberOfObjects == 0 {
-                let cell = tableView.dequeueReusableCellWithIdentifier( "messageCell", forIndexPath: indexPath )
-                cell.textLabel?.text = "No peripherals detected"
-                return cell
-            }
-        }
+// Display message if no entries exist
+//        if let sections = fetchedResultsController.sections {
+//            let sectionInfo = sections[indexPath.section]
+//            if sectionInfo.numberOfObjects == 0 {
+//                let cell = tableView.dequeueReusableCellWithIdentifier( "messageCell", forIndexPath: indexPath )
+//                cell.textLabel?.text = "No peripherals detected"
+//                return cell
+//            }
+//        }
         // Found a peripheral entry
         let peripheralCell = tableView.dequeueReusableCellWithIdentifier( "peripheralCell", forIndexPath: indexPath ) as! PeripheralCell
+        
         configureCell( peripheralCell, atIndexPath: indexPath )
         
         return peripheralCell;

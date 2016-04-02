@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A925C67D1CAB4A1600FAE766 /* PeripheralCell.swift */; };
 		A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A925C6801CAB58C700FAE766 /* MessageCell.swift */; };
-		A928D12E1CADEB0400859168 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = A928D12D1CADEB0400859168 /* README.md */; };
 		A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */; };
 		A93B1A8D1CA5AD46004F9B4F /* able2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8B1CA5AD46004F9B4F /* able2.xcdatamodeld */; };
 		A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */; };
@@ -27,6 +26,7 @@
 		A9ABE1941CAC500D004C1EF7 /* Sighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1901CAC500D004C1EF7 /* Sighting.swift */; };
 		A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
 		A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
+		A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +73,7 @@
 		A9ABE1901CAC500D004C1EF7 /* Sighting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sighting.swift; path = managedClasses/Sighting.swift; sourceTree = "<group>"; };
 		A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Peripheral+CoreDataProperties.swift"; path = "managedClasses/Peripheral+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Peripheral.swift; path = managedClasses/Peripheral.swift; sourceTree = "<group>"; };
+		A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listServicesTVC.swift; path = controllers/listServicesTVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */,
+				A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */,
 				A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */,
 			);
 			name = controllers;
@@ -340,7 +342,7 @@
 				A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */,
 				A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */,
 				A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */,
-				A928D12E1CADEB0400859168 /* README.md in Sources */,
+				A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */,
 				A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */,
 				A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */,
 			);

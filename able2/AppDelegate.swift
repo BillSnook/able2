@@ -145,8 +145,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let URLPersistentStore = self.applicationDocumentsDirectory.URLByAppendingPathComponent("SingleViewCoreData.sqlite")
         var failureReason = "There was an error creating or loading the application's saved data."
+        let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
         do {
-            let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
             try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: URLPersistentStore, options: options)
         } catch {
             let fm = NSFileManager.defaultManager()
@@ -161,7 +161,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                     
                     do {
                         // Declare Options
-                        let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
+//                        let options = [ NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true ]
                         
                         // Add Persistent Store to Persistent Store Coordinator
                         try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: URLPersistentStore, options: options)
@@ -259,5 +259,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         return "\(dateFormatter.stringFromDate(NSDate())).sqlite"
     }
+    
+    func deleteAllPeripherals() {
+        if #available(iOS 9.0, *) {
+            let fetchRequest = NSFetchRequest( entityName: "Peripheral" )
+            let delete = NSBatchDeleteRequest( fetchRequest: fetchRequest )
+            do {
+                try persistentStoreCoordinator.executeRequest(delete, withContext: managedObjectContext)
+            } catch let error as NSError {
+                print( "Error while deleting batch: \(error)" )
+            }
+        } else {
+            let perpRequest = NSFetchRequest()
+            perpRequest.entity = NSEntityDescription.entityForName( "Peripheral", inManagedObjectContext: managedObjectContext )
+            perpRequest.includesPropertyValues = false
+            do {
+                let perps: NSArray = try managedObjectContext.executeFetchRequest( perpRequest )
+                for perp in perps as! [Peripheral] {
+                    managedObjectContext.deleteObject( perp )
+                }
+                try managedObjectContext.save()
+            } catch let error as NSError {
+                print( "Error while fetching or saving batch: \(error)" )
+            }
+        }
+        
+    }
+    
 }
 

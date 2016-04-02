@@ -113,6 +113,9 @@ class Scanner : NSObject, CBCentralManagerDelegate {
         
         do {
             let results = try managedContext.executeFetchRequest( fetch )
+            if results.count > 1 {
+                print( "\n\nError - results.count: \(results.count)\n\n" )
+            }
             if results.isEmpty {
                 storeEntry( peripheral, advertisementData: advertisementData, RSSI: RSSI )
             } else {        // We matched an existing entry
@@ -125,7 +128,14 @@ class Scanner : NSObject, CBCentralManagerDelegate {
         }
 
     }
+   
+    func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+        
+        print("\n\ndidDisconnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
+
+    }
     
+
     func storeEntry( peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber ) {
         let managedContext = appDelegate.managedObjectContext
         let peripheralEntity =  NSEntityDescription.entityForName("Peripheral", inManagedObjectContext: managedContext)
@@ -133,12 +143,22 @@ class Scanner : NSObject, CBCentralManagerDelegate {
             entry.mainUUID = peripheral.identifier.UUIDString
             if let name = peripheral.name {
                 if name.isEmpty {
-                    entry.name = "~ Empty name ~"
+                    entry.name = "~Blank name"
                 } else {
-                    entry.name = peripheral.name
+                    if name.characters.count > 7 {
+                        let checkRange = name[name.startIndex..<name.startIndex.advancedBy(8)]
+//                        print("checkRange: \(checkRange)" )
+                        if (Int(checkRange) != nil) {
+                            entry.name = "~\(peripheral.name!)"
+                        } else {
+                            entry.name = peripheral.name
+                        }
+                    } else {
+                        entry.name = peripheral.name
+                    }
                 }
             } else {
-                entry.name = "~ Nil name ~"
+                entry.name = "~No name"
             }
             if let connectable = advertisementData[ "kCBAdvDataIsConnectable" ] as? NSNumber {
                 entry.connectable = connectable.boolValue
