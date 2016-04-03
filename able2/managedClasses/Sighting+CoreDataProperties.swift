@@ -2,7 +2,7 @@
 //  Sighting+CoreDataProperties.swift
 //  able2
 //
-//  Created by William Snook on 3/31/16.
+//  Created by Bill Snook on 4/2/16.
 //  Copyright © 2016 William Snook. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -14,10 +14,10 @@ import CoreData
 
 extension Sighting {
 
-    @NSManaged var date: NSTimeInterval
-    @NSManaged var latitude: Float
-    @NSManaged var longitude: Float
-    @NSManaged var rssi: Int16
+    @NSManaged var date: NSDate?
+    @NSManaged var latitude: NSNumber?
+    @NSManaged var longitude: NSNumber?
+    @NSManaged var rssi: NSNumber?
     @NSManaged var peripheral: Peripheral?
 
 }

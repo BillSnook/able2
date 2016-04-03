@@ -165,12 +165,12 @@ class Scanner : NSObject, CBCentralManagerDelegate {
             } else {
                 entry.connectable = false
             }
-            entry.rssi = RSSI.shortValue   // Deprecated
+            entry.rssi = RSSI
 
             let sightingEntity = NSEntityDescription.entityForName("Sighting", inManagedObjectContext: managedContext)
             if let newSighting = NSManagedObject(entity: sightingEntity!, insertIntoManagedObjectContext: managedContext) as? Sighting {
-                newSighting.date = NSDate().timeIntervalSince1970
-                newSighting.rssi = RSSI.shortValue
+                newSighting.date = NSDate()
+                newSighting.rssi = RSSI
                 entry.sightings = NSSet( object: newSighting )
             }
         }
@@ -188,8 +188,8 @@ class Scanner : NSObject, CBCentralManagerDelegate {
         let managedContext = appDelegate.managedObjectContext
         let sightingEntity = NSEntityDescription.entityForName("Sighting", inManagedObjectContext: managedContext)
         if let newSighting = NSManagedObject(entity: sightingEntity!, insertIntoManagedObjectContext: managedContext) as? Sighting {
-            newSighting.date = NSDate().timeIntervalSince1970
-            newSighting.rssi = RSSI.shortValue
+            newSighting.date = NSDate()
+            newSighting.rssi = RSSI
             let sightings = entry.mutableSetValueForKey( "sightings" )
             sightings.addObject( newSighting )
         }

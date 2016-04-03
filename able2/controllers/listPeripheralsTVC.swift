@@ -159,7 +159,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         var recentSighting: Sighting?
 //        print("set count: \(sightings!.count)" )
         for sighting in sightings! {
-            let timeValue = sighting.date
+            let timeValue = sighting.date!.timeIntervalSince1970
 //            print("timeValue: \(timeValue)" )
             if timeValue > timeStamp {
                 timeStamp = timeValue
@@ -168,7 +168,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         }
         var rssi: Int16 = 0
         if let foundSighting = recentSighting {
-            rssi = foundSighting.rssi
+            rssi = foundSighting.rssi!.shortValue
             
             let now = NSDate().timeIntervalSince1970
             let minute = 60.0
@@ -194,7 +194,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
                 cell.peripheralRSSI.textColor = UIColor.redColor()                  // Over a day
             }
         } else {
-            rssi = peripheralEntity.rssi
+            rssi = peripheralEntity.rssi!.shortValue
             cell.peripheralRSSI.textColor = UIColor.blackColor()                    // Unknown
         }
         
@@ -205,7 +205,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         }
         
         cell.accessoryType = .None;
-        if peripheralEntity.connectable {
+        if peripheralEntity.connectable!.boolValue {
             cell.accessoryType = .DisclosureIndicator;
         }
     }
@@ -216,9 +216,9 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         if segue.identifier == "toServices" {
             NSLog( "toServices" )
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let object = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral
+                let peripheral = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral
                 let controller = segue.destinationViewController as! ListServicesTVC
-                controller.perp = object
+                controller.perp = peripheral
             }
         }
     }

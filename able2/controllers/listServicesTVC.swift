@@ -20,8 +20,50 @@ class ListServicesTVC: UITableViewController, CBCentralManagerDelegate, CBPeriph
     var scanner: Scanner?
     
     var services: [Peripheral]?
-    
-    
+	
+	var adverts: [String:String]?
+	var advertServices: [String]?
+	var advertName: String?
+	
+//	var selectedService: Service?
+	
+	@IBOutlet var connectionLabel: UILabel?
+	@IBOutlet var activityIndicator: UIActivityIndicatorView?
+	@IBOutlet var connectionIndicator: UIImageView?
+
+//--	----	----	----	----	----	----	----
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		clearsSelectionOnViewWillAppear = false
+		
+		if let name = perp?.name {
+			navigationItem.title = name
+			connectionLabel!.text = "Connection to \(name)"
+		}
+	}
+
+	override func viewWillAppear(animated: Bool) {
+		super.viewWillAppear( animated )
+		
+		activityIndicator!.stopAnimating()
+		connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
+		print( "Not Connectable" );
+
+//		tableView.reloadData()
+	}
+	
+	
+	override func viewWillDisappear(animated: Bool) {
+		
+		super.viewWillDisappear( animated )
+		
+	}
+	
+
+//--	----	----	----	----	----	----	----
+	
     func centralManagerDidUpdateState(central: CBCentralManager) {
         var state = ""
         switch ( central.state ) {
@@ -107,7 +149,7 @@ class ListServicesTVC: UITableViewController, CBCentralManagerDelegate, CBPeriph
     
         if error != nil {
             print( "Error discovering services: \(error!.localizedDescription)" )
-//        [self cleanup];
+//        [self cleanup]
             return
         }
     
@@ -118,17 +160,17 @@ class ListServicesTVC: UITableViewController, CBCentralManagerDelegate, CBPeriph
         services!.removeAll()
         for service in peripheral.services! {
 //            print( "Service discovered: \(service.UUID.uuid2string)" )
-//            abService *abServ = [[abService alloc] initWithName: advertName andID: [service.UUID uuid2string] andService: service];
-//            [services addObject: abServ];
-//            [peripheral discoverIncludedServices: nil forService: service];
-////        [peripheral discoverCharacteristics: nil forService: service];
+//            abService *abServ = [[abService alloc] initWithName: advertName andID: [service.UUID uuid2string] andService: service]
+//            [services addObject: abServ]
+//            [peripheral discoverIncludedServices: nil forService: service]
+////        [peripheral discoverCharacteristics: nil forService: service]
         }
         tableView.reloadData()
     }
     
     
     func peripheral(peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-        print( "didModifyServices" );
+        print( "didModifyServices" )
     
         for serv in invalidatedServices {
             print( "Invalidated service: \(serv)" )
@@ -141,7 +183,7 @@ class ListServicesTVC: UITableViewController, CBCentralManagerDelegate, CBPeriph
     
         if (error != nil) {
             print( "Error discovering included services: \(error!.localizedDescription)" )
-//		[self cleanup];
+//		[self cleanup]
             return
         }
     
@@ -162,7 +204,7 @@ class ListServicesTVC: UITableViewController, CBCentralManagerDelegate, CBPeriph
     
         if error != nil {
             print( "Error discovering characteristics: \(error!.localizedDescription)" )
-    //		[self cleanup];
+    //		[self cleanup]
             return
         }
     
@@ -170,7 +212,7 @@ class ListServicesTVC: UITableViewController, CBCentralManagerDelegate, CBPeriph
         // Loop through the newly filled peripheral.services array, just in case there's more than one.
         for serv in services! {
 //            if ( service.isEqual( serv.service ) ) {
-//                serv.characteristics = [NSMutableArray arrayWithArray: service.characteristics];
+//                serv.characteristics = [NSMutableArray arrayWithArray: service.characteristics]
 //            }
         }
         self.tableView.reloadData()
