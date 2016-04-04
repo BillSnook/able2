@@ -32,13 +32,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Override point for customization after application launch.
         if let splitViewControllerTemp = self.window!.rootViewController as? UISplitViewController {
             splitViewController = splitViewControllerTemp
-            print( "vc count = \(splitViewControllerTemp.viewControllers.count)" )
-            let navigationController = splitViewControllerTemp.viewControllers[splitViewControllerTemp.viewControllers.count-1] as! UINavigationController
-//            navigationPaneButtonItem = splitViewControllerTemp.displayModeButtonItem()
+            print( "vc count = \(splitViewController!.viewControllers.count)" )
+            let navigationController = splitViewController!.viewControllers[splitViewController!.viewControllers.count-1] as! UINavigationController
+//            navigationPaneButtonItem = splitViewController.displayModeButtonItem()
 //            print( "didFinishLaunchingWithOptions, displayModeButtonItem: \(navigationPaneButtonItem!.title), enabled: \(navigationPaneButtonItem!.enabled)" )
 //            navigationController.topViewController!.navigationItem.leftBarButtonItem =  navigationPaneButtonItem
-            splitViewControllerTemp.delegate = self
-//            let masterNavigationController = splitViewControllerTemp.viewControllers[0] as! UINavigationController
+            splitViewController!.delegate = self
+//            let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
 //            let controller = masterNavigationController.topViewController as! MasterViewController
 //            controller.managedObjectContext = self.managedObjectContext
             currentDetailViewController = navigationController.topViewController!
@@ -84,34 +84,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         } else {
             print( "Error: detailViewController is not a SubstitutableDetailViewProtocol" )
 //            abort()
+            return
         }
     
         currentDetailViewController = detailViewController
-
+        
         // Set the new currentDetailViewController's navigationPaneBarButtonItem to the value of our
         // navigationPaneButtonItem.  If navigationPaneButtonItem is not nil, then the button
         // will be displayed.
-        if let detailNavigationViewController = detailViewController as? UINavigationController {
-            print( "displayModeButtonItem: \(splitViewController?.displayModeButtonItem().title), enabled: \(splitViewController?.displayModeButtonItem().enabled)" )
-            if var detailVC = detailNavigationViewController.topViewController as? SubstitutableDetailViewProtocol {
+        print( "ViewControllers count: \(self.splitViewController!.viewControllers.count)" )
+//        guard self.splitViewController!.viewControllers.count > 1 else { return }
+//        if let detailNavigationViewController = splitViewController!.viewControllers[1] as? UINavigationController {
+//            detailNavigationViewController.viewControllers[0] = detailViewController
+            if var detailVC = currentDetailViewController as? SubstitutableDetailViewProtocol {
                 detailVC.navigationPaneBarButtonItem = navigationPaneButtonItem
             }
-        } else if var detailVC = detailViewController as? SubstitutableDetailViewProtocol {
-            detailVC.navigationPaneBarButtonItem = navigationPaneButtonItem
-        }
+//        }
         
         // Update the split view controller's view controllers array.
         // This causes the new detail view controller to be displayed.
-//        print( "vc count = \(splitViewController!.viewControllers.count)" )
-        let masterNavigationViewController = self.splitViewController!.viewControllers[0]
-        if splitViewController!.viewControllers.count > 1 {
-//            let detailNavigationViewController = self.splitViewController!.viewControllers[1]
-//            if let navVC = detailNavigationViewController as? UINavigationController {
-//                navVC.viewControllers[0] = currentDetailViewController!
+        print( "vc count = \(splitViewController!.viewControllers.count)" )
+        let masterNavigationViewController = splitViewController!.viewControllers[0]
+//        if splitViewController!.viewControllers.count > 1 {
+////            let detailNavigationViewController = splitViewController!.viewControllers[1]
+////            if let navVC = detailNavigationViewController as? UINavigationController {
+////                navVC.viewControllers[0] = currentDetailViewController!
                 let viewControllers = [masterNavigationViewController, currentDetailViewController!]
                 splitViewController!.viewControllers = viewControllers
-//            }
-        }
+////            }
+//        }
         
     }
     

@@ -14,5 +14,26 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
 
     var navigationPaneBarButtonItem: UIBarButtonItem?
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        clearsSelectionOnViewWillAppear = false
+        
+        navigationItem.title = "Create Peripheral"
+        
+    }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear( animated )
+        
+    }
+    
+    
+    override func viewWillDisappear(animated: Bool) {
+
+        super.viewWillDisappear( animated )
+        
+    }
+    
+
 }
