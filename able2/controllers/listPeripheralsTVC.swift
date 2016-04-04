@@ -186,7 +186,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
                         cell.peripheralRSSI.textColor = UIColor.orangeColor()       // Last hour
                     }
                 } else {
-                    cell.peripheralRSSI.textColor = UIColor.magentaColor()           // Last day
+                    cell.peripheralRSSI.textColor = UIColor.magentaColor()          // Last day
                 }
             } else {
                 cell.peripheralRSSI.textColor = UIColor.redColor()                  // Over a day
@@ -203,8 +203,10 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         }
         
         cell.accessoryType = .None;
-        if peripheralEntity.connectable!.boolValue {
-            cell.accessoryType = .DisclosureIndicator;
+        if peripheralEntity.connectable != nil {
+            if peripheralEntity.connectable!.boolValue {
+                cell.accessoryType = .DisclosureIndicator
+            }
         }
     }
     

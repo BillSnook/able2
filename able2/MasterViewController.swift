@@ -33,8 +33,10 @@ class MasterViewController: UIViewController {
         managedObjectContext = appDelegate!.managedObjectContext
         print( "MasterViewController, viewDidLoad, managedObjectContext: \(managedObjectContext)")
         
-        if let centralNavVC = splitViewController?.viewControllers[1] as? UINavigationController {
-            centralVC = centralNavVC.topViewController
+        if splitViewController?.viewControllers.count > 1 {
+            if let centralNavVC = splitViewController?.viewControllers[1] as? UINavigationController {
+                centralVC = centralNavVC.topViewController
+            }
         }
         peripheralVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("setupPeripheral")
 
@@ -89,6 +91,14 @@ class MasterViewController: UIViewController {
 
     // MARK: - Segues
 
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        if identifier == "showPeripheralDetail" {
+            return false
+        } else {
+            return true
+        }
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showCentralDetail" {
             NSLog( "showCentralDetail" )

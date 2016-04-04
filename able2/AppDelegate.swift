@@ -27,6 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     var splitViewController: UISplitViewController?
 
+    var savedNavigationController: UINavigationController?
+
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -42,7 +44,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 //            let controller = masterNavigationController.topViewController as! MasterViewController
 //            controller.managedObjectContext = self.managedObjectContext
             currentDetailViewController = navigationController.topViewController!
-        }
+
+            if splitViewController!.viewControllers.count > 1 {
+                if let centralNavVC = splitViewController?.viewControllers[1] as? UINavigationController {
+                    savedNavigationController = centralNavVC
+                }
+            }
+}
 
         return true
     }
@@ -104,15 +112,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Update the split view controller's view controllers array.
         // This causes the new detail view controller to be displayed.
         print( "vc count = \(splitViewController!.viewControllers.count)" )
-        let masterNavigationViewController = splitViewController!.viewControllers[0]
-//        if splitViewController!.viewControllers.count > 1 {
-////            let detailNavigationViewController = splitViewController!.viewControllers[1]
-////            if let navVC = detailNavigationViewController as? UINavigationController {
-////                navVC.viewControllers[0] = currentDetailViewController!
-                let viewControllers = [masterNavigationViewController, currentDetailViewController!]
+        let masterNavigationViewController = splitViewController!.viewControllers[0] as! UINavigationController
+        if splitViewController!.viewControllers.count > 1 {
+            let detailNavigationViewController = splitViewController!.viewControllers[1]
+            if let navVC = detailNavigationViewController as? UINavigationController {
+                navVC.viewControllers[0] = currentDetailViewController!
+                let viewControllers = [masterNavigationViewController, navVC]
                 splitViewController!.viewControllers = viewControllers
-////            }
-//        }
+            }
+        } else {
+            savedNavigationController!.viewControllers[0] = currentDetailViewController!
+            let viewControllers = [masterNavigationViewController, savedNavigationController!]
+            splitViewController!.viewControllers = viewControllers
+        }
         
     }
     
