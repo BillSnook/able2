@@ -12,9 +12,9 @@ import CoreBluetooth
 import CoreData
 
 
-class Scanner : NSObject, CBCentralManagerDelegate {
+class Scanner: NSObject, CBCentralManagerDelegate {
     
-    static let sharedInstance = Scanner()
+    static let sharedScanner = Scanner()
     
     
     var cbManager: CBCentralManager
@@ -75,7 +75,7 @@ class Scanner : NSObject, CBCentralManagerDelegate {
     
     func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
    
-//        print( "Peripheral UUID: \(peripheral.identifier.UUIDString)" )
+        print( "Peripheral UUID: \(peripheral.identifier.UUIDString)" )
 //
 //        guard RSSI.integerValue < -15 else {    // Reject any where the signal strength is above reasonable range
 //            print( "Too Strong: \(RSSI.integerValue)" )
@@ -106,7 +106,7 @@ class Scanner : NSObject, CBCentralManagerDelegate {
 */
         
         let managedContext = appDelegate.managedObjectContext
-        // See of joke (with id) already exists
+        // See of peripheral (with id) already exists
         let fetch = NSFetchRequest( entityName: "Peripheral" )
         let predicate = NSPredicate( format: "mainUUID == '\(peripheral.identifier.UUIDString)'" )
         fetch.predicate = predicate
@@ -131,7 +131,7 @@ class Scanner : NSObject, CBCentralManagerDelegate {
    
     func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
         
-        print("\n\ndidDisconnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
+        print("\n\nScanner didDisconnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
 
     }
     
@@ -203,26 +203,30 @@ class Scanner : NSObject, CBCentralManagerDelegate {
 //        print("updateEntry After do-loop")
     }
 
-    func startScan() {
-    
-    // We may want to get duplicates
-    //	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool: NO], CBCentralManagerScanOptionAllowDuplicatesKey, nil]
-        if ( .PoweredOn == cbManager.state ) && !scanRunning {
-            cbManager.stopScan()
-            print( "Starting scanning" )
-            resetScanList()
-            scanRunning = true
-            cbManager.scanForPeripheralsWithServices( nil, options: nil )	// Search for any service - power usage higher
-        } else {
-            print( "Scan requested but state wrong: \(cbManager.state)" )
-        }
-    }
-    
+	func startScan() {
+		
+		// We may want to get duplicates
+		//	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool: NO], CBCentralManagerScanOptionAllowDuplicatesKey, nil]
+		if ( .PoweredOn == cbManager.state ) && !scanRunning {
+			if cbManager.isScanning {
+				cbManager.stopScan()
+				print( "Scanner starting scanning" )
+				resetScanList()
+			}
+			scanRunning = true
+			cbManager.scanForPeripheralsWithServices( nil, options: nil )	// Search for any service - power usage higher
+		} else {
+			print( "Scan requested but state wrong: \(cbManager.state)" )
+		}
+	}
+	
     func stopScan() {
-    
+		
         if ( .PoweredOn == cbManager.state ) {
-            print( "Stopping scanning" )
-            cbManager.stopScan()
+			if cbManager.isScanning {
+				print( "Stopping scanning" )
+				cbManager.stopScan()
+			}
             scanRunning = false
         }
     }

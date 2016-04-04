@@ -19,6 +19,7 @@
 		A93B1AAF1CA5AD46004F9B4F /* able2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1AAE1CA5AD46004F9B4F /* able2UITests.swift */; };
 		A93B1ABD1CA5E588004F9B4F /* BLEView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1ABC1CA5E588004F9B4F /* BLEView.swift */; };
 		A9688ECA1CB093970036DA5E /* ServiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9688EC91CB093970036DA5E /* ServiceCell.swift */; };
+		A9688ECC1CB19ED60036DA5E /* Interrogator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9688ECB1CB19ED60036DA5E /* Interrogator.swift */; };
 		A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */; };
 		A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */; };
 		A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981659A1CA9A59300D0E65E /* Scanner.swift */; };
@@ -68,6 +69,7 @@
 		A93B1AB01CA5AD46004F9B4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A93B1ABC1CA5E588004F9B4F /* BLEView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEView.swift; sourceTree = "<group>"; };
 		A9688EC91CB093970036DA5E /* ServiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServiceCell.swift; path = cells/ServiceCell.swift; sourceTree = "<group>"; };
+		A9688ECB1CB19ED60036DA5E /* Interrogator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Interrogator.swift; path = managers/Interrogator.swift; sourceTree = "<group>"; };
 		A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listPeripheralsTVC.swift; path = controllers/listPeripheralsTVC.swift; sourceTree = "<group>"; };
 		A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = makePeripheralsTVC.swift; path = controllers/makePeripheralsTVC.swift; sourceTree = "<group>"; };
 		A981659A1CA9A59300D0E65E /* Scanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scanner.swift; path = managers/Scanner.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				A981659A1CA9A59300D0E65E /* Scanner.swift */,
+				A9688ECB1CB19ED60036DA5E /* Interrogator.swift */,
 			);
 			name = managers;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				A93B1ABD1CA5E588004F9B4F /* BLEView.swift in Sources */,
 				A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */,
 				A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */,
+				A9688ECC1CB19ED60036DA5E /* Interrogator.swift in Sources */,
 				A9ABE1931CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift in Sources */,
 				A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */,
 				A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */,

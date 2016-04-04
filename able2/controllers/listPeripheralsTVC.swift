@@ -30,12 +30,11 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         return fetchedResultsController
     }()
 
-    var scanner: Scanner = Scanner.sharedInstance
+    var scanner: Scanner = Scanner.sharedScanner
 
+	
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        scanner.startScan()
         
         let userDefaults = NSUserDefaults.standardUserDefaults()
         let didDetectIncompatibleStore = userDefaults.boolForKey("didDetectIncompatibleStore")
@@ -46,7 +45,8 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
             self.showAlertWithTitle("Warning", message: message, cancelButtonTitle: "OK")
         }
     
-        managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+		appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+		managedObjectContext = appDelegate!.managedObjectContext
 //        print( "viewDidLoad, listPeripheralsTVC, managedObjectContext: \(managedObjectContext)")
         do {
             try self.fetchedResultsController.performFetch()
@@ -58,23 +58,21 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear( animated )
-
-        appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
-        managedObjectContext = appDelegate!.managedObjectContext
-    
-
+		
+		scanner.startScan()
+		
         tableView.reloadData()
     }
     
     
     override func viewWillDisappear(animated: Bool) {
-    
+
+		scanner.stopScan()
+
         super.viewWillDisappear( animated )
-    
     }
     
     deinit {
-        scanner.stopScan()
     }
     
     
