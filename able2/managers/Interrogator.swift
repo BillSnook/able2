@@ -10,9 +10,31 @@ import Foundation
 import CoreBluetooth
 
 
+protocol peripheralConnectionProtocol {
+    
+    func connectableState( connectable: Bool, forPeripheral: CBPeripheral )
+    
+    func connectionStatus( connected: Bool )
+    
+    func disconnectionStatus( connected: Bool )
+    
+}
+
+
 class Interrogator: Scanner, CBPeripheralDelegate {
 	
 	static let sharedInterrogator = Interrogator()
+    
+    var delegate: peripheralConnectionProtocol?
+    
+    var connectable = false
+    var connecting = false
+    var connected = false
+    
+    var connectingPerp: CBPeripheral?
+    var connectedPerp: CBPeripheral?
+    
+    var deviceUUIDs: [CBUUID]?
 
 
 	required init() {
@@ -27,75 +49,129 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	
 	func startScan( forDevices deviceList: [CBUUID]? ) {
 		
+        print( "Interrogator startScan for \(deviceList)" )
 		// We may want to get duplicates
 		//	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool: NO], CBCentralManagerScanOptionAllowDuplicatesKey, nil]
+        deviceUUIDs = deviceList
 		if ( .PoweredOn == cbManager.state ) && !scanRunning {
-			if cbManager.isScanning {
-				cbManager.stopScan()
-				print( "Interrogator starting scanning" )
-				resetScanList()
-			}
+            if #available(iOS 9.0, *) {
+                if cbManager.isScanning {
+                    cbManager.stopScan()
+                    resetScanList()
+                }
+            } else {
+                cbManager.stopScan()
+                resetScanList()
+            }
+            print( "Interrogator starting scanning" )
 			scanRunning = true
 			cbManager.scanForPeripheralsWithServices( deviceList, options: nil )	// Search for specific services
 		} else {
-			print( "Scan requested but state wrong: \(cbManager.state)" )
+			print( "Interrogator scan requested but state wrong: \(cbManager.state)" )
 		}
 	}
 	
 	
-	func startInterrogation( forDevices deviceList: [CBUUID]? ) {
+	func startInterrogation( forDevice device: CBPeripheral ) {
+        print( "Interrogator startInterrogation" )
 
-//			if ( connectable ) {
-//				if ( CBPeripheralStateDisconnected == perp.peripheral.state ) {
-//					[activityIndicator startAnimating];
-//					UIImage *img = [UIImage imageNamed: @"button_round_yellow_small.jpg"];
-//					//			DLog( @"Image for 'button_round_yellow_small': %@", img );
-//					connectionIndicator.image = img;
-//					[centralManager connectPeripheral: perp.peripheral options: nil];
-//				} else {
-//					[activityIndicator stopAnimating];
-//					if ( CBPeripheralStateConnected == perp.peripheral.state ) {
-//						connectionIndicator.image = [UIImage imageNamed: @"button_round_green_small.jpg"];
-//					} else {    // Else connecting or disconnecting
-//						connectionIndicator.image = [UIImage imageNamed: @"button_round_yellow_small.jpg"];
-//					}
-//				}
-//			} else {
-//				[activityIndicator stopAnimating];
-//				connectionIndicator.image = [UIImage imageNamed: @"button_round_red_small.jpg"];
-//				DLog( @"Not Connectable" );
-//			}
+        stopScan()
+        connectingPerp = device
+        connecting = true
+        cbManager.connectPeripheral( device, options: nil )
+
 	}
 	
 	
 	func stopInterrogation() {
+        print( "Interrogator stopInterrogation" )
 		
 		if ( .PoweredOn == cbManager.state ) {
-//			if cbManager.isScanning {
-//				print( "Stopping scanning" )
-//				cbManager.stopScan()
-//			}
-//			scanRunning = false
+            if let connecting = connectingPerp {
+                print( "Stopping Connecting" )
+                cbManager.cancelPeripheralConnection( connecting )
+            }
+			connecting = false
 		}
 	}
 	
 	
 	//  MARK - CBCentral Delegate methods
-	
+
+    override func centralManagerDidUpdateState(central: CBCentralManager) {
+        var state = ""
+        switch ( central.state ) {
+        case .Resetting:
+            state = "Central Manager is resetting."
+        case .Unsupported:
+            state = "No support for Bluetooth Low Energy."
+        case .Unauthorized:
+            state = "Not authorized to use Bluetooth Low Energy."
+        case .PoweredOff:
+            state = "Currently powered off."
+        case .PoweredOn:
+            state = "Currently powered on."
+        case .Unknown:
+            state = "Currently in an unknown state."
+        }
+        print( "Interrogator Bluetooth central state: \(state)" )
+        
+        if (central.state != .PoweredOn) {		// In a real app, you'd deal with all the states correctly
+//            resetScanList()
+            return
+        }
+        // The state must be CBCentralManagerStatePoweredOn...
+        // ... so start scanning
+        self.startScan( forDevices: deviceUUIDs! )
+
+    }
 	
 	override func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
 		
 		print("\n\nInterrogator didDiscoverPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
 		
+        var found = false
+        for uuid in deviceUUIDs! {
+            if uuid == peripheral.identifier.UUIDString {
+                found = true
+            }
+        }
+        if found {
+            if let isConnectable = advertisementData[ "kCBAdvDataIsConnectable" ] as? NSNumber {
+                connectable = isConnectable.boolValue
+                delegate?.connectableState( connectable, forPeripheral: peripheral )
+            } else {
+                connectable = false
+            }
+        } else {
+            print("Not the Peripheral we were looking for: \(connectedPerp?.identifier.UUIDString), got: \(peripheral.identifier.UUIDString)" )
+        }
 	}
 	
 	override func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
 		
 		print("\n\nInterrogator didDisconnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
-		
+        if connectedPerp == peripheral {
+            connectedPerp = nil
+            connecting = false
+            delegate?.disconnectionStatus( false )
+        }
 	}
+    
+    func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
+        
+        print("\n\nInterrogator didConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
+        connecting = false
+        delegate?.connectionStatus( true )
+    }
 	
-	
+    func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+        
+        print("\n\nInterrogator didFailToConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
+        connecting = false
+        delegate?.connectionStatus( false )
+    }
+
 	//  MARK - CBPeripheral Delegate methods
 	
 	// Services were discovered

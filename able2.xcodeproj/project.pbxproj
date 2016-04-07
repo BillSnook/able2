@@ -29,6 +29,16 @@
 		A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
 		A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
 		A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */; };
+		A9D44E781CB58D2A0065F9FA /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */; };
+		A9D44E821CB5D4C50065F9FA /* CBPeripheralMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E811CB5D4C50065F9FA /* CBPeripheralMock.swift */; };
+		A9D44E841CB6C6170065F9FA /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981659A1CA9A59300D0E65E /* Scanner.swift */; };
+		A9D44E851CB6C6550065F9FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */; };
+		A9D44E861CB6C6730065F9FA /* Sighting+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */; };
+		A9D44E871CB6C6730065F9FA /* Sighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1901CAC500D004C1EF7 /* Sighting.swift */; };
+		A9D44E881CB6C6730065F9FA /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
+		A9D44E891CB6C6730065F9FA /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
+		A9D44E8A1CB6DB3E0065F9FA /* able2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8B1CA5AD46004F9B4F /* able2.xcdatamodeld */; };
+		A9D44E8B1CB6ED510065F9FA /* Interrogator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9688ECB1CB19ED60036DA5E /* Interrogator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +88,8 @@
 		A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Peripheral+CoreDataProperties.swift"; path = "managedClasses/Peripheral+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Peripheral.swift; path = managedClasses/Peripheral.swift; sourceTree = "<group>"; };
 		A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listServicesTVC.swift; path = controllers/listServicesTVC.swift; sourceTree = "<group>"; };
+		A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
+		A9D44E811CB5D4C50065F9FA /* CBPeripheralMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBPeripheralMock.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +172,8 @@
 			isa = PBXGroup;
 			children = (
 				A93B1AA31CA5AD46004F9B4F /* able2Tests.swift */,
+				A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */,
+				A9D44E811CB5D4C50065F9FA /* CBPeripheralMock.swift */,
 				A93B1AA51CA5AD46004F9B4F /* Info.plist */,
 			);
 			path = able2Tests;
@@ -276,7 +290,6 @@
 					};
 					A93B1A9E1CA5AD46004F9B4F = {
 						CreatedOnToolsVersion = 7.3;
-						TestTargetID = A93B1A851CA5AD46004F9B4F;
 					};
 					A93B1AA91CA5AD46004F9B4F = {
 						CreatedOnToolsVersion = 7.3;
@@ -360,7 +373,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9D44E781CB58D2A0065F9FA /* CoreDataHelper.swift in Sources */,
+				A9D44E891CB6C6730065F9FA /* Peripheral.swift in Sources */,
 				A93B1AA41CA5AD46004F9B4F /* able2Tests.swift in Sources */,
+				A9D44E871CB6C6730065F9FA /* Sighting.swift in Sources */,
+				A9D44E861CB6C6730065F9FA /* Sighting+CoreDataProperties.swift in Sources */,
+				A9D44E841CB6C6170065F9FA /* Scanner.swift in Sources */,
+				A9D44E881CB6C6730065F9FA /* Peripheral+CoreDataProperties.swift in Sources */,
+				A9D44E8B1CB6ED510065F9FA /* Interrogator.swift in Sources */,
+				A9D44E851CB6C6550065F9FA /* AppDelegate.swift in Sources */,
+				A9D44E8A1CB6DB3E0065F9FA /* able2.xcdatamodeld in Sources */,
+				A9D44E821CB5D4C50065F9FA /* CBPeripheralMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,7 +521,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = able2/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -511,7 +534,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = able2/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -521,24 +544,22 @@
 		A93B1AB71CA5AD46004F9B4F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = able2Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/able2.app/able2";
 			};
 			name = Debug;
 		};
 		A93B1AB81CA5AD46004F9B4F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = able2Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/able2.app/able2";
 			};
 			name = Release;
 		};
@@ -546,6 +567,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = able2UITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -557,6 +579,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = able2UITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

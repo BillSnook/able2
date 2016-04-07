@@ -22,7 +22,6 @@ class MasterViewController: UIViewController {
     var peripheralVC: UIViewController?
 
     @IBOutlet weak var arenaView: UIView!
-    @IBOutlet weak var bleView: BLEView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +31,7 @@ class MasterViewController: UIViewController {
         appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
         managedObjectContext = appDelegate!.managedObjectContext
         print( "MasterViewController, viewDidLoad, managedObjectContext: \(managedObjectContext)")
+        appDelegate!.deleteAllPeripherals()
         
         if splitViewController?.viewControllers.count > 1 {
             if let centralNavVC = splitViewController?.viewControllers[1] as? UINavigationController {

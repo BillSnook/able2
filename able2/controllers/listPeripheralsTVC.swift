@@ -16,7 +16,6 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     
     var navigationPaneBarButtonItem: UIBarButtonItem?
 
-    var appDelegate: AppDelegate?
     var managedObjectContext: NSManagedObjectContext? = nil
     
     lazy var fetchedResultsController: NSFetchedResultsController = {
@@ -45,7 +44,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
             self.showAlertWithTitle("Warning", message: message, cancelButtonTitle: "OK")
         }
     
-		appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+		let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
 		managedObjectContext = appDelegate!.managedObjectContext
 //        print( "viewDidLoad, listPeripheralsTVC, managedObjectContext: \(managedObjectContext)")
         do {
@@ -59,6 +58,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear( animated )
 		
+        scanner.managedObjectContext = managedObjectContext
 		scanner.startScan()
 		
         tableView.reloadData()
@@ -86,6 +86,22 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         alertController.addAction(UIAlertAction(title: cancelButtonTitle, style: .Default, handler: { (_) -> Void in
             let userDefaults = NSUserDefaults.standardUserDefaults()
             userDefaults.removeObjectForKey("didDetectIncompatibleStore")
+        }))
+        
+        // Present Alert Controller
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    
+    private func showDeleteAlertWithTitle(title: String, message: String, cancelButtonTitle: String) {
+        // Initialize Alert Controller
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        
+        // Configure Alert Controller
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        
+        alertController.addAction(UIAlertAction(title: "OK", style: .Destructive, handler: { (_) -> Void in
+            self.doDeleteOperation()
         }))
         
         // Present Alert Controller
@@ -215,6 +231,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "toServices" {
             NSLog( "toServices" )
+            scanner.stopScan()
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let peripheral = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral
                 let controller = segue.destinationViewController as! ListServicesTVC
@@ -224,10 +241,17 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     }
     
     @IBAction func clearData(sender: UIBarButtonItem) {
-//        print( "clearData" )
+        
+        let message = "You are about to delete all your stored info on Bluetooth devices that you have seen. Are you sure?"
+        self.showDeleteAlertWithTitle("Warning", message: message, cancelButtonTitle: "OK")
+    }
+    
+    private func doDeleteOperation() {
+//        print( "doDeleteOperation" )
         scanner.stopScan()
         fetchedResultsController.delegate = nil
 
+        let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
         appDelegate?.deleteAllPeripherals()
 
         fetchedResultsController.delegate = self

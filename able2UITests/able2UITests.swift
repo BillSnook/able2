@@ -32,20 +32,28 @@ class able2UITests: XCTestCase {
     func test1FirstSceneAndReturn() {
        
         // With the SplitView controller, we now start with the Peripheral List page displaying a list of peripherals
-        app.navigationBars["Peripheral List"].childrenMatchingType(.Button).matchingIdentifier("Mode").elementBoundByIndex(0).tap()
-
-        let centralButton = app.buttons["beCentral"]
+        // Chaining the following commands fails for an unknown reason, so we have seperated them for now
+        let navbar = app.navigationBars["Peripheral List"]
+        let buttons = navbar.childrenMatchingType(.Button)
+        let match = buttons.matchingIdentifier("Mode")
+        let element = match.elementBoundByIndex(0)
+        element.tap()
+        
+        print( buttons.debugDescription )
+        
+        let centralButton = app.buttons["becomeCentral"]
+        self.waitForElementToAppear(centralButton, timeout: 2)
         XCTAssertEqual( centralButton.exists, true )
         
         centralButton.tap()
         
         app.navigationBars["Peripheral List"].childrenMatchingType(.Button).matchingIdentifier("Mode").elementBoundByIndex(0).tap()
-        
-        let peripheralButton = app.buttons["bePeripheral"]
+
+        let peripheralButton = app.buttons["becomePeripheral"]
         XCTAssertEqual( peripheralButton.exists, true )
 
         peripheralButton.tap()
-  
+        
         // Needs fix in the app
 //        app.navigationBars["Setup Peripheral"].childrenMatchingType(.Button).matchingIdentifier("Mode").elementBoundByIndex(0).tap()
         
@@ -58,7 +66,7 @@ class able2UITests: XCTestCase {
 //        
 //        centralButton.tap()
 //        
-//        app.navigationBars["Peripheral List"].childrenMatchingType(.Button).matchingIdentifier("Back").elementBoundByIndex(0).tap()
+//        app.navigationBars["Peripheral List"].childrenMatchingType(.Button).matchingIdentifier("Mode").elementBoundByIndex(0).tap()
     
     }
     
@@ -69,8 +77,20 @@ class able2UITests: XCTestCase {
 //        
 //        peripheralButton.tap()
 //        
-//        app.navigationBars["Setup Peripheral"].childrenMatchingType(.Button).matchingIdentifier("Back").elementBoundByIndex(0).tap()
+//        app.navigationBars["Setup Peripheral"].childrenMatchingType(.Button).matchingIdentifier("Mode").elementBoundByIndex(0).tap()
         
     }
 
+    func waitForElementToAppear(element: XCUIElement, timeout: NSTimeInterval = 5,  file: String = #file, line: UInt = #line) {
+        let existsPredicate = NSPredicate(format: "exists == true")
+        
+        expectationForPredicate(existsPredicate, evaluatedWithObject: element, handler: nil)
+        
+        waitForExpectationsWithTimeout(timeout) { (error) -> Void in
+            if (error != nil) {
+                let message = "Failed to find \(element) after \(timeout) seconds."
+                self.recordFailureWithDescription(message, inFile: file, atLine: line, expected: true)
+            }
+        }
+    }
 }

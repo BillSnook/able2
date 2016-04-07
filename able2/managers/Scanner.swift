@@ -12,25 +12,29 @@ import CoreBluetooth
 import CoreData
 
 
+protocol CBPeripheralProtocol {
+    var name: String? { get }
+    var identifier: NSUUID { get }
+}
+
+extension CBPeripheral: CBPeripheralProtocol {
+    
+}
+
 class Scanner: NSObject, CBCentralManagerDelegate {
     
     static let sharedScanner = Scanner()
-    
+//    private override init() { } //This prevents others from using the default '()' initializer for this class.
+
     
     var cbManager: CBCentralManager
     var scanRunning = false
     
-//    var delegate: ScannerDelegate?
-//    var masterList = [abPeripheral]()
-
-    var appDelegate: AppDelegate
-    var managedObjectContext: NSManagedObjectContext
+    var managedObjectContext: NSManagedObjectContext?
 
 
     required override init() {
         cbManager = CBCentralManager( delegate: nil, queue: nil )
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        managedObjectContext = appDelegate.managedObjectContext
         
         super.init()
         
@@ -105,22 +109,22 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     }
 */
         
-        let managedContext = appDelegate.managedObjectContext
+//        let managedContext = appDelegate.managedObjectContext
         // See of peripheral (with id) already exists
         let fetch = NSFetchRequest( entityName: "Peripheral" )
         let predicate = NSPredicate( format: "mainUUID == '\(peripheral.identifier.UUIDString)'" )
         fetch.predicate = predicate
         
         do {
-            let results = try managedContext.executeFetchRequest( fetch )
+            let results = try managedObjectContext!.executeFetchRequest( fetch )
             if results.count > 1 {
                 print( "\n\nError - results.count: \(results.count)\n\n" )
             }
             if results.isEmpty {
-                storeEntry( peripheral, advertisementData: advertisementData, RSSI: RSSI )
+                storeEntry( peripheral, advertisementData: advertisementData, RSSI: RSSI, managedContext: managedObjectContext! )
             } else {        // We matched an existing entry
                 let entry = results[0] as! Peripheral
-                updateEntry( entry, peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI )
+                updateEntry( entry, peripheral: peripheral, advertisementData: advertisementData, RSSI: RSSI, managedContext: managedObjectContext! )
 //                print( "    Existing entry found" )
             }
         } catch let error as NSError {
@@ -136,8 +140,8 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     }
     
 
-    func storeEntry( peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber ) {
-        let managedContext = appDelegate.managedObjectContext
+    func storeEntry( peripheral: CBPeripheralProtocol, advertisementData: [String : AnyObject], RSSI: NSNumber, managedContext: NSManagedObjectContext ) {
+//        let managedContext = appDelegate.managedObjectContext
         let peripheralEntity =  NSEntityDescription.entityForName("Peripheral", inManagedObjectContext: managedContext)
         if let entry = NSManagedObject(entity: peripheralEntity!, insertIntoManagedObjectContext: managedContext) as? Peripheral {
             entry.mainUUID = peripheral.identifier.UUIDString
@@ -184,8 +188,8 @@ class Scanner: NSObject, CBCentralManagerDelegate {
 //        print("storeEntry After do-loop")
     }
     
-    func updateEntry( entry: Peripheral, peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber ) {
-        let managedContext = appDelegate.managedObjectContext
+    func updateEntry( entry: Peripheral, peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber, managedContext: NSManagedObjectContext ) {
+//        let managedContext = appDelegate.managedObjectContext
         let sightingEntity = NSEntityDescription.entityForName("Sighting", inManagedObjectContext: managedContext)
         if let newSighting = NSManagedObject(entity: sightingEntity!, insertIntoManagedObjectContext: managedContext) as? Sighting {
             newSighting.date = NSDate()
@@ -195,7 +199,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
         }
 
         do {
-            try appDelegate.managedObjectContext.save()
+            try managedContext.save()
 //            print("updateEntry After Try")
         } catch let error as NSError  {
             print("Could not save \(error), \(error.userInfo)")
@@ -208,11 +212,16 @@ class Scanner: NSObject, CBCentralManagerDelegate {
 		// We may want to get duplicates
 		//	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool: NO], CBCentralManagerScanOptionAllowDuplicatesKey, nil]
 		if ( .PoweredOn == cbManager.state ) && !scanRunning {
-			if cbManager.isScanning {
-				cbManager.stopScan()
-				print( "Scanner starting scanning" )
-				resetScanList()
-			}
+            if #available(iOS 9.0, *) {
+                if cbManager.isScanning {
+                    cbManager.stopScan()
+                    resetScanList()
+                }
+            } else {
+                cbManager.stopScan()
+                resetScanList()
+            }
+            print( "Scanner starting scanning" )
 			scanRunning = true
 			cbManager.scanForPeripheralsWithServices( nil, options: nil )	// Search for any service - power usage higher
 		} else {
@@ -223,11 +232,15 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     func stopScan() {
 		
         if ( .PoweredOn == cbManager.state ) {
-			if cbManager.isScanning {
-				print( "Stopping scanning" )
-				cbManager.stopScan()
-			}
+            if #available(iOS 9.0, *) {
+                if cbManager.isScanning {
+                    cbManager.stopScan()
+                }
+            } else {
+                cbManager.stopScan()
+            }
             scanRunning = false
+            print( "Stopping scanning" )
         }
     }
     

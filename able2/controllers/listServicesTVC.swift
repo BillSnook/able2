@@ -12,7 +12,7 @@ import CoreBluetooth
 import CoreData
 
 
-class ListServicesTVC: UITableViewController {
+class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     
     var perp: Peripheral?				// This gets passed in as identifier to represent selected device
     
@@ -46,7 +46,12 @@ class ListServicesTVC: UITableViewController {
 			navigationItem.title = name
 			connectionLabel!.text = "Connection to \(name)"
 		}
-		
+
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        interrogator.managedObjectContext = appDelegate.managedObjectContext
+        interrogator.delegate = self
+        
+
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -55,11 +60,11 @@ class ListServicesTVC: UITableViewController {
 		activityIndicator!.stopAnimating()
 		setIndicator( perp?.connectable?.boolValue )
 
-		if let scanPerp = self.perp  {
-			print( "Start scan for \(scanPerp.mainUUID!)" )
-			interrogator.startInterrogation( forDevices: [CBUUID(string: scanPerp.mainUUID!)] )
-		}
-		
+        if let scanPerp = self.perp  {
+            print( "Start scan for \(scanPerp.mainUUID!)" )
+            interrogator.startScan( forDevices: [CBUUID(string: scanPerp.mainUUID!)] )
+        }
+        
 //		tableView.reloadData()
 	}
 	
@@ -87,5 +92,39 @@ class ListServicesTVC: UITableViewController {
 			connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
 		}
 	}
+
+    func connectableState( connectable: Bool, forPeripheral peripheral: CBPeripheral ) {
+        print( "connectableState: connectable: \(connectable)" )
+        if ( connectable ) {
+            activityIndicator!.startAnimating()
+            connectionIndicator!.image = UIImage( named: "button_round_yellow_small.jpg" )
+            interrogator.startInterrogation( forDevice: peripheral )
+        } else {
+            activityIndicator!.stopAnimating()
+            connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
+            print( "Not Connectable" )
+        }
+    }
+    
+    func connectionStatus( connected: Bool ) {
+        print( "connectionStatus, connected: \(connected)" )
+        activityIndicator!.stopAnimating()
+        if connected {
+            connectionIndicator!.image = UIImage( named: "button_round_green_small.jpg" )
+        } else {
+            connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
+        }
+    }
+
+    func disconnectionStatus( connected: Bool ) {
+        print( "disconnectionStatus, connected: \(connected)" )
+        activityIndicator!.stopAnimating()
+        if connected {
+            connectionIndicator!.image = UIImage( named: "button_round_yellow_small.jpg" )
+        } else {
+            connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
+        }
+    }
+    
 
 }
