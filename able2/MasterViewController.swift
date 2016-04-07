@@ -18,8 +18,8 @@ class MasterViewController: UIViewController {
     
     var bleList = [BLEView]()
     
-    var centralVC: UIViewController?
-    var peripheralVC: UIViewController?
+//    var centralVC: UIViewController?
+//    var peripheralVC: UIViewController?
 
     @IBOutlet weak var arenaView: UIView!
 
@@ -33,12 +33,12 @@ class MasterViewController: UIViewController {
         print( "MasterViewController, viewDidLoad, managedObjectContext: \(managedObjectContext)")
         appDelegate!.deleteAllPeripherals()
         
-        if splitViewController?.viewControllers.count > 1 {
-            if let centralNavVC = splitViewController?.viewControllers[1] as? UINavigationController {
-                centralVC = centralNavVC.topViewController
-            }
-        }
-        peripheralVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("setupPeripheral")
+//        if splitViewController?.viewControllers.count > 1 {
+//            if let centralNavVC = splitViewController?.viewControllers[1] as? UINavigationController {
+//                centralVC = centralNavVC.topViewController
+//            }
+//        }
+//        peripheralVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("setupPeripheral")
 
     }
 
@@ -54,23 +54,25 @@ class MasterViewController: UIViewController {
         let bleSize = CGFloat(100.0)
         let width = arenaView.bounds.size.width - bleSize // Nominally 100 x 100 pixels
         let height = arenaView.bounds.size.height - bleSize
-        for _ in 0...5 {    // Add ping views
-            let xOrigin = CGFloat(BLEView.randomNumber(0..<Int(width)))
-            let yOrigin = CGFloat(BLEView.randomNumber(0..<Int(height)))
-            let xSize = bleSize + CGFloat(BLEView.randomNumber(-20..<20))
-            let ySize = bleSize + CGFloat(BLEView.randomNumber(-20..<20))
-            let bleViewNext = BLEView( frame: CGRect(x: xOrigin, y: yOrigin, width: xSize, height: ySize ) )
-            let nextColor = UIColor( red: CGFloat(BLEView.randomNumber(128...255))/CGFloat( 256.0), green: CGFloat(BLEView.randomNumber(0...127))/CGFloat( 256.0), blue: CGFloat(BLEView.randomNumber(0...127))/CGFloat( 256.0), alpha: CGFloat( 1.0 ) )
-            bleViewNext.backgroundColor = UIColor.clearColor()
-            bleViewNext.initialColor = nextColor
-            bleList.append(bleViewNext)
-            arenaView.addSubview(bleViewNext)
+        if height > bleSize + 20.0 {
+            for _ in 0...3 {    // Add ping views
+                let xOrigin = CGFloat(BLEView.randomNumber(0..<Int(width)))
+                let yOrigin = CGFloat(BLEView.randomNumber(0..<Int(height)))
+                let xSize = bleSize + CGFloat(BLEView.randomNumber(-20..<20))
+                let ySize = bleSize + CGFloat(BLEView.randomNumber(-20..<20))
+                let bleViewNext = BLEView( frame: CGRect(x: xOrigin, y: yOrigin, width: xSize, height: ySize ) )
+                let nextColor = UIColor( red: CGFloat(BLEView.randomNumber(128...255))/CGFloat( 256.0), green: CGFloat(BLEView.randomNumber(0...127))/CGFloat( 256.0), blue: CGFloat(BLEView.randomNumber(0...127))/CGFloat( 256.0), alpha: CGFloat( 1.0 ) )
+                bleViewNext.backgroundColor = UIColor.clearColor()
+                bleViewNext.initialColor = nextColor
+                bleList.append(bleViewNext)
+                arenaView.addSubview(bleViewNext)
+            }
+            // Remove when testing to keep it simple
+//            for nextView in bleList {
+//                nextView.startPing()
+//            }
         }
 
-        // Remove when testing to keep it simple
-//        for nextView in bleList {
-//            nextView.startPing()
-//        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -91,29 +93,28 @@ class MasterViewController: UIViewController {
 
     // MARK: - Segues
 
-    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-        if identifier == "showPeripheralDetail" {
-            return false
-        } else {
-            return true
-        }
-    }
+//    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+//        if identifier == "showPeripheralDetail" {
+//            return false
+//        } else {
+//            return true
+//        }
+//    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showCentralDetail" {
             NSLog( "showCentralDetail" )
-            appDelegate?.setDetailViewController( centralVC! )
-//            if let indexPath = self.tableView.indexPathForSelectedRow {
-//                let object = self.fetchedResultsController.objectAtIndexPath(indexPath)
-//                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
-//                controller.detailItem = object
-//                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
-//                controller.navigationItem.leftItemsSupplementBackButton = true
-//            }
+//            appDelegate?.setDetailViewController( centralVC! )
+            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! listPeripheralsTVC
+            controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+            controller.navigationItem.leftItemsSupplementBackButton = true
         } else {
             if segue.identifier == "showPeripheralDetail" {
                 NSLog( "showPeripheralDetail" )
-                appDelegate?.setDetailViewController( peripheralVC! )
+//                appDelegate?.setDetailViewController( peripheralVC! )
+                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! makePeripheralsTVC
+                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+                controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }
     }

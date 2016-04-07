@@ -19,7 +19,7 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         
         clearsSelectionOnViewWillAppear = false
         
-        navigationItem.title = "Create Peripheral"
+//        navigationItem.title = "Create Peripheral"
         
     }
     
