@@ -21,8 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     var window: UIWindow?
 
-    var currentDetailViewController: UIViewController?
-    
     var navigationPaneButtonItem: UIBarButtonItem?
     
     var splitViewController: UISplitViewController?
@@ -32,25 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        if let splitViewControllerTemp = self.window!.rootViewController as? UISplitViewController {
-            splitViewController = splitViewControllerTemp
-            print( "vc count = \(splitViewController!.viewControllers.count)" )
-            let navigationController = splitViewController!.viewControllers[splitViewController!.viewControllers.count-1] as! UINavigationController
-//            navigationPaneButtonItem = splitViewController.displayModeButtonItem()
-//            print( "didFinishLaunchingWithOptions, displayModeButtonItem: \(navigationPaneButtonItem!.title), enabled: \(navigationPaneButtonItem!.enabled)" )
-//            navigationController.topViewController!.navigationItem.leftBarButtonItem =  navigationPaneButtonItem
-            splitViewController!.delegate = self
-//            let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
-//            let controller = masterNavigationController.topViewController as! MasterViewController
-//            controller.managedObjectContext = self.managedObjectContext
-            currentDetailViewController = navigationController.topViewController!
-
-            if splitViewController!.viewControllers.count > 1 {
-                if let centralNavVC = splitViewController?.viewControllers[1] as? UINavigationController {
-                    savedNavigationController = centralNavVC
-                }
-            }
-}
 
         return true
     }
@@ -79,64 +58,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         // Saves changes in the application's managed object context before the application terminates.
         self.saveManagedObjectContext()
     }
-
-    // MARK: - Split view
-    
-    func setDetailViewController( detailViewController: UIViewController ) {
-        // Clear any bar button item from the detail view controller that is about to
-        // no longer be displayed.
-        guard currentDetailViewController != detailViewController else { return }
-        if var currentVC = currentDetailViewController as? SubstitutableDetailViewProtocol {
-//            navigationPaneButtonItem = currentVC.navigationPaneBarButtonItem
-            currentVC.navigationPaneBarButtonItem = nil
-        } else {
-            print( "Error: detailViewController is not a SubstitutableDetailViewProtocol" )
-//            abort()
-            return
-        }
-    
-        currentDetailViewController = detailViewController
-        
-        // Set the new currentDetailViewController's navigationPaneBarButtonItem to the value of our
-        // navigationPaneButtonItem.  If navigationPaneButtonItem is not nil, then the button
-        // will be displayed.
-        print( "ViewControllers count: \(self.splitViewController!.viewControllers.count)" )
-//        guard self.splitViewController!.viewControllers.count > 1 else { return }
-//        if let detailNavigationViewController = splitViewController!.viewControllers[1] as? UINavigationController {
-//            detailNavigationViewController.viewControllers[0] = detailViewController
-            if var detailVC = currentDetailViewController as? SubstitutableDetailViewProtocol {
-                detailVC.navigationPaneBarButtonItem = navigationPaneButtonItem
-            }
-//        }
-        
-        // Update the split view controller's view controllers array.
-        // This causes the new detail view controller to be displayed.
-        print( "vc count = \(splitViewController!.viewControllers.count)" )
-        let masterNavigationViewController = splitViewController!.viewControllers[0] as! UINavigationController
-        if splitViewController!.viewControllers.count > 1 {
-            let detailNavigationViewController = splitViewController!.viewControllers[1]
-            if let navVC = detailNavigationViewController as? UINavigationController {
-                navVC.viewControllers[0] = currentDetailViewController!
-                let viewControllers = [masterNavigationViewController, navVC]
-                splitViewController!.viewControllers = viewControllers
-            }
-        } else {
-            savedNavigationController!.viewControllers[0] = currentDetailViewController!
-            let viewControllers = [masterNavigationViewController, savedNavigationController!]
-            splitViewController!.viewControllers = viewControllers
-        }
-        
-    }
-    
-    // MARK: - Split view
-
-//    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController:UIViewController, ontoPrimaryViewController primaryViewController:UIViewController) -> Bool {
-////        guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-////        if let _ = secondaryAsNavController.topViewController as? listPeripheralsTVC { return true }
-////        if let _ = secondaryAsNavController.topViewController as? makePeripheralsTVC { return true }
-//       return false
-//    }
-    
     
     // MARK: - Core Data stack
 
@@ -148,9 +69,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-//        let modelURL = NSBundle.mainBundle().URLForResource("able2", withExtension: "momd")!
-//        return NSManagedObjectModel(contentsOfURL: modelURL)!
-        return NSManagedObjectModel.mergedModelFromBundles([NSBundle.mainBundle()])!
+        let modelURL = NSBundle.mainBundle().URLForResource("able2", withExtension: "momd")!
+        return NSManagedObjectModel(contentsOfURL: modelURL)!
+//        return NSManagedObjectModel.mergedModelFromBundles([NSBundle.mainBundle()])!
     }()
 
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
@@ -297,8 +218,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                 print( "Error while fetching or saving batch: \(error)" )
             }
         }
-        
     }
-    
 }
-

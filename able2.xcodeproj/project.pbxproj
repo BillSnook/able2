@@ -23,7 +23,6 @@
 		A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */; };
 		A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */; };
 		A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981659A1CA9A59300D0E65E /* Scanner.swift */; };
-		A981659F1CA9BCE700D0E65E /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A901CA5AD46004F9B4F /* DetailViewController.swift */; };
 		A9ABE1931CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */; };
 		A9ABE1941CAC500D004C1EF7 /* Sighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1901CAC500D004C1EF7 /* Sighting.swift */; };
 		A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
@@ -349,7 +348,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A981659F1CA9BCE700D0E65E /* DetailViewController.swift in Sources */,
 				A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */,
 				A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */,
 				A93B1A8D1CA5AD46004F9B4F /* able2.xcdatamodeld in Sources */,

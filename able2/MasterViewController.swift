@@ -11,35 +11,21 @@ import CoreData
 
 class MasterViewController: UIViewController {
 
-    var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
     
     var appDelegate: AppDelegate?
     
     var bleList = [BLEView]()
     
-//    var centralVC: UIViewController?
-//    var peripheralVC: UIViewController?
-
     @IBOutlet weak var arenaView: UIView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-//        bleView.frame.origin = CGPoint(x: 10.0, y: 20.0)
         
         appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
         managedObjectContext = appDelegate!.managedObjectContext
         print( "MasterViewController, viewDidLoad, managedObjectContext: \(managedObjectContext)")
         appDelegate!.deleteAllPeripherals()
-        
-//        if splitViewController?.viewControllers.count > 1 {
-//            if let centralNavVC = splitViewController?.viewControllers[1] as? UINavigationController {
-//                centralVC = centralNavVC.topViewController
-//            }
-//        }
-//        peripheralVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("setupPeripheral")
-
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -93,25 +79,15 @@ class MasterViewController: UIViewController {
 
     // MARK: - Segues
 
-//    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
-//        if identifier == "showPeripheralDetail" {
-//            return false
-//        } else {
-//            return true
-//        }
-//    }
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showCentralDetail" {
             NSLog( "showCentralDetail" )
-//            appDelegate?.setDetailViewController( centralVC! )
             let controller = (segue.destinationViewController as! UINavigationController).topViewController as! listPeripheralsTVC
             controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
             controller.navigationItem.leftItemsSupplementBackButton = true
         } else {
             if segue.identifier == "showPeripheralDetail" {
                 NSLog( "showPeripheralDetail" )
-//                appDelegate?.setDetailViewController( peripheralVC! )
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! makePeripheralsTVC
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true

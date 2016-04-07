@@ -53,6 +53,9 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
             print("Could not fetch \(error), \(error.userInfo)")
         }
 
+        self.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+        self.navigationItem.leftItemsSupplementBackButton = true
+
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -136,7 +139,6 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
                 if let cell = tableView.dequeueReusableCellWithIdentifier( "peripheralCell", forIndexPath: indexPath ) as? PeripheralCell {
                     configureCell( cell, atIndexPath: indexPath )
                 }
-//                tableView.reloadData()
             }
         case .Move:
             if let indexPath = indexPath {
@@ -279,40 +281,17 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         // Return the number of rows in the section.
         if let sections = fetchedResultsController.sections {
             let sectionInfo = sections[section]
-//            if sectionInfo.numberOfObjects == 0 {
-//                return 1
-//            } else {
-                return sectionInfo.numberOfObjects
-//            }
+            return sectionInfo.numberOfObjects
         }
         return 0
     }
     
     override func tableView( tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath ) -> CGFloat {
-    
-//        if let sections = fetchedResultsController.sections {
-//            let sectionInfo = sections[indexPath.section]
-//            if sectionInfo.numberOfObjects > 0 {
-                return 66.0
-//            }
-//        }
-//        return 44.0
+        return 66.0
     }
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath ) -> UITableViewCell {
-    
-        // Configure the cell...
-// Display message if no entries exist
-//        if let sections = fetchedResultsController.sections {
-//            let sectionInfo = sections[indexPath.section]
-//            if sectionInfo.numberOfObjects == 0 {
-//                let cell = tableView.dequeueReusableCellWithIdentifier( "messageCell", forIndexPath: indexPath )
-//                cell.textLabel?.text = "No peripherals detected"
-//                return cell
-//            }
-//        }
-        // Found a peripheral entry
         let peripheralCell = tableView.dequeueReusableCellWithIdentifier( "peripheralCell", forIndexPath: indexPath ) as! PeripheralCell
         
         configureCell( peripheralCell, atIndexPath: indexPath )

@@ -27,7 +27,6 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	var advertServices: [String]?
 	var advertName: String?
 	
-//	var selectedService: Service?
 	
 	@IBOutlet var connectionLabel: UILabel?
 	@IBOutlet var activityIndicator: UIActivityIndicatorView?
@@ -50,8 +49,6 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         interrogator.managedObjectContext = appDelegate.managedObjectContext
         interrogator.delegate = self
-        
-
 	}
 
 	override func viewWillAppear(animated: Bool) {
@@ -64,9 +61,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
             print( "Start scan for \(scanPerp.mainUUID!)" )
             interrogator.startScan( forDevices: [CBUUID(string: scanPerp.mainUUID!)] )
         }
-        
-//		tableView.reloadData()
-	}
+    }
 	
 	
 	override func viewWillDisappear(animated: Bool) {

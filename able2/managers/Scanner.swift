@@ -109,7 +109,6 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     }
 */
         
-//        let managedContext = appDelegate.managedObjectContext
         // See of peripheral (with id) already exists
         let fetch = NSFetchRequest( entityName: "Peripheral" )
         let predicate = NSPredicate( format: "mainUUID == '\(peripheral.identifier.UUIDString)'" )
@@ -141,7 +140,6 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     
 
     func storeEntry( peripheral: CBPeripheralProtocol, advertisementData: [String : AnyObject], RSSI: NSNumber, managedContext: NSManagedObjectContext ) {
-//        let managedContext = appDelegate.managedObjectContext
         let peripheralEntity =  NSEntityDescription.entityForName("Peripheral", inManagedObjectContext: managedContext)
         if let entry = NSManagedObject(entity: peripheralEntity!, insertIntoManagedObjectContext: managedContext) as? Peripheral {
             entry.mainUUID = peripheral.identifier.UUIDString
@@ -189,7 +187,6 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     }
     
     func updateEntry( entry: Peripheral, peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber, managedContext: NSManagedObjectContext ) {
-//        let managedContext = appDelegate.managedObjectContext
         let sightingEntity = NSEntityDescription.entityForName("Sighting", inManagedObjectContext: managedContext)
         if let newSighting = NSManagedObject(entity: sightingEntity!, insertIntoManagedObjectContext: managedContext) as? Sighting {
             newSighting.date = NSDate()
