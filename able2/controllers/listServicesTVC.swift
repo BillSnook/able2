@@ -66,7 +66,7 @@ class ListServicesTVC: UITableViewController {
 	
 	override func viewWillDisappear(animated: Bool) {
 		
-		interrogator.stopScan()
+		interrogator.stopInterrogation()
 
 		super.viewWillDisappear( animated )
 		
