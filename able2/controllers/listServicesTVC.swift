@@ -12,9 +12,20 @@ import CoreBluetooth
 import CoreData
 
 
+enum Indicator: String {
+    case green = "button_round_green_small.jpg"
+    case yellow = "button_round_yellow_small.jpg"
+    case red = "button_round_red_small.jpg"
+    
+    func image() -> UIImage {
+        return UIImage( named: self.rawValue )!
+    }
+}
+
+
 class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     
-    var perp: Peripheral?				// This gets passed in as identifier to represent selected device
+    var perp: Peripheral?	// This gets passed in as identifier to represent the selected device
     
     var centralManager: CBCentralManager?
 	var interrogator: Interrogator = Interrogator.sharedInterrogator
@@ -63,40 +74,41 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         }
     }
 	
-	
 	override func viewWillDisappear(animated: Bool) {
 		
 		interrogator.stopInterrogation()
 
 		super.viewWillDisappear( animated )
-		
 	}
 	
+    
 	func setIndicator( isConnectable: Bool? ) {
 		if let connectable = isConnectable {
 			if connectable {
 				if connected {
-					connectionIndicator!.image = UIImage( named: "button_round_green_small.jpg" )
+					connectionIndicator!.image = Indicator.green.image()
 				} else {
-					connectionIndicator!.image = UIImage( named: "button_round_yellow_small.jpg" )
+					connectionIndicator!.image = Indicator.yellow.image()
 				}
 			} else {
-				connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
+				connectionIndicator!.image = Indicator.red.image()
 			}
 		} else {
-			connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
+			connectionIndicator!.image = Indicator.red.image()
 		}
 	}
 
+    //  MARK: - peripheralConnectionProtocol delegate methods
+    
     func connectableState( connectable: Bool, forPeripheral peripheral: CBPeripheral ) {
         print( "connectableState: connectable: \(connectable)" )
         if ( connectable ) {
             activityIndicator!.startAnimating()
-            connectionIndicator!.image = UIImage( named: "button_round_yellow_small.jpg" )
+            connectionIndicator!.image = Indicator.yellow.image()
             interrogator.startInterrogation( forDevice: peripheral )
         } else {
             activityIndicator!.stopAnimating()
-            connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
+            connectionIndicator!.image = Indicator.red.image()
             print( "Not Connectable" )
         }
     }
@@ -105,9 +117,9 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         print( "connectionStatus, connected: \(connected)" )
         activityIndicator!.stopAnimating()
         if connected {
-            connectionIndicator!.image = UIImage( named: "button_round_green_small.jpg" )
+            connectionIndicator!.image = Indicator.green.image()
         } else {
-            connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
+            connectionIndicator!.image = Indicator.red.image()
         }
     }
 
@@ -115,11 +127,83 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         print( "disconnectionStatus, connected: \(connected)" )
         activityIndicator!.stopAnimating()
         if connected {
-            connectionIndicator!.image = UIImage( named: "button_round_yellow_small.jpg" )
+            connectionIndicator!.image = Indicator.yellow.image()
         } else {
-            connectionIndicator!.image = UIImage( named: "button_round_red_small.jpg" )
+            connectionIndicator!.image = Indicator.red.image()
         }
     }
+    
+
+    //  MARK: - UITableViewDelegate methods
+    
+    internal override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+//        switch section {
+//        case 0:
+//            return 22.0;
+//            
+//        case 1:
+//            return 22.0;
+//            
+//        case 2:
+//            return 22.0;
+//            
+//        }
+        return 0.0;
+    }
+
+    
+/*
+    func testit() {
+        
+        enum Section : Int {
+            case service = 0
+            case subservice = 1
+            case characteristics = 2
+            
+//            static let «allValues» = [Section.Dough, Section.Ingredients]
+            
+            func titles() -> String? {
+                switch self {
+                    case .service: return "Services"
+                    case .subservice: return "SubServices"
+                    case .characteristics: return "Characteristics"
+                }
+            }
+            
+            func caseForRow(row: Int) -> String? {
+                switch self {
+                case .service: return "Services"
+                case .subservice: return "SubServices"
+                case .characteristics: return "Characteristics"
+                }
+            }
+            
+            func headerHeight() -> CGFloat {
+                switch self {
+                case .service: return 22.0
+                case .subservice: return 22.0
+                case .characteristics: return 22.0
+                }
+                return CGFloat(22.0)
+            }
+            
+//            func headerView(tableView: UITableView) -> UIView? {
+//                let header = tableView.dequeueReusableHeaderFooterViewWithIdentifier(kTableHeaderIdentifier) as! TableHeaderView
+//                if let sectionName = self.title() {
+//                    header.lblTitle.text = sectionName
+//                }
+//                return header
+//            }
+        }
+        
+    }
+*/
+    
+    
+    //  MARK: - UITableViewSource methods
+    
+    
     
 
 }

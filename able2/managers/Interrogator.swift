@@ -47,7 +47,9 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		
 	}
 	
-	func startScan( forDevices deviceList: [CBUUID]? ) {
+    //  MARK: - Operation control methods
+
+    func startScan( forDevices deviceList: [CBUUID]? ) {
 		
         print( "Interrogator startScan for \(deviceList)" )
 		// We may want to get duplicates
@@ -75,11 +77,12 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	func startInterrogation( forDevice device: CBPeripheral ) {
         print( "Interrogator startInterrogation" )
 
-        stopScan()
-        connectingPerp = device
-        connecting = true
-        cbManager.connectPeripheral( device, options: nil )
-
+        if ( .PoweredOn == cbManager.state ) {
+            stopScan()
+            connectingPerp = device
+            connecting = true
+            cbManager.connectPeripheral( device, options: nil )
+        }
 	}
 	
 	
@@ -96,7 +99,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	}
 	
 	
-	//  MARK - CBCentral Delegate methods
+    //  MARK: - CBCentralManagerDelegate methods
 
     override func centralManagerDidUpdateState(central: CBCentralManager) {
         var state = ""
@@ -126,6 +129,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 
     }
 	
+    
 	override func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
 		
 		print("\n\nInterrogator didDiscoverPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
@@ -143,6 +147,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
             } else {
                 connectable = false
             }
+            delegate?.connectableState( connectable, forPeripheral: peripheral )
         } else {
             print("Not the Peripheral we were looking for: \(connectedPerp?.identifier.UUIDString), got: \(peripheral.identifier.UUIDString)" )
         }
@@ -158,7 +163,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         }
 	}
     
-    func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
+   func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
         
         print("\n\nInterrogator didConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
         connecting = false
@@ -172,7 +177,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         delegate?.connectionStatus( false )
     }
 
-	//  MARK - CBPeripheral Delegate methods
+	//  MARK: - CBPeripheralDelegate methods
 	
 	// Services were discovered
 	func peripheral( peripheral: CBPeripheral, didDiscoverServices error: NSError? ) {

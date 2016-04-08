@@ -204,6 +204,8 @@ class Scanner: NSObject, CBCentralManagerDelegate {
 //        print("updateEntry After do-loop")
     }
 
+    //  MARK: - connection methods
+    
 	func startScan() {
 		
 		// We may want to get duplicates
@@ -240,8 +242,5 @@ class Scanner: NSObject, CBCentralManagerDelegate {
             print( "Stopping scanning" )
         }
     }
-    
-//  MARK: connection methods
-    
     
 }
