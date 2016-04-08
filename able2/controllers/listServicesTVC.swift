@@ -76,7 +76,8 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	
 	override func viewWillDisappear(animated: Bool) {
 		
-		interrogator.stopInterrogation()
+        interrogator.stopInterrogation()
+        interrogator.stopScan()
 
 		super.viewWillDisappear( animated )
 	}
@@ -119,7 +120,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         if connected {
             connectionIndicator!.image = Indicator.green.image()
         } else {
-            connectionIndicator!.image = Indicator.red.image()
+            connectionIndicator!.image = Indicator.yellow.image()
         }
     }
 
@@ -127,9 +128,9 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         print( "disconnectionStatus, connected: \(connected)" )
         activityIndicator!.stopAnimating()
         if connected {
-            connectionIndicator!.image = Indicator.yellow.image()
+            connectionIndicator!.image = Indicator.green.image()
         } else {
-            connectionIndicator!.image = Indicator.red.image()
+            connectionIndicator!.image = Indicator.yellow.image()
         }
     }
     

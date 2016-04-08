@@ -35,6 +35,8 @@ class Interrogator: Scanner, CBPeripheralDelegate {
     var connectedPerp: CBPeripheral?
     
     var deviceUUIDs: [CBUUID]?
+    
+    var scanUUID: CBUUID?
 
 
 	required init() {
@@ -55,21 +57,24 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		// We may want to get duplicates
 		//	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool: NO], CBCentralManagerScanOptionAllowDuplicatesKey, nil]
         deviceUUIDs = deviceList
-		if ( .PoweredOn == cbManager.state ) && !scanRunning {
-            if #available(iOS 9.0, *) {
-                if cbManager.isScanning {
+		if ( .PoweredOn == cbManager.state ) {
+            if scanRunning {
+                if #available(iOS 9.0, *) {
+                    if cbManager.isScanning {
+                        cbManager.stopScan()
+                        resetScanList()
+                    }
+                } else {
                     cbManager.stopScan()
                     resetScanList()
                 }
-            } else {
-                cbManager.stopScan()
-                resetScanList()
             }
             print( "Interrogator starting scanning" )
 			scanRunning = true
-			cbManager.scanForPeripheralsWithServices( deviceList, options: nil )	// Search for specific services
+            scanUUID = deviceList![0]
+			cbManager.scanForPeripheralsWithServices( nil, options: nil )	// Search for specific services
 		} else {
-			print( "Interrogator scan requested but state wrong: \(cbManager.state)" )
+            print( "Interrogator scan requested but state wrong: \(cbManager.state.rawValue)" )
 		}
 	}
 	
@@ -90,11 +95,14 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         print( "Interrogator stopInterrogation" )
 		
 		if ( .PoweredOn == cbManager.state ) {
-            if let connecting = connectingPerp {
-                print( "Stopping Connecting" )
-                cbManager.cancelPeripheralConnection( connecting )
+            if connecting || connected {
+                if let connectingPerpipheral = connectingPerp {
+                    print( "Stopping trying to connect" )
+                    cbManager.cancelPeripheralConnection( connectingPerpipheral )
+                    connected = false
+                    connecting = false
+                }
             }
-			connecting = false
 		}
 	}
 	
@@ -104,6 +112,8 @@ class Interrogator: Scanner, CBPeripheralDelegate {
     override func centralManagerDidUpdateState(central: CBCentralManager) {
         var state = ""
         switch ( central.state ) {
+        case .Unknown:
+            state = "Currently in an unknown state."
         case .Resetting:
             state = "Central Manager is resetting."
         case .Unsupported:
@@ -114,8 +124,6 @@ class Interrogator: Scanner, CBPeripheralDelegate {
             state = "Currently powered off."
         case .PoweredOn:
             state = "Currently powered on."
-        case .Unknown:
-            state = "Currently in an unknown state."
         }
         print( "Interrogator Bluetooth central state: \(state)" )
         
@@ -136,20 +144,21 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		
         var found = false
         for uuid in deviceUUIDs! {
-            if uuid == peripheral.identifier.UUIDString {
+            print("Checking for: \(uuid), got: \(peripheral.identifier.UUIDString)" )
+            if uuid.UUIDString == peripheral.identifier.UUIDString {
                 found = true
             }
         }
         if found {
             if let isConnectable = advertisementData[ "kCBAdvDataIsConnectable" ] as? NSNumber {
                 connectable = isConnectable.boolValue
-                delegate?.connectableState( connectable, forPeripheral: peripheral )
             } else {
                 connectable = false
             }
+            connectedPerp = peripheral
             delegate?.connectableState( connectable, forPeripheral: peripheral )
         } else {
-            print("Not the Peripheral we were looking for: \(connectedPerp?.identifier.UUIDString), got: \(peripheral.identifier.UUIDString)" )
+            print("Not the Peripheral we were looking for: \(scanUUID!.UUIDString), got: \(peripheral.identifier.UUIDString)" )
         }
 	}
 	
@@ -158,6 +167,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		print("\n\nInterrogator didDisconnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
         if connectedPerp == peripheral {
             connectedPerp = nil
+            connected = false
             connecting = false
             delegate?.disconnectionStatus( false )
         }
@@ -167,6 +177,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         
         print("\n\nInterrogator didConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
         connecting = false
+        connected = true
         delegate?.connectionStatus( true )
     }
 	
@@ -174,6 +185,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         
         print("\n\nInterrogator didFailToConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
         connecting = false
+        connected = false
         delegate?.connectionStatus( false )
     }
 
