@@ -233,13 +233,14 @@ class Scanner: NSObject, CBCentralManagerDelegate {
         if ( .PoweredOn == cbManager.state ) {
             if #available(iOS 9.0, *) {
                 if cbManager.isScanning {
+					print( "Stopping scanning" )
                     cbManager.stopScan()
                 }
             } else {
+				print( "Stopping scanning" )
                 cbManager.stopScan()
             }
             scanRunning = false
-            print( "Stopping scanning" )
         }
     }
     

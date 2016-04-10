@@ -114,26 +114,39 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         }
     }
     
-    func connectionStatus( connected: Bool ) {
+    func connectionStatus( connected: Bool, forPeripheral peripheral: CBPeripheral ) {
         print( "connectionStatus, connected: \(connected)" )
         activityIndicator!.stopAnimating()
-        if connected {
+//		interrogator.stopInterrogation() // ?? Is this needed ??
+		if connected {
             connectionIndicator!.image = Indicator.green.image()
+			updateConnection( peripheral )
+//			peripheral.delegate = self
+//			peripheral.discoverServices( nil )	// Search for all
         } else {
             connectionIndicator!.image = Indicator.yellow.image()
+			disconnectConnection( peripheral )
         }
     }
 
-    func disconnectionStatus( connected: Bool ) {
-        print( "disconnectionStatus, connected: \(connected)" )
-        activityIndicator!.stopAnimating()
-        if connected {
-            connectionIndicator!.image = Indicator.green.image()
-        } else {
-            connectionIndicator!.image = Indicator.yellow.image()
-        }
-    }
-    
+	
+	func updateConnection( peripheral: CBPeripheral ) {
+		
+		print( "updateConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
+
+/*
+		case Disconnected = 0
+		case Connecting
+		case Connected
+		@available(iOS 9.0, *)
+		case Disconnecting
+*/
+	}
+	
+	func disconnectConnection( peripheral: CBPeripheral ) {
+		
+		print( "disconnectConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
+	}
 
     //  MARK: - UITableViewDelegate methods
     

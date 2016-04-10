@@ -14,10 +14,8 @@ protocol peripheralConnectionProtocol {
     
     func connectableState( connectable: Bool, forPeripheral: CBPeripheral )
     
-    func connectionStatus( connected: Bool )
-    
-    func disconnectionStatus( connected: Bool )
-    
+    func connectionStatus( connected: Bool, forPeripheral peripheral: CBPeripheral )
+
 }
 
 
@@ -156,6 +154,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
                 connectable = false
             }
             connectedPerp = peripheral
+			stopScan()		// Just find one
             delegate?.connectableState( connectable, forPeripheral: peripheral )
         } else {
             print("Not the Peripheral we were looking for: \(scanUUID!.UUIDString), got: \(peripheral.identifier.UUIDString)" )
@@ -169,7 +168,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
             connectedPerp = nil
             connected = false
             connecting = false
-            delegate?.disconnectionStatus( false )
+            delegate?.connectionStatus( false, forPeripheral: peripheral )
         }
 	}
     
@@ -178,7 +177,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         print("\n\nInterrogator didConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
         connecting = false
         connected = true
-        delegate?.connectionStatus( true )
+		delegate?.connectionStatus( true, forPeripheral: peripheral )
     }
 	
     func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
@@ -186,7 +185,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         print("\n\nInterrogator didFailToConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
         connecting = false
         connected = false
-        delegate?.connectionStatus( false )
+        delegate?.connectionStatus( false, forPeripheral: peripheral )
     }
 
 	//  MARK: - CBPeripheralDelegate methods
