@@ -24,7 +24,7 @@ class MasterViewController: UIViewController {
         
         appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
         managedObjectContext = appDelegate!.managedObjectContext
-        print( "MasterViewController, viewDidLoad, managedObjectContext: \(managedObjectContext)")
+        Log.trace( "MasterViewController, viewDidLoad, managedObjectContext: \(managedObjectContext)" )
         appDelegate!.deleteAllPeripherals()
     }
 

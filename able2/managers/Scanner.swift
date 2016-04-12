@@ -40,7 +40,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
         
         cbManager.delegate = self
 
-        print( "Scanner init" )
+        Log.trace( "Scanner init" )
 
 }
 
@@ -66,7 +66,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
             case .Unknown:
                 state = "Currently in an unknown state."
         }
-        print( "Bluetooth central state: \(state)" )
+        Log.info( "Bluetooth central state: \(state)" )
         
         if (central.state != .PoweredOn) {		// In a real app, you'd deal with all the states correctly
             resetScanList()
@@ -79,7 +79,8 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     
     func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
    
-        print( "Peripheral UUID: \(peripheral.identifier.UUIDString)" )
+//        print( "Peripheral UUID: \(peripheral.identifier.UUIDString)" )
+
 //
 //        guard RSSI.integerValue < -15 else {    // Reject any where the signal strength is above reasonable range
 //            print( "Too Strong: \(RSSI.integerValue)" )
@@ -117,7 +118,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
         do {
             let results = try managedObjectContext!.executeFetchRequest( fetch )
             if results.count > 1 {
-                print( "\n\nError - results.count: \(results.count)\n\n" )
+                Log.error( "\n\nError - results.count: \(results.count)\n\n" )
             }
             if results.isEmpty {
                 storeEntry( peripheral, advertisementData: advertisementData, RSSI: RSSI, managedContext: managedObjectContext! )
@@ -127,7 +128,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
 //                print( "    Existing entry found" )
             }
         } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
+            Log.error("Could not fetch \(error), \(error.userInfo)")
         }
 
     }
@@ -181,7 +182,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
             try managedContext.save()
 //            print("storeEntry After Try")
         } catch let error as NSError  {
-            print("Could not save \(error), \(error.userInfo)")
+            Log.error("Could not save \(error), \(error.userInfo)")
         }
 //        print("storeEntry After do-loop")
     }
@@ -199,7 +200,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
             try managedContext.save()
 //            print("updateEntry After Try")
         } catch let error as NSError  {
-            print("Could not save \(error), \(error.userInfo)")
+            Log.error("Could not save \(error), \(error.userInfo)")
         }
 //        print("updateEntry After do-loop")
     }
@@ -220,11 +221,11 @@ class Scanner: NSObject, CBCentralManagerDelegate {
                 cbManager.stopScan()
                 resetScanList()
             }
-            print( "Scanner starting scanning" )
+            Log.info( "Scanner starting scanning" )
 			scanRunning = true
 			cbManager.scanForPeripheralsWithServices( nil, options: nil )	// Search for any service - power usage higher
 		} else {
-			print( "Scan requested but state wrong: \(cbManager.state)" )
+			Log.warning( "Scan requested but state wrong: \(cbManager.state)" )
 		}
 	}
 	
@@ -233,11 +234,11 @@ class Scanner: NSObject, CBCentralManagerDelegate {
         if ( .PoweredOn == cbManager.state ) {
             if #available(iOS 9.0, *) {
                 if cbManager.isScanning {
-					print( "Stopping scanning" )
+					Log.info( "Stopping scanning" )
                     cbManager.stopScan()
                 }
             } else {
-				print( "Stopping scanning" )
+				Log.info( "Stopping scanning" )
                 cbManager.stopScan()
             }
             scanRunning = false

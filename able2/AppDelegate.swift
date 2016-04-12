@@ -9,6 +9,32 @@
 import Foundation
 import UIKit
 import CoreData
+import Log
+
+
+extension Formatters {
+    static let Constrained = Formatter("%@ | [%@] %@.%@:%@ %@", [
+        .Level,
+        .Date("HH:mm:ss.SSS"),
+        .File(fullPath: false, fileExtension: false),
+        .Function,
+        .Line,
+        .Message
+        ])
+}
+
+extension Themes {
+    static let TomorrowNight = Theme(
+        trace:   "#C5C8C6",
+        debug:   "#81A2BE",
+        info:    "#B5BD68",
+        warning: "#F0C674",
+        error:   "#CC6666"
+    )
+}
+
+
+let Log = Logger( formatter: .Constrained, theme: .Tomorrow )
 
 
 protocol SubstitutableDetailViewProtocol {
@@ -27,7 +53,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     var savedNavigationController: UINavigationController?
 
-
+    
+    required override init() {
+        
+        super.init()
+        
+        Log.trace( "Starting up" )
+        
+    }
+    
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
 
