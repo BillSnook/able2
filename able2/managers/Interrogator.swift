@@ -15,6 +15,8 @@ protocol peripheralConnectionProtocol {
     func connectableState( connectable: Bool, forPeripheral: CBPeripheral )
     
     func connectionStatus( connected: Bool, forPeripheral peripheral: CBPeripheral )
+    
+    func servicesDiscovered( peripheral: CBPeripheral )
 
 }
 
@@ -211,6 +213,9 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		// Discover any included services and characteristics
 		Log.info( "Peripheral services discovered: \(peripheral.services)" )
 		
+        delegate?.servicesDiscovered( peripheral )
+        
+        
 		// Loop through the newly filled peripheral.services array, just in case there's more than one.
 //		for service in peripheral.services! {  // CBService
 //            print( "Service discovered: \(service.peripheral.identifier)" )

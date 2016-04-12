@@ -32,7 +32,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	
 	var connected = false
 	
-    var services: [Peripheral]?
+    var services: [CBService]?
 	
 	var adverts: [String:String]?
 	var advertServices: [String]?
@@ -128,7 +128,18 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 			disconnectConnection( peripheral )
         }
     }
-
+    
+    func servicesDiscovered( peripheral: CBPeripheral ) {
+        
+        Log.trace( "servicesDiscovered with \(peripheral.services?.count) services" )
+        
+        services = peripheral.services
+        
+        tableView.reloadData()
+        
+    }
+    
+//--    ----    ----    ----
 	
 	func updateConnection( peripheral: CBPeripheral ) {
 		
@@ -151,11 +162,12 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 		Log.trace( "disconnectConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
 	}
 
+    
     //  MARK: - UITableViewDelegate methods
     
     override func numberOfSectionsInTableView( tableView: UITableView ) -> Int {
         // Return the number of rows in the section.
-        return 0
+        return 1
     }
     
     internal override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -185,7 +197,11 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         // Return the number of rows in the section.
         switch section {
         case 0:
-            return 1
+            if let srvcs = services {
+                return srvcs.count
+            } else {
+                return 0
+            }
         case 1:
             return 0
         case 2:
@@ -212,7 +228,8 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     }
 
     func configureMainService( cell: ServiceCell, atIndexPath indexPath: NSIndexPath ) {
-        let name = perp!.name
+        let service = services![indexPath.row]
+        let name = service.peripheral.name
         if ( ( name == nil ) || ( name!.characters.count == 0 ) ) {
             cell.nameField.text = name
         } else {
@@ -223,8 +240,20 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
                 cell.nameField.text = name
             }
         }
-        cell.IDField.text = perp!.mainUUID
-        
+        cell.IDField.text = service.UUID.UUIDString
+        cell.primaryIndicator.text = service.isPrimary ? "Primary" : "Secondary"
+        let servicesCount = service.includedServices?.count
+        if servicesCount > 0 {
+            cell.servicesCount.text = "\(servicesCount) services"
+        } else {
+            cell.servicesCount.text = "No services"
+        }
+        let characteristicCount = service.characteristics?.count
+        if characteristicCount > 0 {
+            cell.characteristicsCount.text = "\(characteristicCount) characteristics"
+        } else {
+            cell.characteristicsCount.text = "No characteristics"
+        }
     }
 /*
     func testit() {
