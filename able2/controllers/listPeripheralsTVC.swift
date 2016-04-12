@@ -46,11 +46,11 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     
 		let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
 		managedObjectContext = appDelegate!.managedObjectContext
-//        print( "viewDidLoad, listPeripheralsTVC, managedObjectContext: \(managedObjectContext)")
+//        Log.trace( "viewDidLoad, listPeripheralsTVC, managedObjectContext: \(managedObjectContext)")
         do {
             try self.fetchedResultsController.performFetch()
         } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
+            Log.error("Could not fetch \(error), \(error.userInfo)")
         }
 
         self.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
@@ -135,7 +135,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
             }
         case .Update:
             if let indexPath = indexPath {
-//                print( "didChangeObject, Update at indexPath section: \(indexPath.section), row: \(indexPath.row)" )
+//                Log.trace( "didChangeObject, Update at indexPath section: \(indexPath.section), row: \(indexPath.row)" )
                 if let cell = tableView.dequeueReusableCellWithIdentifier( "peripheralCell", forIndexPath: indexPath ) as? PeripheralCell {
                     configureCell( cell, atIndexPath: indexPath )
                 }
@@ -173,10 +173,10 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         let sightings = peripheralEntity.sightings as! Set<Sighting>?
         var timeStamp: NSTimeInterval = 0
         var recentSighting: Sighting?
-//        print("set count: \(sightings!.count)" )
+//        Log.trace("set count: \(sightings!.count)" )
         for sighting in sightings! {
             let timeValue = sighting.date!.timeIntervalSince1970
-//            print("timeValue: \(timeValue)" )
+//            Log.trace("timeValue: \(timeValue)" )
             if timeValue > timeStamp {
                 timeStamp = timeValue
                 recentSighting = sighting
@@ -249,7 +249,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     }
     
     private func doDeleteOperation() {
-//        print( "doDeleteOperation" )
+//        Log.trace( "doDeleteOperation" )
         scanner.stopScan()
         fetchedResultsController.delegate = nil
 
@@ -260,7 +260,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         do {
             try self.fetchedResultsController.performFetch()
         } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
+            Log.error("Could not fetch \(error), \(error.userInfo)")
         }
 
         tableView.reloadData()

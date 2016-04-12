@@ -12,8 +12,8 @@ class ServiceCell: UITableViewCell {
 
 @IBOutlet var nameField: UILabel!
 @IBOutlet var primaryIndicator: UILabel!
+@IBOutlet var IDField: UILabel!
 @IBOutlet var servicesCount: UILabel!
 @IBOutlet var characteristicsCount: UILabel!
-@IBOutlet var IDField: UILabel!
 
 }

@@ -13,9 +13,9 @@ import Log
 
 
 extension Formatters {
-    static let Constrained = Formatter("%@ | [%@] %@.%@:%@ %@", [
-        .Level,
+    static let Constrained = Formatter("[%@] %@ | %@.%@:%@ %@", [
         .Date("HH:mm:ss.SSS"),
+        .Level,
         .File(fullPath: false, fileExtension: false),
         .Function,
         .Line,
@@ -27,7 +27,7 @@ extension Themes {
     static let TomorrowNight = Theme(
         trace:   "#C5C8C6",
         debug:   "#81A2BE",
-        info:    "#B5BD68",
+        info:    "#CCCC48",
         warning: "#F0C674",
         error:   "#CC6666"
     )

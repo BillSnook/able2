@@ -118,7 +118,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
         do {
             let results = try managedObjectContext!.executeFetchRequest( fetch )
             if results.count > 1 {
-                Log.error( "\n\nError - results.count: \(results.count)\n\n" )
+                Log.error( "\n\nError - results.count: \(results.count)\n" )
             }
             if results.isEmpty {
                 storeEntry( peripheral, advertisementData: advertisementData, RSSI: RSSI, managedContext: managedObjectContext! )
@@ -135,7 +135,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
    
     func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
         
-        print("\n\nScanner didDisconnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n\n" )
+        Log.trace("\n\nScanner didDisconnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
 
     }
     

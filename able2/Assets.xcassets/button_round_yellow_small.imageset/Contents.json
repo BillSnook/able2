@@ -9,6 +9,10 @@
       "idiom" : "universal",
       "filename" : "button_round_yellow_small@2x.jpg",
       "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

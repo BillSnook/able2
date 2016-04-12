@@ -39,9 +39,10 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	var advertName: String?
 	
 	
-	@IBOutlet var connectionLabel: UILabel?
-	@IBOutlet var activityIndicator: UIActivityIndicatorView?
-	@IBOutlet var connectionIndicator: UIImageView?
+	@IBOutlet weak var connectionLabel: UILabel?
+    @IBOutlet weak var connectionUUID: UILabel!
+	@IBOutlet weak var activityIndicator: UIActivityIndicatorView?
+	@IBOutlet weak var connectionIndicator: UIImageView?
 
 	
 //--	----	----	----	----	----	----	----
@@ -56,6 +57,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 			navigationItem.title = name
 			connectionLabel!.text = "Connection to \(name)"
 		}
+        connectionUUID.text = perp?.mainUUID
 
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         interrogator.managedObjectContext = appDelegate.managedObjectContext
@@ -69,7 +71,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 		setIndicator( perp?.connectable?.boolValue )
 
         if let scanPerp = self.perp  {
-            print( "Start scan for \(scanPerp.mainUUID!)" )
+            Log.info( "Start scan for \(scanPerp.mainUUID!)" )
             interrogator.startScan( forDevices: [CBUUID(string: scanPerp.mainUUID!)] )
         }
     }
@@ -102,7 +104,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     //  MARK: - peripheralConnectionProtocol delegate methods
     
     func connectableState( connectable: Bool, forPeripheral peripheral: CBPeripheral ) {
-        print( "connectableState: connectable: \(connectable)" )
+        Log.trace( "connectableState: connectable: \(connectable)" )
         if ( connectable ) {
             activityIndicator!.startAnimating()
             connectionIndicator!.image = Indicator.yellow.image()
@@ -110,19 +112,17 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         } else {
             activityIndicator!.stopAnimating()
             connectionIndicator!.image = Indicator.red.image()
-            print( "Not Connectable" )
+            Log.info( "Not Connectable" )
         }
     }
     
     func connectionStatus( connected: Bool, forPeripheral peripheral: CBPeripheral ) {
-        print( "connectionStatus, connected: \(connected)" )
+        Log.trace( "connectionStatus, connected: \(connected)" )
         activityIndicator!.stopAnimating()
 //		interrogator.stopInterrogation() // ?? Is this needed ??
 		if connected {
             connectionIndicator!.image = Indicator.green.image()
 			updateConnection( peripheral )
-//			peripheral.delegate = self
-//			peripheral.discoverServices( nil )	// Search for all
         } else {
             connectionIndicator!.image = Indicator.yellow.image()
 			disconnectConnection( peripheral )
@@ -132,8 +132,11 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	
 	func updateConnection( peripheral: CBPeripheral ) {
 		
-		print( "updateConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
+		Log.trace( "updateConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
 
+        interrogator.startServiceDiscovery( peripheral )
+        
+        
 /*
 		case Disconnected = 0
 		case Connecting
@@ -145,28 +148,84 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	
 	func disconnectConnection( peripheral: CBPeripheral ) {
 		
-		print( "disconnectConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
+		Log.trace( "disconnectConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
 	}
 
     //  MARK: - UITableViewDelegate methods
     
+    override func numberOfSectionsInTableView( tableView: UITableView ) -> Int {
+        // Return the number of rows in the section.
+        return 0
+    }
+    
     internal override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-//        switch section {
-//        case 0:
-//            return 22.0;
-//            
-//        case 1:
-//            return 22.0;
-//            
-//        case 2:
-//            return 22.0;
-//            
-//        }
-        return 0.0;
+        switch section {
+        case 0:
+            return 22.0;
+            
+        case 1:
+            return 22.0;
+            
+        case 2:
+            return 22.0;
+        default:
+            return 0.0
+        }
     }
 
+    override func tableView( tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath ) -> CGFloat {
+        return 66.0
+    }
     
+    
+    //  MARK: - UITableViewSource methods
+
+    override func tableView( tableView: UITableView, numberOfRowsInSection section: NSInteger ) -> NSInteger {
+        // Return the number of rows in the section.
+        switch section {
+        case 0:
+            return 1
+        case 1:
+            return 0
+        case 2:
+            return 0
+        default:
+            return 0
+        }
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath ) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier( "centralServiceCell", forIndexPath: indexPath ) as! ServiceCell
+        
+        switch indexPath.section {
+        case 0:
+            configureMainService( cell, atIndexPath: indexPath )
+            return cell
+        case 1:
+            return cell
+        case 2:
+            return cell
+        default:
+            return cell
+        }
+    }
+
+    func configureMainService( cell: ServiceCell, atIndexPath indexPath: NSIndexPath ) {
+        let name = perp!.name
+        if ( ( name == nil ) || ( name!.characters.count == 0 ) ) {
+            cell.nameField.text = name
+        } else {
+            let prefix = name![name!.startIndex]
+            if prefix == "~" {
+                cell.nameField.text = name!.substringFromIndex(name!.startIndex.successor())
+            } else {
+                cell.nameField.text = name
+            }
+        }
+        cell.IDField.text = perp!.mainUUID
+        
+    }
 /*
     func testit() {
         
@@ -213,10 +272,6 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         
     }
 */
-    
-    
-    //  MARK: - UITableViewSource methods
-    
     
     
 
