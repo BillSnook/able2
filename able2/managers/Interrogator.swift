@@ -18,6 +18,9 @@ protocol peripheralConnectionProtocol {
     
     func servicesDiscovered( peripheral: CBPeripheral )
 
+    func includedServicesDiscovered( peripheral: CBPeripheral, forService service: CBService )
+    
+    func characteristicsDiscovered( peripheral: CBPeripheral, forService service: CBService )
 }
 
 
@@ -148,16 +151,17 @@ class Interrogator: Scanner, CBPeripheralDelegate {
     
 	override func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
     
-		Log.trace("\n\nInterrogator didDiscoverPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
+//		Log.trace("\n\nInterrogator didDiscoverPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
 		
         var found = false
         for uuid in deviceUUIDs! {
-            Log.info("Checking for: \(uuid), got: \(peripheral.identifier.UUIDString)" )
+//            Log.info("Checking for: \(uuid), got: \(peripheral.identifier.UUIDString)" )
             if uuid.UUIDString == peripheral.identifier.UUIDString {
                 found = true
             }
         }
         if found {
+            Log.trace("didDiscoverPeripheral, found UUID: \(peripheral.identifier.UUIDString)" )
             if let isConnectable = advertisementData[ "kCBAdvDataIsConnectable" ] as? NSNumber {
                 connectable = isConnectable.boolValue
             } else {
@@ -166,8 +170,8 @@ class Interrogator: Scanner, CBPeripheralDelegate {
             connectedPerp = peripheral
 			stopScan()		// Just find one
             delegate?.connectableState( connectable, forPeripheral: peripheral )
-        } else {
-            Log.info("Not the Peripheral we were looking for: \(scanUUID!.UUIDString), got: \(peripheral.identifier.UUIDString)" )
+//        } else {
+//            Log.info("Not the Peripheral we were looking for: \(scanUUID!.UUIDString), got: \(peripheral.identifier.UUIDString)" )
         }
 	}
 	
@@ -202,8 +206,8 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	
 	// Services were discovered
 	func peripheral( peripheral: CBPeripheral, didDiscoverServices error: NSError? ) {
-		
 		Log.trace("Interrogator didDiscoverServices" )
+		
 		if error != nil {
 			print( "Error discovering services: \(error!.localizedDescription)" )
 //			[self cleanup]
@@ -211,20 +215,15 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		}
 		
 		// Discover any included services and characteristics
-		Log.info( "Peripheral services discovered: \(peripheral.services)" )
 		
         delegate?.servicesDiscovered( peripheral )
         
+        for service in peripheral.services! {
+//            Log.info( "Peripheral service discovered: \(service)" )
+            peripheral.discoverIncludedServices( nil, forService: service )
+            peripheral.discoverCharacteristics( nil, forService: service )
+        }
         
-		// Loop through the newly filled peripheral.services array, just in case there's more than one.
-//		for service in peripheral.services! {  // CBService
-//            print( "Service discovered: \(service.peripheral.identifier)" )
-//            abService *abServ = [[abService alloc] initWithName: advertName andID: [service.UUID uuid2string] andService: service]
-//            [services addObject: abServ]
-//            [peripheral discoverIncludedServices: nil forService: service]
-////        [peripheral discoverCharacteristics: nil forService: service]
-//		}
-//		tableView.reloadData()
 	}
 	
 	
@@ -238,7 +237,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	
 	
 	func peripheral(peripheral: CBPeripheral, didDiscoverIncludedServicesForService service: CBService, error: NSError?) {
-		Log.trace("Interrogator didDiscoverIncludedServicesForService")
+//		Log.trace("Interrogator didDiscoverIncludedServicesForService")
 		
 		if (error != nil) {
 			Log.error( "Error discovering included services: \(error!.localizedDescription)" )
@@ -246,20 +245,15 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 			return
 		}
 		
-		Log.trace("Included Services discovered: \(service.includedServices)" )
-		// Loop through the newly filled peripheral.services array, just in case there's more than one.
-//		for serv in services! {
-////            if ( service.UUID.isEqual( serv.service.UUID ) ) {
-////                serv.subservices = service.includedServices
-////            }
-//		}
-//		self.tableView.reloadData()
-		
+//		Log.info("Included Services discovered: \(service.includedServices)" )
+
+        delegate?.includedServicesDiscovered( peripheral, forService: service )
+        
 	}
 	
 	
 	func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
-		Log.trace("Interrogator didDiscoverCharacteristicsForService")
+//		Log.trace("Interrogator didDiscoverCharacteristicsForService")
 		
 		if error != nil {
 			Log.error( "Error discovering characteristics: \(error!.localizedDescription)" )
@@ -267,15 +261,10 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 			return
 		}
 		
-		Log.trace( "Characteristics discovered: \(service.characteristics)" )
-		// Loop through the newly filled peripheral.services array, just in case there's more than one.
-//		for serv in services! {
-////            if ( service.isEqual( serv.service ) ) {
-////                serv.characteristics = [NSMutableArray arrayWithArray: service.characteristics]
-////            }
-//		}
-//		self.tableView.reloadData()
-		
+//		Log.info( "Characteristics discovered: \(service.characteristics)" )
+
+        delegate?.characteristicsDiscovered( peripheral, forService: service )
+
 	}
 	
 	

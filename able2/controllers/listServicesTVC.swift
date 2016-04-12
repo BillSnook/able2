@@ -31,6 +31,8 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	var interrogator: Interrogator = Interrogator.sharedInterrogator
 	
 	var connected = false
+    
+    var selectedService = -1
 	
     var services: [CBService]?
 	
@@ -67,6 +69,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear( animated )
 		
+        selectedService = -1
 		activityIndicator!.stopAnimating()
 		setIndicator( perp?.connectable?.boolValue )
 
@@ -131,13 +134,51 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     
     func servicesDiscovered( peripheral: CBPeripheral ) {
         
-        Log.trace( "servicesDiscovered with \(peripheral.services?.count) services" )
+//        Log.trace( "servicesDiscovered with \(peripheral.services?.count) services" )
         
         services = peripheral.services
         
         tableView.reloadData()
         
     }
+    
+    func includedServicesDiscovered( peripheral: CBPeripheral, forService service: CBService ) {
+
+//        Log.trace( "includedServicesDiscovered for \(service.UUID.UUIDString)" )
+        
+        services = peripheral.services
+        
+        tableView.reloadData()
+        
+    }
+ 
+    func characteristicsDiscovered( peripheral: CBPeripheral, forService service: CBService ) {
+
+//        Log.trace( "characteristicsDiscovered for \(service.UUID.UUIDString)" )
+        
+        services = peripheral.services
+        
+//        for service in peripheral.services! {
+//            Log.info( "service: \(service.description)" )
+//            if let includeds = service.includedServices {
+//                for included in includeds {
+//                    Log.info( "  includedService: \(included.description)" )
+//                }
+//            } else {
+//                Log.info( "  includedService: none" )
+//            }
+//            if let characteristics = service.characteristics {
+//                for characteristic in characteristics {
+//                    Log.info( "  characteristic: \(characteristic.description)" )
+//                }
+//            } else {
+//                Log.info( "  characteristic: none" )
+//            }
+//        }
+        tableView.reloadData()
+        
+    }
+ 
     
 //--    ----    ----    ----
 	
@@ -166,8 +207,12 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     //  MARK: - UITableViewDelegate methods
     
     override func numberOfSectionsInTableView( tableView: UITableView ) -> Int {
-        // Return the number of rows in the section.
-        return 1
+        // Return the number of section.
+        if selectedService >= 0 {
+            return 3
+        } else {
+            return 1
+        }
     }
     
     internal override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -190,8 +235,31 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         return 66.0
     }
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if indexPath.section == 0 {
+            selectedService = indexPath.row
+            tableView.reloadData()
+        }
+    }
+
     
     //  MARK: - UITableViewSource methods
+
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    
+        switch section {
+        case 0:
+            return "Services"
+        case 1:
+            return "Included Services"
+        case 2:
+            return "Characteristics"
+        default:
+            return ""
+        }
+
+    }
 
     override func tableView( tableView: UITableView, numberOfRowsInSection section: NSInteger ) -> NSInteger {
         // Return the number of rows in the section.
@@ -205,29 +273,36 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         case 1:
             return 0
         case 2:
-            return 0
+            if selectedService >= 0 {
+                let service = services![selectedService]
+                if let characteristics = service.characteristics {
+                    return characteristics.count
+                }
+                return 0
+            } else {
+                return 0
+            }
         default:
             return 0
         }
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath ) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier( "centralServiceCell", forIndexPath: indexPath ) as! ServiceCell
         
         switch indexPath.section {
         case 0:
-            configureMainService( cell, atIndexPath: indexPath )
-            return cell
+            return configureMainService( indexPath )
         case 1:
-            return cell
+            return configureMainService( indexPath )
         case 2:
-            return cell
+            return configureCharacteristics( indexPath )
         default:
-            return cell
+            return configureMainService( indexPath )
         }
     }
 
-    func configureMainService( cell: ServiceCell, atIndexPath indexPath: NSIndexPath ) {
+    func configureMainService( indexPath: NSIndexPath ) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier( "centralServiceCell", forIndexPath: indexPath ) as! ServiceCell
         let service = services![indexPath.row]
         let name = service.peripheral.name
         if ( ( name == nil ) || ( name!.characters.count == 0 ) ) {
@@ -244,17 +319,68 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         cell.primaryIndicator.text = service.isPrimary ? "Primary" : "Secondary"
         let servicesCount = service.includedServices?.count
         if servicesCount > 0 {
-            cell.servicesCount.text = "\(servicesCount) services"
+            cell.servicesCount.text = "\(servicesCount!) services"
         } else {
             cell.servicesCount.text = "No services"
         }
         let characteristicCount = service.characteristics?.count
         if characteristicCount > 0 {
-            cell.characteristicsCount.text = "\(characteristicCount) characteristics"
+            cell.characteristicsCount.text = "\(characteristicCount!) characteristics"
         } else {
             cell.characteristicsCount.text = "No characteristics"
         }
+        return cell
     }
+    
+    func configureCharacteristics( indexPath: NSIndexPath ) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier( "centralDisplayCharacteristic", forIndexPath: indexPath ) as! CharacteristicCell
+        let service = services![selectedService]
+        if let characteristics = service.characteristics {
+            Log.info( "indexPath.row: \(indexPath.row), characteristics.count = \(characteristics.count)" )
+            cell.nameField.text = characteristics[indexPath.row].UUID.UUIDString
+            let properties = characteristics[indexPath.row].properties
+            Log.info( "properties: \(properties)" )
+            let rawProperties = properties.rawValue
+            var propString = ""
+            if ( CBCharacteristicProperties.Broadcast.rawValue & rawProperties ) == CBCharacteristicProperties.Broadcast.rawValue {
+                propString += "Broadcast "
+            }
+            if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) == CBCharacteristicProperties.Read.rawValue {
+                propString += "Read "
+            }
+            if ( CBCharacteristicProperties.WriteWithoutResponse.rawValue & rawProperties ) == CBCharacteristicProperties.WriteWithoutResponse.rawValue {
+                propString += "WriteWithoutResponse "
+            }
+            if ( CBCharacteristicProperties.Write.rawValue & rawProperties ) == CBCharacteristicProperties.Write.rawValue {
+                propString += "Write "
+            }
+            if ( CBCharacteristicProperties.Notify.rawValue & rawProperties ) == CBCharacteristicProperties.Notify.rawValue {
+                propString += "Notify "
+            }
+            if ( CBCharacteristicProperties.Indicate.rawValue & rawProperties ) == CBCharacteristicProperties.Indicate.rawValue {
+                propString += "Indicate "
+            }
+            if ( CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue & rawProperties ) == CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue {
+                propString += "AuthenticatedSignedWrites "
+            }
+            if ( CBCharacteristicProperties.ExtendedProperties.rawValue & rawProperties ) == CBCharacteristicProperties.ExtendedProperties.rawValue {
+                propString += "ExtendedProperties "
+            }
+            cell.propertiesField.text = propString
+        }
+        
+        return cell
+    }
+    
+//    func checkProperty( bit: CBCharacteristicProperties, rawProperties: UInt ) {
+//        if ( bit.rawValue & rawProperties ) == bit.rawValue {
+//            propString += string + " "
+//        } else {
+//            
+//        }}
+//        
+//    }
+    
 /*
     func testit() {
         
