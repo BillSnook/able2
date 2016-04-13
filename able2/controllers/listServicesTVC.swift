@@ -56,19 +56,9 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 		clearsSelectionOnViewWillAppear = false
 		
 		if let name = perp?.name {
-            var cleanName = ""
-            if name.characters.count == 0 {
-                cleanName = "No name"
-            } else {
-                let prefix = name[name.startIndex]
-                if prefix == "~" {
-                    cleanName = name.substringFromIndex(name.startIndex.successor())
-                } else {
-                    cleanName = name
-                }
-            }
-			navigationItem.title = cleanName
-			connectionLabel!.text = "Connection to \(cleanName)"
+            let betterName = cleanName( name )
+			navigationItem.title = betterName
+			connectionLabel!.text = "Connection to \(betterName)"
         } else {
             navigationItem.title = "Missing Name"
             connectionLabel!.text = "Connection to unnamed device"
@@ -312,18 +302,8 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
             }
         }
     
-        let name = service.peripheral.name
-        if ( ( name == nil ) || ( name!.characters.count == 0 ) ) {
-            cell.nameField.text = name
-        } else {
-            let prefix = name![name!.startIndex]
-            if prefix == "~" {
-                cell.nameField.text = name!.substringFromIndex(name!.startIndex.successor())
-            } else {
-                cell.nameField.text = name
-            }
-        }
-        cell.IDField.text = service.UUID.UUIDString
+        cell.nameField.text = cleanName( service.peripheral.name )
+        cell.IDField.text = bluetoothUUID( service.UUID.UUIDString )
         cell.primaryIndicator.text = service.isPrimary ? "Primary" : "Secondary"
         let servicesCount = service.includedServices?.count
         if servicesCount > 0 {
@@ -353,7 +333,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         let service = services![selectedService]
         if let characteristics = service.characteristics {
             Log.info( "indexPath.row: \(indexPath.row), characteristics.count = \(characteristics.count)" )
-            cell.nameField.text = characteristics[indexPath.row].UUID.UUIDString
+            cell.nameField.text = bluetoothUUID( characteristics[indexPath.row].UUID.UUIDString )
             let properties = characteristics[indexPath.row].properties
             Log.info( "properties: \(properties)" )
             let rawProperties = properties.rawValue

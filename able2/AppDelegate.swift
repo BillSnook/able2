@@ -33,8 +33,38 @@ extension Themes {
     )
 }
 
+func bluetoothUUID( uuidString: String ) -> String {
+//    if uuidString.lengthOfBytesUsingEncoding( NSUTF8StringEncoding ) == 4 {
+        if let name = bluetoothNames[uuidString] {
+            return name
+        } else {
+            return uuidString
+        }
+//    } else {
+//        return = uuidString
+//    }
+}
+
+func cleanName( name: String? ) -> String {
+    
+    guard name != nil else {
+        return "Name nil"
+    }
+    guard name!.characters.count != 0 else {
+        return "No name"
+    }
+    let prefix = name![name!.startIndex]
+    if prefix == "~" {
+        return name!.substringFromIndex(name!.startIndex.successor())
+    } else {
+        return name!
+    }
+}
+
 
 let Log = Logger( formatter: .Constrained, theme: .MobileForming )
+
+var bluetoothNames = Dictionary<String, String>()
 
 
 protocol SubstitutableDetailViewProtocol {
@@ -65,6 +95,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        bluetoothNames["180A"] = ""
+        bluetoothNames["2A24"] = "Model Number String"
+        bluetoothNames["2A29"] = "Manufacturer Name String"
 
         return true
     }

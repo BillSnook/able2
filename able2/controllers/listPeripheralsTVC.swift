@@ -157,17 +157,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     
     func configureCell( cell: PeripheralCell, atIndexPath indexPath: NSIndexPath ) {
         let peripheralEntity = fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral
-        let name = peripheralEntity.name
-        if ( ( name == nil ) || ( name!.characters.count == 0 ) ) {
-            cell.peripheralName.text = "Missing name"
-        } else {
-            let prefix = name![name!.startIndex]
-            if prefix == "~" {
-                cell.peripheralName.text = name!.substringFromIndex(name!.startIndex.successor())
-            } else {
-                cell.peripheralName.text = name
-            }
-        }
+        cell.peripheralName.text = cleanName( peripheralEntity.name! )
         cell.peripheralIdentifier.text = peripheralEntity.mainUUID
         
         let sightings = peripheralEntity.sightings as! Set<Sighting>?
