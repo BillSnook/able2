@@ -77,6 +77,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
             Log.info( "Start scan for \(scanPerp.mainUUID!)" )
             interrogator.startScan( forDevices: [CBUUID(string: scanPerp.mainUUID!)] )
         }
+        
     }
 	
 	override func viewWillDisappear(animated: Bool) {
@@ -158,23 +159,6 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         
         services = peripheral.services
         
-//        for service in peripheral.services! {
-//            Log.info( "service: \(service.description)" )
-//            if let includeds = service.includedServices {
-//                for included in includeds {
-//                    Log.info( "  includedService: \(included.description)" )
-//                }
-//            } else {
-//                Log.info( "  includedService: none" )
-//            }
-//            if let characteristics = service.characteristics {
-//                for characteristic in characteristics {
-//                    Log.info( "  characteristic: \(characteristic.description)" )
-//                }
-//            } else {
-//                Log.info( "  characteristic: none" )
-//            }
-//        }
         tableView.reloadData()
         
     }
@@ -209,7 +193,11 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     override func numberOfSectionsInTableView( tableView: UITableView ) -> Int {
         // Return the number of section.
         if selectedService >= 0 {
-            return 3
+            if services![selectedService].includedServices!.count > 0 {
+                return 3
+            } else {
+                return 2
+            }
         } else {
             return 1
         }
@@ -217,18 +205,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     
     internal override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        switch section {
-        case 0:
-            return 22.0;
-            
-        case 1:
-            return 22.0;
-            
-        case 2:
-            return 22.0;
-        default:
-            return 0.0
-        }
+        return 30.0;
     }
 
     override func tableView( tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath ) -> CGFloat {
@@ -252,9 +229,9 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         case 0:
             return "Services"
         case 1:
-            return "Included Services"
-        case 2:
             return "Characteristics"
+        case 2:
+            return "Included Services"
         default:
             return ""
         }
@@ -271,12 +248,20 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
                 return 0
             }
         case 1:
-            return 0
-        case 2:
             if selectedService >= 0 {
                 let service = services![selectedService]
                 if let characteristics = service.characteristics {
                     return characteristics.count
+                }
+                return 0
+            } else {
+                return 0
+            }
+        case 2:
+            if selectedService >= 0 {
+                let service = services![selectedService]
+                if let included = service.includedServices {
+                    return included.count
                 }
                 return 0
             } else {
@@ -293,9 +278,9 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         case 0:
             return configureMainService( indexPath )
         case 1:
-            return configureMainService( indexPath )
-        case 2:
             return configureCharacteristics( indexPath )
+        case 2:
+            return configureMainService( indexPath )
         default:
             return configureMainService( indexPath )
         }
@@ -303,7 +288,15 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 
     func configureMainService( indexPath: NSIndexPath ) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier( "centralServiceCell", forIndexPath: indexPath ) as! ServiceCell
-        let service = services![indexPath.row]
+        var service = services![indexPath.row]
+        if indexPath.section != 0 {
+            if let included = service.includedServices {
+                if indexPath.row < included.count {
+                    service = included[indexPath.row]
+                }
+            }
+        }
+    
         let name = service.peripheral.name
         if ( ( name == nil ) || ( name!.characters.count == 0 ) ) {
             cell.nameField.text = name
@@ -319,13 +312,21 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         cell.primaryIndicator.text = service.isPrimary ? "Primary" : "Secondary"
         let servicesCount = service.includedServices?.count
         if servicesCount > 0 {
-            cell.servicesCount.text = "\(servicesCount!) services"
+            if servicesCount > 1 {
+                cell.servicesCount.text = "\(servicesCount!) included services"
+            } else {
+                cell.servicesCount.text = "1 included service"
+            }
         } else {
-            cell.servicesCount.text = "No services"
+            cell.servicesCount.text = "No included services"
         }
         let characteristicCount = service.characteristics?.count
         if characteristicCount > 0 {
-            cell.characteristicsCount.text = "\(characteristicCount!) characteristics"
+            if characteristicCount > 1 {
+                cell.characteristicsCount.text = "\(characteristicCount!) characteristics"
+            } else {
+                cell.characteristicsCount.text = "1 characteristic"
+            }
         } else {
             cell.characteristicsCount.text = "No characteristics"
         }

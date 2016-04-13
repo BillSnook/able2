@@ -6,7 +6,7 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Peripheral List-->
+        <!--Peripherals-->
         <scene sceneID="HJr-KL-yXT">
             <objects>
                 <tableViewController storyboardIdentifier="peripheralList" id="zLd-Kf-47E" customClass="listPeripheralsTVC" customModule="able2" customModuleProvider="target" sceneMemberID="viewController">
@@ -103,7 +103,7 @@
                             <outlet property="delegate" destination="zLd-Kf-47E" id="CXK-Ee-kkl"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Peripheral List" id="e0u-7z-1LV">
+                    <navigationItem key="navigationItem" title="Peripherals" id="e0u-7z-1LV">
                         <barButtonItem key="rightBarButtonItem" title="---" id="SA1-d0-8qX">
                             <connections>
                                 <action selector="clearData:" destination="zLd-Kf-47E" id="Lbr-mV-iXC"/>
@@ -270,7 +270,7 @@
             </objects>
             <point key="canvasLocation" x="635" y="-358"/>
         </scene>
-        <!--Perp Services-->
+        <!--Services-->
         <scene sceneID="2MK-Zf-pDi">
             <objects>
                 <tableViewController storyboardIdentifier="servicesList" id="aR8-Hn-RD9" customClass="ListServicesTVC" customModule="able2" customModuleProvider="target" sceneMemberID="viewController">
@@ -279,7 +279,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="enA-aX-Yb5">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
+                            <rect key="frame" x="0.0" y="64" width="320" height="66"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connection to Peripheral" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fCn-QV-e64">
@@ -331,7 +331,7 @@
                         </view>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="centralServiceCell" rowHeight="66" id="50Y-ls-smq" customClass="ServiceCell" customModule="able2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="88" width="320" height="66"/>
+                                <rect key="frame" x="0.0" y="152" width="320" height="66"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="50Y-ls-smq" id="ePh-AS-AXG">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
@@ -364,43 +364,39 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No subservices" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xbe-p9-xzy">
-                                            <rect key="frame" x="20" y="44" width="120" height="21"/>
+                                            <rect key="frame" x="20" y="44" width="157" height="21"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="Jbv-Yl-rQt"/>
-                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No characteristics" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VAT-Na-J9Z">
-                                            <rect key="frame" x="170" y="44" width="130" height="21"/>
+                                            <rect key="frame" x="176" y="44" width="124" height="21"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="u6D-LK-tTr"/>
+                                                <constraint firstAttribute="height" constant="21" id="Hxu-Cv-Wwx"/>
+                                                <constraint firstAttribute="width" constant="124" id="xJR-w7-8U6"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="VAT-Na-J9Z" firstAttribute="leading" secondItem="xbe-p9-xzy" secondAttribute="trailing" constant="30" id="6hN-9S-aoa"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="VAT-Na-J9Z" secondAttribute="trailing" constant="12" id="ARu-xR-EBz"/>
-                                        <constraint firstItem="VAT-Na-J9Z" firstAttribute="width" secondItem="xbe-p9-xzy" secondAttribute="width" constant="10" id="CyH-ag-HjU"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="r9I-hM-naQ" secondAttribute="trailing" constant="12" id="EGa-3G-Y9J"/>
                                         <constraint firstItem="MGV-zK-2kj" firstAttribute="leading" secondItem="ePh-AS-AXG" secondAttribute="leadingMargin" constant="12" id="EvP-4x-een"/>
-                                        <constraint firstItem="xbe-p9-xzy" firstAttribute="leading" secondItem="ePh-AS-AXG" secondAttribute="leadingMargin" constant="12" id="H16-yb-JPz"/>
+                                        <constraint firstItem="VAT-Na-J9Z" firstAttribute="leading" secondItem="xbe-p9-xzy" secondAttribute="trailing" constant="-1" id="ImJ-cA-WDw"/>
                                         <constraint firstItem="r9I-hM-naQ" firstAttribute="leading" secondItem="MGV-zK-2kj" secondAttribute="trailing" constant="8" id="MBR-aP-3EK"/>
+                                        <constraint firstItem="xbe-p9-xzy" firstAttribute="top" secondItem="MGV-zK-2kj" secondAttribute="bottom" constant="21" id="OeW-nU-V40"/>
+                                        <constraint firstAttribute="bottom" secondItem="VAT-Na-J9Z" secondAttribute="bottom" constant="1" id="R9D-Ng-DjI"/>
                                         <constraint firstItem="qUP-HO-jrX" firstAttribute="leading" secondItem="ePh-AS-AXG" secondAttribute="leadingMargin" constant="12" id="UeV-Mq-3Ic"/>
+                                        <constraint firstItem="xbe-p9-xzy" firstAttribute="leading" secondItem="ePh-AS-AXG" secondAttribute="leading" constant="20" id="ZIC-uE-mtc"/>
                                         <constraint firstItem="MGV-zK-2kj" firstAttribute="top" secondItem="ePh-AS-AXG" secondAttribute="topMargin" constant="-6" id="ayb-ya-ONg"/>
                                         <constraint firstItem="qUP-HO-jrX" firstAttribute="top" secondItem="r9I-hM-naQ" secondAttribute="bottom" constant="1" id="iQM-WR-U7E"/>
                                         <constraint firstItem="r9I-hM-naQ" firstAttribute="top" secondItem="ePh-AS-AXG" secondAttribute="topMargin" constant="-6" id="lsT-jd-Xlc"/>
                                         <constraint firstAttribute="trailingMargin" secondItem="qUP-HO-jrX" secondAttribute="trailing" constant="12" id="nYC-Ga-kw5"/>
+                                        <constraint firstAttribute="bottom" secondItem="xbe-p9-xzy" secondAttribute="bottom" constant="1" id="tF3-ZQ-pej"/>
+                                        <constraint firstAttribute="trailing" secondItem="VAT-Na-J9Z" secondAttribute="trailing" constant="20" id="wIh-f9-RWr"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="VAT-Na-J9Z" secondAttribute="bottom" constant="1" id="2os-we-ZiY"/>
-                                    <constraint firstAttribute="bottom" secondItem="xbe-p9-xzy" secondAttribute="bottom" constant="1" id="fIS-M6-O8q"/>
-                                </constraints>
                                 <connections>
                                     <outlet property="IDField" destination="qUP-HO-jrX" id="akk-OG-rkJ"/>
                                     <outlet property="characteristicsCount" destination="VAT-Na-J9Z" id="vRW-XT-Rjx"/>
@@ -409,19 +405,11 @@
                                     <outlet property="servicesCount" destination="xbe-p9-xzy" id="7tl-dx-gy0"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="centralDisplaySubservice" rowHeight="66" id="VYM-1u-x2Y">
-                                <rect key="frame" x="0.0" y="154" width="320" height="66"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VYM-1u-x2Y" id="VSp-8b-tza">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="centralDisplayCharacteristic" rowHeight="66" id="Oue-Ta-2wX" customClass="CharacteristicCell" customModule="able2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="220" width="320" height="66"/>
+                                <rect key="frame" x="0.0" y="218" width="320" height="66"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Oue-Ta-2wX" id="BLV-8u-NDU">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="65.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="66"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00000000-0000-0000-0000-000000000000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zob-6q-6K1">
@@ -461,7 +449,10 @@
                             <outlet property="delegate" destination="aR8-Hn-RD9" id="dBA-Pl-Vti"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Perp Services" id="6op-iW-sP9"/>
+                    <navigationItem key="navigationItem" title="Services" id="6op-iW-sP9">
+                        <barButtonItem key="rightBarButtonItem" title="Connect" id="cSf-GB-nr2"/>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="activityIndicator" destination="k2p-KW-eYK" id="Ojp-an-4lC"/>

@@ -13,7 +13,7 @@ import Log
 
 
 extension Formatters {
-    static let Constrained = Formatter("[%@] %@ | %@.%@:%@ %@", [
+    static let Constrained = Formatter("[%@] %@ | %@.%@:%@\t\t%@", [
         .Date("HH:mm:ss.SSS"),
         .Level,
         .File(fullPath: false, fileExtension: false),
@@ -24,17 +24,17 @@ extension Formatters {
 }
 
 extension Themes {
-    static let TomorrowNight = Theme(
-        trace:   "#C5C8C6",
-        debug:   "#81A2BE",
-        info:    "#CCCC48",
-        warning: "#F0C674",
-        error:   "#CC6666"
+    static let MobileForming = Theme(
+        trace:   "#AAAAAA",
+        debug:   "#44AAAA",
+        info:    "#44CC44",
+        warning: "#CC6666",
+        error:   "#EE4444"
     )
 }
 
 
-let Log = Logger( formatter: .Constrained, theme: .Tomorrow )
+let Log = Logger( formatter: .Constrained, theme: .MobileForming )
 
 
 protocol SubstitutableDetailViewProtocol {
