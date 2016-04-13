@@ -450,12 +450,17 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Services" id="6op-iW-sP9">
-                        <barButtonItem key="rightBarButtonItem" title="Connect" id="cSf-GB-nr2"/>
+                        <barButtonItem key="rightBarButtonItem" title="Connect" id="cSf-GB-nr2">
+                            <connections>
+                                <action selector="doConnect:" destination="aR8-Hn-RD9" id="Fyb-cp-YI3"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="activityIndicator" destination="k2p-KW-eYK" id="Ojp-an-4lC"/>
+                        <outlet property="connectButton" destination="cSf-GB-nr2" id="05e-fh-Xed"/>
                         <outlet property="connectionIndicator" destination="zDE-cp-yuP" id="mUb-Il-7SC"/>
                         <outlet property="connectionLabel" destination="fCn-QV-e64" id="vs3-e1-OAk"/>
                         <outlet property="connectionUUID" destination="4yL-wZ-knA" id="DFx-6a-Pjm"/>

@@ -39,7 +39,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
     
     var deviceUUIDs: [CBUUID]?
     
-    var scanUUID: CBUUID?
+//    var scanUUID: CBUUID?
 
 
 	required init() {
@@ -74,7 +74,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
             }
             Log.trace( "Interrogator starting scanning" )
 			scanRunning = true
-            scanUUID = deviceList![0]
+//            scanUUID = deviceList![0]
 			cbManager.scanForPeripheralsWithServices( nil, options: nil )	// Search for specific services
 		} else {
             Log.warning( "Interrogator scan requested but state wrong: \(cbManager.state.rawValue)" )
@@ -167,7 +167,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
             } else {
                 connectable = false
             }
-            connectedPerp = peripheral
+            connectingPerp = peripheral
 			stopScan()		// Just find one
             delegate?.connectableState( connectable, forPeripheral: peripheral )
 //        } else {
@@ -191,6 +191,8 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         Log.trace("\n\nInterrogator didConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
         connecting = false
         connected = true
+        connectingPerp = nil
+        connectedPerp = peripheral
 		delegate?.connectionStatus( true, forPeripheral: peripheral )
     }
 	
@@ -199,6 +201,8 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         Log.trace("\n\nInterrogator didFailToConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
         connecting = false
         connected = false
+        connectingPerp = nil
+        connectedPerp = nil
         delegate?.connectionStatus( false, forPeripheral: peripheral )
     }
 
