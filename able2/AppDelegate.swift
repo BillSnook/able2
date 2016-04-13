@@ -98,7 +98,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         bluetoothNames["180A"] = ""
         bluetoothNames["2A24"] = "Model Number String"
+        bluetoothNames["2A25"] = "Serial Number String"
+        bluetoothNames["2A26"] = "Firmware Revision String"
+        bluetoothNames["2A27"] = "Hardware Revision String"
+        bluetoothNames["2A28"] = "Software Revision String"
         bluetoothNames["2A29"] = "Manufacturer Name String"
+        
+        bluetoothNames["8667556C-9A37-4C91-84ED-54EE27D90049"] = "Continuity"
 
         return true
     }

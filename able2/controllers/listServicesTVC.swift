@@ -55,7 +55,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		clearsSelectionOnViewWillAppear = false
+		clearsSelectionOnViewWillAppear = true
 		
 		if let name = perp?.name {
             let betterName = cleanName( name )
@@ -72,7 +72,6 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         interrogator.managedObjectContext = appDelegate.managedObjectContext
         interrogator.delegate = self
 
-        connectButton.enabled = false
 }
 
 	override func viewWillAppear(animated: Bool) {
@@ -80,13 +79,15 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 		
         selectedService = -1
 		activityIndicator!.stopAnimating()
-		setIndicator( perp?.connectable?.boolValue )
+        connected = false
+		setIndicator( false )
 
         if let scanPerp = self.perp  {
             if interrogator.connected {
                 Log.info( "Already connected to \(scanPerp.mainUUID!)" )
             } else {
                 Log.info( "Start scan for \(scanPerp.mainUUID!)" )
+                activityIndicator!.startAnimating()
                 interrogator.startScan( forDevices: [CBUUID(string: scanPerp.mainUUID!)] )
             }
         }
@@ -110,6 +111,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
                     connectButton.enabled = false
 				} else {
 					connectionIndicator!.image = Indicator.yellow.image()
+//                    Log.error( "Enabling connectButton" )
                     connectButton.enabled = true
 				}
 			} else {
@@ -136,7 +138,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     //  MARK: - peripheralConnectionProtocol delegate methods
     
     func connectableState( connectable: Bool, forPeripheral peripheral: CBPeripheral ) {
-        Log.trace( "connectableState: connectable: \(connectable)" )
+        Log.trace( "connectableState: connectable: \(connectable), peripheral: \(peripheral.identifier.UUIDString)" )
         if ( connectable ) {
             activityIndicator!.startAnimating()
             self.connectedPerp = peripheral
@@ -145,7 +147,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
             activityIndicator!.stopAnimating()
             Log.info( "Not Connectable" )
         }
-        setIndicator( connectable )
+//        setIndicator( connectable )
     }
     
     func connectionStatus( connected: Bool, forPeripheral peripheral: CBPeripheral ) {
@@ -153,7 +155,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         activityIndicator!.stopAnimating()
 //		interrogator.stopInterrogation() // ?? Is this needed ??
         self.connected = connected
-        setIndicator( true )
+        setIndicator( connected )
 		if connected {
 			updateConnection( peripheral )
         } else {
@@ -205,17 +207,25 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	func disconnectConnection( peripheral: CBPeripheral ) {
 		
 		Log.trace( "disconnectConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
+
+        connected = false
+        selectedService = -1
+        setIndicator( true )
+        
+        services = nil
+        
+        tableView.reloadData()
 	}
 
     
     //  MARK: - UITableViewDelegate methods
     
     override func numberOfSectionsInTableView( tableView: UITableView ) -> Int {
-        // Return the number of section.
-        guard selectedService >= 0 else {
-            return 1
-        }
+        // Return the number of sections
         guard services != nil && selectedService < services!.count else {
+            return 0
+        }
+        guard selectedService >= 0 else {
             return 1
         }
         if services![selectedService].includedServices != nil && services![selectedService].includedServices!.count > 0 {
@@ -237,8 +247,10 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         if indexPath.section == 0 {
-            selectedService = indexPath.row
-            tableView.reloadData()
+            if connected {
+                selectedService = indexPath.row
+                tableView.reloadData()
+            }
         }
     }
 

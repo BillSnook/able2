@@ -56,7 +56,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 
     func startScan( forDevices deviceList: [CBUUID]? ) {
 		
-        Log.trace( "Interrogator startScan for \(deviceList)" )
+        Log.trace( "Interrogator startScan for \(deviceList!)" )
 		// We may want to get duplicates
 		//	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool: NO], CBCentralManagerScanOptionAllowDuplicatesKey, nil]
         deviceUUIDs = deviceList
@@ -83,7 +83,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	
 	
 	func startInterrogation( forDevice device: CBPeripheral ) {
-        Log.trace( "Interrogator startInterrogation" )
+        Log.trace( "Interrogator startInterrogation for \(device.identifier.UUIDString)" )
 
         if ( .PoweredOn == cbManager.state ) {
             stopScan()
@@ -99,12 +99,18 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		
 		if ( .PoweredOn == cbManager.state ) {
             if connecting || connected {
-                if let connectingPerpipheral = connectingPerp {
+                if connectingPerp != nil {
                     Log.info( "Stopping trying to connect" )
-                    cbManager.cancelPeripheralConnection( connectingPerpipheral )
-                    connected = false
-                    connecting = false
+                    cbManager.cancelPeripheralConnection( connectingPerp! )
+                    connectingPerp = nil
+                } else if connectedPerp != nil {
+                    Log.info( "Cancel connection" )
+                    cbManager.cancelPeripheralConnection( connectedPerp! )
+                    connectedPerp = nil
                 }
+                connected = false
+                connecting = false
+                
             }
 		}
 	}
