@@ -10,6 +10,7 @@ end
 
 target 'able2Tests' do
 
+    pod 'Log'
 
 end
 

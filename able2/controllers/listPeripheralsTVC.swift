@@ -232,7 +232,7 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "toServices" {
-            NSLog( "toServices" )
+//            Log.info( "Segue toServices" )
             scanner.stopScan()
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let peripheral = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral

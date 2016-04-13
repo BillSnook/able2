@@ -56,9 +56,24 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 		clearsSelectionOnViewWillAppear = false
 		
 		if let name = perp?.name {
-			navigationItem.title = name
-			connectionLabel!.text = "Connection to \(name)"
-		}
+            var cleanName = ""
+            if name.characters.count == 0 {
+                cleanName = "No name"
+            } else {
+                let prefix = name[name.startIndex]
+                if prefix == "~" {
+                    cleanName = name.substringFromIndex(name.startIndex.successor())
+                } else {
+                    cleanName = name
+                }
+            }
+			navigationItem.title = cleanName
+			connectionLabel!.text = "Connection to \(cleanName)"
+        } else {
+            navigationItem.title = "Missing Name"
+            connectionLabel!.text = "Connection to unnamed device"
+
+        }
         connectionUUID.text = perp?.mainUUID
 
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate

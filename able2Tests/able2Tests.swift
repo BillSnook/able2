@@ -9,8 +9,34 @@
 import XCTest
 import CoreData
 import CoreBluetooth
+import Log
 
 @testable import able2
+
+
+extension Formatters {
+    static let Constrained = Formatter("[%@] %@ | %@.%@:%@\t\t%@", [
+        .Date("HH:mm:ss.SSS"),
+        .Level,
+        .File(fullPath: false, fileExtension: false),
+        .Function,
+        .Line,
+        .Message
+        ])
+}
+
+extension Themes {
+    static let MobileForming = Theme(
+        trace:   "#AAAAAA",
+        debug:   "#44AAAA",
+        info:    "#44CC44",
+        warning: "#CC6666",
+        error:   "#EE4444"
+    )
+}
+
+
+let Log = Logger( formatter: .Constrained, theme: .MobileForming )
 
 
 class able2Tests: XCTestCase {
@@ -21,9 +47,9 @@ class able2Tests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        let appDelegate = AppDelegate()
-        managedContext = appDelegate.managedObjectContext
-//        managedContext = setUpInMemoryManagedObjectContext()
+//        let appDelegate = AppDelegate()
+//        managedContext = appDelegate.managedObjectContext
+        managedContext = setUpInMemoryManagedObjectContext()
 
         deleteAllPeripherals(managedContext!)
 

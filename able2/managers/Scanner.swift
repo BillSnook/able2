@@ -141,7 +141,10 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     
 
     func storeEntry( peripheral: CBPeripheralProtocol, advertisementData: [String : AnyObject], RSSI: NSNumber, managedContext: NSManagedObjectContext ) {
-        let peripheralEntity =  NSEntityDescription.entityForName("Peripheral", inManagedObjectContext: managedContext)
+        let peripheralEntity = NSEntityDescription.entityForName("Peripheral", inManagedObjectContext: managedContext)
+        guard peripheralEntity != nil else {
+            return
+        }
         if let entry = NSManagedObject(entity: peripheralEntity!, insertIntoManagedObjectContext: managedContext) as? Peripheral {
             entry.mainUUID = peripheral.identifier.UUIDString
             if let name = peripheral.name {
