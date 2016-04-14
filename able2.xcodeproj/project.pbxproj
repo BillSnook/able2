@@ -273,8 +273,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A93B1AB31CA5AD46004F9B4F /* Build configuration list for PBXNativeTarget "able2" */;
 			buildPhases = (
-				192D58429D15E667C8A4B952 /* Check Pods Manifest.lock */,
 				822FAEEBB76CC3D6C659B056 /* 📦 Check Pods Manifest.lock */,
+				192D58429D15E667C8A4B952 /* Check Pods Manifest.lock */,
 				A93B1A821CA5AD46004F9B4F /* Sources */,
 				A93B1A831CA5AD46004F9B4F /* Frameworks */,
 				A93B1A841CA5AD46004F9B4F /* Resources */,
@@ -296,8 +296,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A93B1AB61CA5AD46004F9B4F /* Build configuration list for PBXNativeTarget "able2Tests" */;
 			buildPhases = (
-				0B5EDCE79077BCA7C8A0AA04 /* Check Pods Manifest.lock */,
 				EB55CF0322CFDA0C2FB34551 /* 📦 Check Pods Manifest.lock */,
+				0B5EDCE79077BCA7C8A0AA04 /* Check Pods Manifest.lock */,
 				A93B1A9B1CA5AD46004F9B4F /* Sources */,
 				A93B1A9C1CA5AD46004F9B4F /* Frameworks */,
 				A93B1A9D1CA5AD46004F9B4F /* Resources */,
@@ -320,8 +320,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A93B1AB91CA5AD46004F9B4F /* Build configuration list for PBXNativeTarget "able2UITests" */;
 			buildPhases = (
-				B348DDD64A8017A4BA41EC1B /* Check Pods Manifest.lock */,
 				9AB62590C3BC8B7F650D1B37 /* 📦 Check Pods Manifest.lock */,
+				B348DDD64A8017A4BA41EC1B /* Check Pods Manifest.lock */,
 				A93B1AA61CA5AD46004F9B4F /* Sources */,
 				A93B1AA71CA5AD46004F9B4F /* Frameworks */,
 				A93B1AA81CA5AD46004F9B4F /* Resources */,
