@@ -216,7 +216,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	
 	// Services were discovered
 	func peripheral( peripheral: CBPeripheral, didDiscoverServices error: NSError? ) {
-		Log.trace("Interrogator didDiscoverServices" )
+        Log.trace("Interrogator didDiscoverServices" )
 		
 		if error != nil {
 			print( "Error discovering services: \(error!.localizedDescription)" )
@@ -247,7 +247,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	
 	
 	func peripheral(peripheral: CBPeripheral, didDiscoverIncludedServicesForService service: CBService, error: NSError?) {
-//		Log.trace("Interrogator didDiscoverIncludedServicesForService")
+//      Log.trace("Interrogator didDiscoverIncludedServicesForService")
 		
 		if (error != nil) {
 			Log.error( "Error discovering included services: \(error!.localizedDescription)" )

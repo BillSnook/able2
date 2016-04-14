@@ -34,15 +34,11 @@ extension Themes {
 }
 
 func bluetoothUUID( uuidString: String ) -> String {
-//    if uuidString.lengthOfBytesUsingEncoding( NSUTF8StringEncoding ) == 4 {
-        if let name = bluetoothNames[uuidString] {
-            return name
-        } else {
-            return uuidString
-        }
-//    } else {
-//        return = uuidString
-//    }
+    if let name = bluetoothNames[uuidString] {
+        return name
+    } else {
+        return uuidString
+    }
 }
 
 func cleanName( name: String? ) -> String {
@@ -96,7 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
-        bluetoothNames["180A"] = ""
+        bluetoothNames["180A"] = "Device Information"
         bluetoothNames["2A24"] = "Model Number String"
         bluetoothNames["2A25"] = "Serial Number String"
         bluetoothNames["2A26"] = "Firmware Revision String"
@@ -105,6 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         bluetoothNames["2A29"] = "Manufacturer Name String"
         
         bluetoothNames["8667556C-9A37-4C91-84ED-54EE27D90049"] = "Continuity"
+        bluetoothNames["D0611E78-BBB4-4591-A5F8-487910AE4366"] = "Continuity"
 
         return true
     }

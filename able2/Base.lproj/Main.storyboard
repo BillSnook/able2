@@ -146,7 +146,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DrY-Bi-n04">
                                 <rect key="frame" x="40" y="112" width="240" height="44"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <accessibility key="accessibilityConfiguration" identifier="becomeCentral"/>
+                                <accessibility key="accessibilityConfiguration" identifier="becomeCentral" label="becomeCentral"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="QOp-wr-IsW"/>
                                     <constraint firstAttribute="width" constant="240" id="w58-rg-Eqy"/>

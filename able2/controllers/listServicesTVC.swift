@@ -178,6 +178,9 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 //        Log.trace( "includedServicesDiscovered for \(service.UUID.UUIDString)" )
         
         services = peripheral.services
+//        for index in 0..<services!.count {
+//            Log.info( "includedServicesDiscovered, services UUID \(index): \(services![index].UUID.UUIDString) - \(services![index])" )
+//        }
         
         tableView.reloadData()
         

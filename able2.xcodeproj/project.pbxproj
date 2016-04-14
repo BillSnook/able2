@@ -36,13 +36,13 @@
 		A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */; };
 		A9D44E781CB58D2A0065F9FA /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */; };
 		A9D44E821CB5D4C50065F9FA /* CBPeripheralMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E811CB5D4C50065F9FA /* CBPeripheralMock.swift */; };
-		A9D44E841CB6C6170065F9FA /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981659A1CA9A59300D0E65E /* Scanner.swift */; };
-		A9D44E861CB6C6730065F9FA /* Sighting+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */; };
-		A9D44E871CB6C6730065F9FA /* Sighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1901CAC500D004C1EF7 /* Sighting.swift */; };
-		A9D44E881CB6C6730065F9FA /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
-		A9D44E891CB6C6730065F9FA /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
-		A9D44E8A1CB6DB3E0065F9FA /* able2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A8B1CA5AD46004F9B4F /* able2.xcdatamodeld */; };
-		A9D44E8B1CB6ED510065F9FA /* Interrogator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9688ECB1CB19ED60036DA5E /* Interrogator.swift */; };
+		A9E72D6F1CBEF1CC00E7260C /* Sighting+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */; };
+		A9E72D701CBEF1CC00E7260C /* Sighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1901CAC500D004C1EF7 /* Sighting.swift */; };
+		A9E72D711CBEF1CC00E7260C /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
+		A9E72D721CBEF1CC00E7260C /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
+		A9E72D731CBEF20F00E7260C /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981659A1CA9A59300D0E65E /* Scanner.swift */; };
+		A9E72D741CBEF20F00E7260C /* Interrogator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9688ECB1CB19ED60036DA5E /* Interrogator.swift */; };
+		A9E72D751CBEF83800E7260C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,7 +80,6 @@
 		A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A93B1A8C1CA5AD46004F9B4F /* able2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = able2.xcdatamodel; sourceTree = "<group>"; };
 		A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		A93B1A901CA5AD46004F9B4F /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		A93B1A931CA5AD46004F9B4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A93B1A951CA5AD46004F9B4F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A93B1A981CA5AD46004F9B4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -200,7 +199,6 @@
 			children = (
 				A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */,
 				A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */,
-				A93B1A901CA5AD46004F9B4F /* DetailViewController.swift */,
 				A98165991CA9A58300D0E65E /* controllers */,
 				A981659C1CA9A59A00D0E65E /* managers */,
 				A925C67F1CAB4A1C00FAE766 /* cells */,
@@ -353,6 +351,7 @@
 					};
 					A93B1A9E1CA5AD46004F9B4F = {
 						CreatedOnToolsVersion = 7.3;
+						TestTargetID = A93B1A851CA5AD46004F9B4F;
 					};
 					A93B1AA91CA5AD46004F9B4F = {
 						CreatedOnToolsVersion = 7.3;
@@ -681,15 +680,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9E72D741CBEF20F00E7260C /* Interrogator.swift in Sources */,
+				A9E72D6F1CBEF1CC00E7260C /* Sighting+CoreDataProperties.swift in Sources */,
+				A9E72D721CBEF1CC00E7260C /* Peripheral.swift in Sources */,
+				A9E72D731CBEF20F00E7260C /* Scanner.swift in Sources */,
+				A9E72D711CBEF1CC00E7260C /* Peripheral+CoreDataProperties.swift in Sources */,
 				A9D44E781CB58D2A0065F9FA /* CoreDataHelper.swift in Sources */,
-				A9D44E891CB6C6730065F9FA /* Peripheral.swift in Sources */,
 				A93B1AA41CA5AD46004F9B4F /* able2Tests.swift in Sources */,
-				A9D44E871CB6C6730065F9FA /* Sighting.swift in Sources */,
-				A9D44E861CB6C6730065F9FA /* Sighting+CoreDataProperties.swift in Sources */,
-				A9D44E841CB6C6170065F9FA /* Scanner.swift in Sources */,
-				A9D44E881CB6C6730065F9FA /* Peripheral+CoreDataProperties.swift in Sources */,
-				A9D44E8B1CB6ED510065F9FA /* Interrogator.swift in Sources */,
-				A9D44E8A1CB6DB3E0065F9FA /* able2.xcdatamodeld in Sources */,
+				A9E72D701CBEF1CC00E7260C /* Sighting.swift in Sources */,
+				A9E72D751CBEF83800E7260C /* AppDelegate.swift in Sources */,
 				A9D44E821CB5D4C50065F9FA /* CBPeripheralMock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -859,6 +858,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/able2.app/able2";
 			};
 			name = Debug;
 		};
@@ -871,6 +871,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.billsnook.testx.able2Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/able2.app/able2";
 			};
 			name = Release;
 		};

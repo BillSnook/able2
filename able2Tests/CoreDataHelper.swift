@@ -15,6 +15,8 @@ import CoreData
 // To test CoreData, it helps to use the InMemoryStore type as it avoids some overhead from using SQLite as the store.
 func setUpInMemoryManagedObjectContext() -> NSManagedObjectContext {
     let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle.mainBundle()])!
+//    let modelURL = NSBundle.mainBundle().URLForResource("able2", withExtension: "momd")!
+//    let managedObjectModel =  NSManagedObjectModel(contentsOfURL: modelURL)!
     let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
     
     do {
