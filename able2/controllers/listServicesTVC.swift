@@ -137,8 +137,8 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     
     //  MARK: - peripheralConnectionProtocol delegate methods
     
-    func connectableState( connectable: Bool, forPeripheral peripheral: CBPeripheral ) {
-        Log.trace( "connectableState: connectable: \(connectable), peripheral: \(peripheral.identifier.UUIDString)" )
+    func foundPeripheral( peripheral: CBPeripheral, isConnectable connectable: Bool ) {
+        Log.trace( "foundPeripheral: connectable: \(connectable), peripheral: \(peripheral.identifier.UUIDString)" )
         if ( connectable ) {
             activityIndicator!.startAnimating()
             self.connectedPerp = peripheral
@@ -221,6 +221,22 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	}
 
     
+    // MARK: - Segues
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "toCharacteristics" {
+            Log.info( "Segue toCharacteristics" )
+            interrogator.stopScan()
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                let controller = segue.destinationViewController as! ShowCharacteristics
+                controller.serviceIndex = selectedService
+                controller.characteristicsIndex = indexPath.row
+                controller.peripheral = connectedPerp
+            }
+        }
+    }
+    
+
     //  MARK: - UITableViewDelegate methods
     
     override func numberOfSectionsInTableView( tableView: UITableView ) -> Int {
@@ -370,28 +386,28 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
             Log.info( "properties: \(properties)" )
             let rawProperties = properties.rawValue
             var propString = ""
-            if ( CBCharacteristicProperties.Broadcast.rawValue & rawProperties ) == CBCharacteristicProperties.Broadcast.rawValue {
+            if ( CBCharacteristicProperties.Broadcast.rawValue & rawProperties ) != 0 {
                 propString += "Broadcast "
             }
-            if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) == CBCharacteristicProperties.Read.rawValue {
+            if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) != 0 {
                 propString += "Read "
             }
-            if ( CBCharacteristicProperties.WriteWithoutResponse.rawValue & rawProperties ) == CBCharacteristicProperties.WriteWithoutResponse.rawValue {
+            if ( CBCharacteristicProperties.WriteWithoutResponse.rawValue & rawProperties ) != 0 {
                 propString += "WriteWithoutResponse "
             }
-            if ( CBCharacteristicProperties.Write.rawValue & rawProperties ) == CBCharacteristicProperties.Write.rawValue {
+            if ( CBCharacteristicProperties.Write.rawValue & rawProperties ) != 0 {
                 propString += "Write "
             }
-            if ( CBCharacteristicProperties.Notify.rawValue & rawProperties ) == CBCharacteristicProperties.Notify.rawValue {
+            if ( CBCharacteristicProperties.Notify.rawValue & rawProperties ) != 0 {
                 propString += "Notify "
             }
-            if ( CBCharacteristicProperties.Indicate.rawValue & rawProperties ) == CBCharacteristicProperties.Indicate.rawValue {
+            if ( CBCharacteristicProperties.Indicate.rawValue & rawProperties ) != 0 {
                 propString += "Indicate "
             }
-            if ( CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue & rawProperties ) == CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue {
+            if ( CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue & rawProperties ) != 0 {
                 propString += "AuthenticatedSignedWrites "
             }
-            if ( CBCharacteristicProperties.ExtendedProperties.rawValue & rawProperties ) == CBCharacteristicProperties.ExtendedProperties.rawValue {
+            if ( CBCharacteristicProperties.ExtendedProperties.rawValue & rawProperties ) != 0 {
                 propString += "ExtendedProperties "
             }
             cell.propertiesField.text = propString

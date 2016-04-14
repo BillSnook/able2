@@ -24,6 +24,7 @@
 		A93B1AA41CA5AD46004F9B4F /* able2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1AA31CA5AD46004F9B4F /* able2Tests.swift */; };
 		A93B1AAF1CA5AD46004F9B4F /* able2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1AAE1CA5AD46004F9B4F /* able2UITests.swift */; };
 		A93B1ABD1CA5E588004F9B4F /* BLEView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1ABC1CA5E588004F9B4F /* BLEView.swift */; };
+		A95FC1011CBF4C2B001ACB0C /* showCharacteristics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95FC1001CBF4C2B001ACB0C /* showCharacteristics.swift */; };
 		A9688ECA1CB093970036DA5E /* ServiceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9688EC91CB093970036DA5E /* ServiceCell.swift */; };
 		A9688ECC1CB19ED60036DA5E /* Interrogator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9688ECB1CB19ED60036DA5E /* Interrogator.swift */; };
 		A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */; };
@@ -91,6 +92,7 @@
 		A93B1AAE1CA5AD46004F9B4F /* able2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = able2UITests.swift; sourceTree = "<group>"; };
 		A93B1AB01CA5AD46004F9B4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A93B1ABC1CA5E588004F9B4F /* BLEView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEView.swift; sourceTree = "<group>"; };
+		A95FC1001CBF4C2B001ACB0C /* showCharacteristics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = showCharacteristics.swift; sourceTree = "<group>"; };
 		A9688EC91CB093970036DA5E /* ServiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServiceCell.swift; path = cells/ServiceCell.swift; sourceTree = "<group>"; };
 		A9688ECB1CB19ED60036DA5E /* Interrogator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Interrogator.swift; path = managers/Interrogator.swift; sourceTree = "<group>"; };
 		A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listPeripheralsTVC.swift; path = controllers/listPeripheralsTVC.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 			children = (
 				A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */,
 				A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */,
+				A95FC1001CBF4C2B001ACB0C /* showCharacteristics.swift */,
 				A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */,
 			);
 			name = controllers;
@@ -270,8 +273,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A93B1AB31CA5AD46004F9B4F /* Build configuration list for PBXNativeTarget "able2" */;
 			buildPhases = (
-				822FAEEBB76CC3D6C659B056 /* 📦 Check Pods Manifest.lock */,
 				192D58429D15E667C8A4B952 /* Check Pods Manifest.lock */,
+				822FAEEBB76CC3D6C659B056 /* 📦 Check Pods Manifest.lock */,
 				A93B1A821CA5AD46004F9B4F /* Sources */,
 				A93B1A831CA5AD46004F9B4F /* Frameworks */,
 				A93B1A841CA5AD46004F9B4F /* Resources */,
@@ -293,8 +296,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A93B1AB61CA5AD46004F9B4F /* Build configuration list for PBXNativeTarget "able2Tests" */;
 			buildPhases = (
-				EB55CF0322CFDA0C2FB34551 /* 📦 Check Pods Manifest.lock */,
 				0B5EDCE79077BCA7C8A0AA04 /* Check Pods Manifest.lock */,
+				EB55CF0322CFDA0C2FB34551 /* 📦 Check Pods Manifest.lock */,
 				A93B1A9B1CA5AD46004F9B4F /* Sources */,
 				A93B1A9C1CA5AD46004F9B4F /* Frameworks */,
 				A93B1A9D1CA5AD46004F9B4F /* Resources */,
@@ -317,8 +320,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A93B1AB91CA5AD46004F9B4F /* Build configuration list for PBXNativeTarget "able2UITests" */;
 			buildPhases = (
-				9AB62590C3BC8B7F650D1B37 /* 📦 Check Pods Manifest.lock */,
 				B348DDD64A8017A4BA41EC1B /* Check Pods Manifest.lock */,
+				9AB62590C3BC8B7F650D1B37 /* 📦 Check Pods Manifest.lock */,
 				A93B1AA61CA5AD46004F9B4F /* Sources */,
 				A93B1AA71CA5AD46004F9B4F /* Frameworks */,
 				A93B1AA81CA5AD46004F9B4F /* Resources */,
@@ -669,6 +672,7 @@
 				A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */,
 				A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */,
 				A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */,
+				A95FC1011CBF4C2B001ACB0C /* showCharacteristics.swift in Sources */,
 				A91EC6A41CBD61BA00C8ABA3 /* CharacteristicCell.swift in Sources */,
 				A9688ECA1CB093970036DA5E /* ServiceCell.swift in Sources */,
 				A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */,

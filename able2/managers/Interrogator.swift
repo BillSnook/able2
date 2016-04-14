@@ -12,7 +12,7 @@ import CoreBluetooth
 
 protocol peripheralConnectionProtocol {
     
-    func connectableState( connectable: Bool, forPeripheral: CBPeripheral )
+    func foundPeripheral( peripheral: CBPeripheral, isConnectable connectable: Bool )
     
     func connectionStatus( connected: Bool, forPeripheral peripheral: CBPeripheral )
     
@@ -174,8 +174,8 @@ class Interrogator: Scanner, CBPeripheralDelegate {
                 connectable = false
             }
             connectingPerp = peripheral
-			stopScan()		// Just find one
-            delegate?.connectableState( connectable, forPeripheral: peripheral )
+			stopScan()		// Just find the one then stop
+            delegate?.foundPeripheral( peripheral, isConnectable: connectable )
 //        } else {
 //            Log.info("Not the Peripheral we were looking for: \(scanUUID!.UUIDString), got: \(peripheral.identifier.UUIDString)" )
         }
