@@ -77,7 +77,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	override func viewWillAppear(animated: Bool) {
 		super.viewWillAppear( animated )
 		
-        selectedService = -1
+//        selectedService = -1
 		activityIndicator!.stopAnimating()
         connected = false
 		setIndicator( false )
@@ -96,11 +96,15 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	
 	override func viewWillDisappear(animated: Bool) {
 		
-        interrogator.stopInterrogation()
-        interrogator.stopScan()
-
 		super.viewWillDisappear( animated )
 	}
+    
+    deinit {
+        
+        interrogator.stopInterrogation()
+        interrogator.stopScan()
+        
+    }
 	
     
 	func setIndicator( isConnectable: Bool? ) {
@@ -224,10 +228,12 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     // MARK: - Segues
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard selectedService >= 0 else { Log.info( "selectedService invalid" ); return }
         if segue.identifier == "toCharacteristics" {
-            Log.info( "Segue toCharacteristics" )
-            interrogator.stopScan()
+            Log.info( "Segue to Characteristics" )
+//            interrogator.stopScan()
             if let indexPath = self.tableView.indexPathForSelectedRow {
+                Log.info( "selectedService: \(selectedService), indexPath.row: \(indexPath.row)" )
                 let controller = segue.destinationViewController as! ShowCharacteristics
                 controller.serviceIndex = selectedService
                 controller.characteristicsIndex = indexPath.row

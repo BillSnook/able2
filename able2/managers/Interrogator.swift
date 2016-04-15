@@ -21,6 +21,7 @@ protocol peripheralConnectionProtocol {
     func includedServicesDiscovered( peripheral: CBPeripheral, forService service: CBService )
     
     func characteristicsDiscovered( peripheral: CBPeripheral, forService service: CBService )
+
 }
 
 

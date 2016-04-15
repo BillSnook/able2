@@ -11,7 +11,9 @@ import UIKit
 import CoreBluetooth
 
 
-class ShowCharacteristics: UIViewController {
+class ShowCharacteristics: UIViewController, CharacteristicProtocol {
+
+    var characterizer: Characterizer = Characterizer.sharedCharacterizer
 
     var peripheral: CBPeripheral?           // Three passed-in parameters to specify which
     var serviceIndex = 0                    // characteristic on which service
@@ -31,19 +33,6 @@ class ShowCharacteristics: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        if let perp = peripheral {
-//            if let name = perp.name {
-//                let betterName = cleanName( name )
-//                navigationItem.title = betterName
-//            } else {
-//                navigationItem.title = "Missing Name"
-//            }
-//        } else {
-//            navigationItem.title = "Missing Peripheral"
-//        }
-        
-//        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
         textLabel.font = UIFont.preferredFontForTextStyle(fontStyle)
         textLabel.text = "" // "Test is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\n"
@@ -51,10 +40,13 @@ class ShowCharacteristics: UIViewController {
         outputString = ""
         
         prepareCharacteristicsProperties()
-        prepareDescriptorDescription()
-        prepareValueDescription()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(preferredContentSizeChanged(_:)), name: UIContentSizeCategoryDidChangeNotification, object: nil)
+
+        characterizer.characteristicDelegate = self
+        if ( CBCharacteristicProperties.Read.rawValue & characteristic!.properties.rawValue ) != 0 {  // If characteristic is readable, start read operation
+            characterizer.startCharacteristicEvaluation( characteristic!, forPeripheral: peripheral! )
+        }
 
     }
     
@@ -116,6 +108,11 @@ class ShowCharacteristics: UIViewController {
             outputString += "  ExtendedProperties\n"
         }
 
+        if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) != 0 {  // If characteristic is readable, start read operation
+            
+            
+        }
+
     }
     
     func prepareDescriptorDescription() {
@@ -123,24 +120,49 @@ class ShowCharacteristics: UIViewController {
         guard characteristic != nil else { Log.debug( "characteristic is nil" ); return }
         guard characteristic!.descriptors != nil else { Log.debug( "descriptors is nil" ); return }
         let descs = characteristic!.descriptors!
+        Log.debug( "descriptor count: \(descs.count)" )
         if descs.count > 0 {
             outputString += "\n\(descs.count) Descriptors:\n"
             for desc in descs {
-                Log.info( "Descriptor: \(desc.description)" )
+                Log.info( "  Descriptor: \(desc.description)" )
             }
+            outputString += "\n"
         } else {
             outputString += "\nNo Descriptors\n"
         }
-        
+        textLabel.text = outputString
     }
     
     func prepareValueDescription() {
         
+        
         guard characteristic != nil else { Log.debug( "characteristic is nil" ); return }
         guard characteristic!.value != nil else { Log.debug( "value is nil" ); return }
-        outputString += "\nValues:\n"
-        Log.info( "characteristic!.value.description" )
+        outputString += "\nCharacteristic Values:\n"
+        if let dataString = String( data: characteristic!.value!, encoding: NSUTF8StringEncoding ) {
+            outputString += dataString + "\n"
+        } else {
+            outputString += "Non-string data\n"
+        }
+        textLabel.text = outputString
+        Log.info( "characteristic value: \(characteristic!.value!.description)" )
     }
     
+    
+    // MARK: - descriptor and characteristics protocol support
+    
+    func descriptorsRead( characteristic: CBCharacteristic ) {
+        
+//        outputString = textLabel.text!
+        prepareDescriptorDescription()
+        
+    }
+    
+    func characteristicRead( characteristic: CBCharacteristic ) {
+        
+//        outputString = textLabel.text!
+        prepareValueDescription()
+        
+    }
     
 }
