@@ -35,9 +35,8 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
         super.viewDidLoad()
 
         textLabel.font = UIFont.preferredFontForTextStyle(fontStyle)
-        textLabel.text = "" // "Test is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\nTest is test\n"
-        
-        outputString = ""
+        textLabel.text = ""
+		outputString = ""
         
         prepareCharacteristicsProperties()
         
@@ -83,30 +82,52 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
         outputString += "\nProperties:\n"
         let properties = characteristic!.properties
         let rawProperties = properties.rawValue
+		var offset = 0
         if ( CBCharacteristicProperties.Broadcast.rawValue & rawProperties ) != 0 {
-            outputString += "  Broadcast\n"
+            outputString += "  Broadcast"
+			offset++
         }
-        if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) != 0 {
-            outputString += "  Read\n"
+		if ( CBCharacteristicProperties.Notify.rawValue & rawProperties ) != 0 {
+			outputString += "  Notify"
+			offset++
+		}
+		if ( CBCharacteristicProperties.Indicate.rawValue & rawProperties ) != 0 {
+			outputString += "  Indicate"
+			offset++
+		}
+		if offset > 0 {
+			outputString += "\n"
+			offset = 0
+		}
+
+		if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) != 0 {
+            outputString += "  Read"
+			offset++
         }
+		if ( CBCharacteristicProperties.Write.rawValue & rawProperties ) != 0 {
+			outputString += "  Write"
+			offset++
+		}
         if ( CBCharacteristicProperties.WriteWithoutResponse.rawValue & rawProperties ) != 0 {
-            outputString += "  WriteWithoutResponse\n"
+            outputString += "  WriteWithoutResponse"
+			offset++
         }
-        if ( CBCharacteristicProperties.Write.rawValue & rawProperties ) != 0 {
-            outputString += "  Write\n"
-        }
-        if ( CBCharacteristicProperties.Notify.rawValue & rawProperties ) != 0 {
-            outputString += "  Notify\n"
-        }
-        if ( CBCharacteristicProperties.Indicate.rawValue & rawProperties ) != 0 {
-            outputString += "  Indicate\n"
-        }
-        if ( CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue & rawProperties ) != 0 {
-            outputString += "  AuthenticatedSignedWrites\n"
+		if offset > 0 {
+			outputString += "\n"
+			offset = 0
+		}
+
+		if ( CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue & rawProperties ) != 0 {
+            outputString += "  AuthenticatedSignedWrites"
+			offset++
         }
         if ( CBCharacteristicProperties.ExtendedProperties.rawValue & rawProperties ) != 0 {
-            outputString += "  ExtendedProperties\n"
-        }
+            outputString += "  ExtendedProperties"
+			offset++
+       }
+		if offset > 0 {
+			outputString += "\n"
+		}
 
         if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) != 0 {  // If characteristic is readable, start read operation
             
