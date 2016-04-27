@@ -70,7 +70,6 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         interrogator.managedObjectContext = appDelegate.managedObjectContext
-        interrogator.delegate = self
 
 }
 
@@ -78,25 +77,27 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 		super.viewWillAppear( animated )
 		
 //        selectedService = -1
-		activityIndicator!.stopAnimating()
-        connected = false
-		setIndicator( false )
+        interrogator.delegate = self
 
         if let scanPerp = self.perp  {
             if interrogator.connected {
                 Log.info( "Already connected to \(scanPerp.mainUUID!)" )
+                connected = true
             } else {
                 Log.info( "Start scan for \(scanPerp.mainUUID!)" )
+                connected = false
                 activityIndicator!.startAnimating()
                 interrogator.startScan( forDevices: [CBUUID(string: scanPerp.mainUUID!)] )
             }
+            setIndicator( scanPerp.connectable?.boolValue, isConnecting: !connected )
         }
         
     }
 	
 	override func viewWillDisappear(animated: Bool) {
-		
 		super.viewWillDisappear( animated )
+		
+        activityIndicator!.stopAnimating()
 	}
     
     deinit {
@@ -107,7 +108,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     }
 	
     
-	func setIndicator( isConnectable: Bool? ) {
+    func setIndicator( isConnectable: Bool?, isConnecting: Bool ) {
 		if let connectable = isConnectable {
 			if connectable {
 				if connected {
@@ -116,7 +117,11 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 				} else {
 					connectionIndicator!.image = Indicator.yellow.image()
 //                    Log.error( "Enabling connectButton" )
-                    connectButton.enabled = true
+                    if isConnecting {
+                        connectButton.enabled = false
+                    } else {
+                        connectButton.enabled = true
+                    }
 				}
 			} else {
 				connectionIndicator!.image = Indicator.red.image()
@@ -151,7 +156,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
             activityIndicator!.stopAnimating()
             Log.info( "Not Connectable" )
         }
-//        setIndicator( connectable )
+//        setIndicator( connectable, isConnecting: false )
     }
     
     func connectionStatus( connected: Bool, forPeripheral peripheral: CBPeripheral ) {
@@ -159,7 +164,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         activityIndicator!.stopAnimating()
 //		interrogator.stopInterrogation() // ?? Is this needed ??
         self.connected = connected
-        setIndicator( connected )
+        setIndicator( true, isConnecting: false )
 		if connected {
 			updateConnection( peripheral )
         } else {
@@ -217,7 +222,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 
         connected = false
         selectedService = -1
-        setIndicator( true )
+        setIndicator( true, isConnecting: false )
         
         services = nil
         
