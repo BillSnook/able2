@@ -195,7 +195,7 @@
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cZU-Oi-B1e" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-856" y="-330"/>
+            <point key="canvasLocation" x="-864" y="-358"/>
         </scene>
         <!--Mode-->
         <scene sceneID="rpK-HL-rht">
@@ -266,7 +266,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uxs-rN-tEY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="21" y="-663"/>
+            <point key="canvasLocation" x="57" y="33"/>
         </scene>
         <!--Create Peripheral-->
         <scene sceneID="6IQ-pd-wO3">
@@ -315,7 +315,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PVi-B5-9mq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-389" y="-663"/>
+            <point key="canvasLocation" x="-353" y="33"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="SB7-Dc-tj1">
@@ -381,7 +381,7 @@
                                     </constraints>
                                 </activityIndicatorView>
                             </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.96997709424083767" green="0.96997709424083767" blue="0.96997709424083767" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
                                 <constraint firstItem="zDE-cp-yuP" firstAttribute="top" secondItem="enA-aX-Yb5" secondAttribute="top" constant="7" id="Ghi-dy-56w"/>
                                 <constraint firstItem="fCn-QV-e64" firstAttribute="leading" secondItem="enA-aX-Yb5" secondAttribute="leading" constant="20" id="IKl-Aw-iid"/>
@@ -561,6 +561,6 @@
         <image name="button_round_red_small" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="e6N-bh-gkL"/>
+        <segue reference="3IJ-I9-LcX"/>
     </inferredMetricsTieBreakers>
 </document>
