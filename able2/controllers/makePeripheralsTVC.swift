@@ -18,8 +18,10 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         super.viewDidLoad()
         
         clearsSelectionOnViewWillAppear = false
-        
 //        navigationItem.title = "Create Peripheral"
+        
+        // This back button is the one that will appear on the next (build) page
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
         
     }
     
@@ -35,5 +37,13 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "toBuild" {
+            
+        }
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+    }
 
 }

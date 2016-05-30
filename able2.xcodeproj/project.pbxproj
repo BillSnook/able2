@@ -34,6 +34,9 @@
 		A9ABE1941CAC500D004C1EF7 /* Sighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1901CAC500D004C1EF7 /* Sighting.swift */; };
 		A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
 		A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
+		A9C329471CF6BE6F0074CFB5 /* buildPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C329461CF6BE6F0074CFB5 /* buildPeripheral.swift */; };
+		A9C329491CFBDA5F0074CFB5 /* ServicesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C329481CFBDA5F0074CFB5 /* ServicesCollectionViewCell.swift */; };
+		A9C3294B1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */; };
 		A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */; };
 		A9D44E781CB58D2A0065F9FA /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */; };
 		A9D44E821CB5D4C50065F9FA /* CBPeripheralMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E811CB5D4C50065F9FA /* CBPeripheralMock.swift */; };
@@ -93,7 +96,7 @@
 		A93B1AAE1CA5AD46004F9B4F /* able2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = able2UITests.swift; sourceTree = "<group>"; };
 		A93B1AB01CA5AD46004F9B4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A93B1ABC1CA5E588004F9B4F /* BLEView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEView.swift; sourceTree = "<group>"; };
-		A95FC1001CBF4C2B001ACB0C /* showCharacteristics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = showCharacteristics.swift; sourceTree = "<group>"; };
+		A95FC1001CBF4C2B001ACB0C /* showCharacteristics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = showCharacteristics.swift; path = controllers/showCharacteristics.swift; sourceTree = "<group>"; };
 		A9688EC91CB093970036DA5E /* ServiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServiceCell.swift; path = cells/ServiceCell.swift; sourceTree = "<group>"; };
 		A9688ECB1CB19ED60036DA5E /* Interrogator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Interrogator.swift; path = managers/Interrogator.swift; sourceTree = "<group>"; };
 		A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listPeripheralsTVC.swift; path = controllers/listPeripheralsTVC.swift; sourceTree = "<group>"; };
@@ -103,6 +106,9 @@
 		A9ABE1901CAC500D004C1EF7 /* Sighting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sighting.swift; path = managedClasses/Sighting.swift; sourceTree = "<group>"; };
 		A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Peripheral+CoreDataProperties.swift"; path = "managedClasses/Peripheral+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Peripheral.swift; path = managedClasses/Peripheral.swift; sourceTree = "<group>"; };
+		A9C329461CF6BE6F0074CFB5 /* buildPeripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = buildPeripheral.swift; path = controllers/buildPeripheral.swift; sourceTree = "<group>"; };
+		A9C329481CFBDA5F0074CFB5 /* ServicesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServicesCollectionViewCell.swift; path = cells/ServicesCollectionViewCell.swift; sourceTree = "<group>"; };
+		A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CharacteristicsCollectionViewCell.swift; path = cells/CharacteristicsCollectionViewCell.swift; sourceTree = "<group>"; };
 		A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listServicesTVC.swift; path = controllers/listServicesTVC.swift; sourceTree = "<group>"; };
 		A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		A9D44E811CB5D4C50065F9FA /* CBPeripheralMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBPeripheralMock.swift; sourceTree = "<group>"; };
@@ -169,6 +175,8 @@
 				A925C6801CAB58C700FAE766 /* MessageCell.swift */,
 				A9688EC91CB093970036DA5E /* ServiceCell.swift */,
 				A91EC6A31CBD61BA00C8ABA3 /* CharacteristicCell.swift */,
+				A9C329481CFBDA5F0074CFB5 /* ServicesCollectionViewCell.swift */,
+				A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -255,6 +263,7 @@
 				A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */,
 				A95FC1001CBF4C2B001ACB0C /* showCharacteristics.swift */,
 				A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */,
+				A9C329461CF6BE6F0074CFB5 /* buildPeripheral.swift */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -668,15 +677,18 @@
 				A9ABE1941CAC500D004C1EF7 /* Sighting.swift in Sources */,
 				A93B1ABD1CA5E588004F9B4F /* BLEView.swift in Sources */,
 				A9E2F03B1CC188ED00B18013 /* Characterizer.swift in Sources */,
+				A9C329491CFBDA5F0074CFB5 /* ServicesCollectionViewCell.swift in Sources */,
 				A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */,
 				A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */,
 				A9688ECC1CB19ED60036DA5E /* Interrogator.swift in Sources */,
 				A9ABE1931CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift in Sources */,
 				A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */,
 				A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */,
+				A9C329471CF6BE6F0074CFB5 /* buildPeripheral.swift in Sources */,
 				A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */,
 				A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */,
 				A95FC1011CBF4C2B001ACB0C /* showCharacteristics.swift in Sources */,
+				A9C3294B1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift in Sources */,
 				A91EC6A41CBD61BA00C8ABA3 /* CharacteristicCell.swift in Sources */,
 				A9688ECA1CB093970036DA5E /* ServiceCell.swift in Sources */,
 				A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */,

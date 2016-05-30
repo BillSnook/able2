@@ -75,8 +75,8 @@ class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         super.viewWillDisappear( animated )
     }
     
-    deinit {
-    }
+//    deinit {
+//    }
     
     
 // MARK: - Helper Methods
