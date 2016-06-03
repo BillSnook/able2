@@ -319,8 +319,11 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GiS-1o-LBX">
                                 <rect key="frame" x="0.0" y="64" width="320" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VCx-8A-4na">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VCx-8A-4na">
                                         <rect key="frame" x="60" y="10" width="200" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="onh-QE-KXT"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <state key="normal" title="Advertise">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -340,13 +343,16 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="VCx-8A-4na" firstAttribute="top" secondItem="GiS-1o-LBX" secondAttribute="top" constant="10" id="B4P-s7-b4A"/>
                                     <constraint firstAttribute="height" constant="50" id="Itg-2z-1Qu"/>
+                                    <constraint firstItem="VCx-8A-4na" firstAttribute="centerX" secondItem="GiS-1o-LBX" secondAttribute="centerX" id="UkP-cj-cfg"/>
+                                    <constraint firstAttribute="bottom" secondItem="VCx-8A-4na" secondAttribute="bottom" constant="10" id="auc-3l-tTc"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tc0-2Q-Wkx">
                                 <rect key="frame" x="0.0" y="114" width="320" height="455"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="pdJ-73-OVj">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="0.0" id="pdJ-73-OVj">
                                     <size key="itemSize" width="320" height="100"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -368,9 +374,12 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
-                                                <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="UUID" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Afj-FY-3k7">
-                                                    <rect key="frame" x="8" y="62" width="247" height="30"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="UUID" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Afj-FY-3k7">
+                                                    <rect key="frame" x="8" y="62" width="254" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="254" id="8cx-ZV-AZG"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="11"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                                 </textField>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hbw-UW-6x4">
@@ -393,7 +402,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Icc-kB-g5P">
-                                                    <rect key="frame" x="278" y="66" width="22" height="22"/>
+                                                    <rect key="frame" x="283" y="66" width="22" height="22"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="USH-LO-EQL"/>
                                                         <constraint firstAttribute="width" constant="22" id="xqt-Rc-tAX"/>
@@ -412,12 +421,12 @@
                                             <constraint firstItem="509-rB-apT" firstAttribute="top" secondItem="4Tc-pl-nBY" secondAttribute="top" constant="8" id="GPI-JD-7iI"/>
                                             <constraint firstItem="Hbw-UW-6x4" firstAttribute="leading" secondItem="509-rB-apT" secondAttribute="trailing" constant="8" id="Kfy-b2-1Vp"/>
                                             <constraint firstAttribute="trailing" secondItem="Kmd-gx-USv" secondAttribute="trailing" constant="8" id="L3J-Ud-mB5"/>
-                                            <constraint firstItem="Icc-kB-g5P" firstAttribute="leading" secondItem="Afj-FY-3k7" secondAttribute="trailing" constant="23" id="UaK-37-Cpq"/>
+                                            <constraint firstItem="Icc-kB-g5P" firstAttribute="leading" secondItem="Afj-FY-3k7" secondAttribute="trailing" priority="900" constant="21" id="UaK-37-Cpq"/>
                                             <constraint firstAttribute="bottom" secondItem="Afj-FY-3k7" secondAttribute="bottom" constant="8" id="bAI-Re-j36"/>
                                             <constraint firstItem="Hbw-UW-6x4" firstAttribute="top" secondItem="4Tc-pl-nBY" secondAttribute="top" constant="7" id="bIY-5q-Su4"/>
                                             <constraint firstAttribute="trailing" secondItem="Hbw-UW-6x4" secondAttribute="trailing" constant="8" id="cmk-5V-D69"/>
                                             <constraint firstItem="Afj-FY-3k7" firstAttribute="top" secondItem="509-rB-apT" secondAttribute="bottom" constant="24" id="ecq-O2-yDr"/>
-                                            <constraint firstAttribute="trailing" secondItem="Icc-kB-g5P" secondAttribute="trailing" constant="20" id="qsx-04-8Kw"/>
+                                            <constraint firstAttribute="trailing" secondItem="Icc-kB-g5P" secondAttribute="trailing" constant="15" id="qsx-04-8Kw"/>
                                             <constraint firstAttribute="bottom" secondItem="Icc-kB-g5P" secondAttribute="bottom" constant="12" id="u26-sA-yAm"/>
                                         </constraints>
                                         <connections>
@@ -428,7 +437,7 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CharacteristicView" id="ioU-FM-GHC" customClass="CharacteristicsCollectionViewCell" customModule="able2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="110" width="320" height="100"/>
+                                        <rect key="frame" x="0.0" y="104" width="320" height="100"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
