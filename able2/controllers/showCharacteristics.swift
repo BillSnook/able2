@@ -85,15 +85,15 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
 		var offset = 0
         if ( CBCharacteristicProperties.Broadcast.rawValue & rawProperties ) != 0 {
             outputString += "  Broadcast"
-			offset++
+			offset += 1
         }
 		if ( CBCharacteristicProperties.Notify.rawValue & rawProperties ) != 0 {
 			outputString += "  Notify"
-			offset++
+			offset += 1
 		}
 		if ( CBCharacteristicProperties.Indicate.rawValue & rawProperties ) != 0 {
 			outputString += "  Indicate"
-			offset++
+			offset += 1
 		}
 		if offset > 0 {
 			outputString += "\n"
@@ -102,15 +102,15 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
 
 		if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) != 0 {
             outputString += "  Read"
-			offset++
+			offset += 1
         }
 		if ( CBCharacteristicProperties.Write.rawValue & rawProperties ) != 0 {
 			outputString += "  Write"
-			offset++
+			offset += 1
 		}
         if ( CBCharacteristicProperties.WriteWithoutResponse.rawValue & rawProperties ) != 0 {
             outputString += "  WriteWithoutResponse"
-			offset++
+			offset += 1
         }
 		if offset > 0 {
 			outputString += "\n"
@@ -119,11 +119,11 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
 
 		if ( CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue & rawProperties ) != 0 {
             outputString += "  AuthenticatedSignedWrites"
-			offset++
+			offset += 1
         }
         if ( CBCharacteristicProperties.ExtendedProperties.rawValue & rawProperties ) != 0 {
             outputString += "  ExtendedProperties"
-			offset++
+			offset += 1
        }
 		if offset > 0 {
 			outputString += "\n"

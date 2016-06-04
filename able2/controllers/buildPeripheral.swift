@@ -54,57 +54,24 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         let indexPath = NSIndexPath(forItem: adButton.tag, inSection: 0 )
         let cell = collectionView.cellForItemAtIndexPath( indexPath ) as! ServicesCollectionViewCell
         if !advertising {           // If we were not advertising, now we want to start
-            let nameSet = self.verifyCell( cell.serviceNameField )
-            let uuidSet = self.verifyCell( cell.uuidField )
-            if nameSet && uuidSet {
+			if cell.verifyTextReady() {
+				cell.setStateEnabled( false )
                 adButton.setTitle( "Stop Advertising", forState: .Normal )
-                cell.serviceNameField.enabled = false
-                cell.uuidField.enabled = false
-                cell.uuidButton.enabled = false
                 advertising = true
                 // Start advertising
             } else {
-                
+                // Say why we failed
             }
         } else {
-            cell.serviceNameField.layer.borderColor = UIColor.lightGrayColor().CGColor
-            cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
+//            cell.serviceNameField.layer.borderColor = UIColor.lightGrayColor().CGColor
+//            cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
             adButton.setTitle( "Advertise", forState: .Normal )
-            cell.serviceNameField.enabled = true
-            cell.uuidField.enabled = true
-            cell.uuidButton.enabled = true
+			cell.setStateEnabled( true )
             advertising = false
             // Stop advertising
         }
     }
     
-    func verifyCell( textField: (UITextField) ) -> Bool {
-        
-        if let text = textField.text {
-            if text.isEmpty {
-                textField.layer.borderColor = UIColor.redColor().CGColor
-                return false
-            } else {
-                textField.layer.borderColor = UIColor.greenColor().CGColor
-                return true
-            }
-        } else {
-            return false
-        }
-    }
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-//    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        
-//        if segue.identifier == "" {
-//            
-//        }
-//        // Get the new view controller using segue.destinationViewController.
-//        // Pass the selected object to the new view controller.
-//    }
-
     // MARK: - Collection View
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -126,13 +93,15 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
             cell.serviceNameField.layer.cornerRadius = 6.0
             cell.serviceNameField.layer.borderWidth = 0.5
             cell.serviceNameField.layer.borderColor = UIColor.lightGrayColor().CGColor
+			cell.serviceNameField.delegate = cell
             cell.uuidField.text = ""
             cell.uuidField.layer.cornerRadius = 6.0
             cell.uuidField.layer.borderWidth = 0.5
             cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
-            cell.uuidField.delegate = cell
             cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
+			cell.uuidField.delegate = cell
             cell.tag = indexPath.item
+			cell.verifyTextReady()
             return cell
         } else {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "ServiceView", forIndexPath: indexPath ) as! ServicesCollectionViewCell
