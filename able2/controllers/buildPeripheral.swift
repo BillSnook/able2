@@ -81,12 +81,12 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     
     func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
     
-        return 1
+        return 2
     }
     
     func collectionView( collectionView: UICollectionView,
                           cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 { // For advertised service setup
+        if indexPath.row == 0 { // For advertised service setup
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "ServiceView", forIndexPath: indexPath ) as! ServicesCollectionViewCell
             
             cell.serviceNameField.text = ""
@@ -102,17 +102,39 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 			cell.uuidField.delegate = cell
             cell.tag = indexPath.item
 			cell.verifyTextReady()
+			
             return cell
         } else {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "ServiceView", forIndexPath: indexPath ) as! ServicesCollectionViewCell
-            return cell
+			if indexPath.row == 1 { // For characteristic setup
+				let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
+				
+				cell.uuidField.text = ""
+				cell.uuidField.layer.cornerRadius = 6.0
+				cell.uuidField.layer.borderWidth = 0.5
+				cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
+				cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
+//				cell.uuidField.delegate = cell
+				cell.tag = indexPath.item
+
+				return cell
+			} else {
+				let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
+				return cell
+			}
         }
     }
     
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
         
-        let size = CGSizeMake( collectionView.frame.size.width, 100 )
-        return size
+		if sizeForItemAtIndexPath.row == 0 { // For advertised service setup
+			return CGSizeMake( collectionView.frame.size.width, 100 )
+		} else {
+			if sizeForItemAtIndexPath.row == 1 { // For characteristic setup
+				return CGSizeMake( collectionView.frame.size.width, 425 )
+			} else {
+				return CGSizeZero
+			}
+		}
     }
 
 }
