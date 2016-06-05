@@ -94,6 +94,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
             cell.serviceNameField.layer.borderWidth = 0.5
             cell.serviceNameField.layer.borderColor = UIColor.lightGrayColor().CGColor
 			cell.serviceNameField.delegate = cell
+			
             cell.uuidField.text = ""
             cell.uuidField.layer.cornerRadius = 6.0
             cell.uuidField.layer.borderWidth = 0.5
@@ -114,6 +115,14 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 				cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
 				cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
 //				cell.uuidField.delegate = cell
+				cell.tag = indexPath.item
+
+				cell.valueTextView.text = ""
+				cell.valueTextView.layer.cornerRadius = 6.0
+				cell.valueTextView.layer.borderWidth = 0.5
+				cell.valueTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
+//				cell.valueTextView.inputView = UIView.init( frame: CGRectZero );    // No keyboard
+//				cell.delegate = self		// !!
 				cell.tag = indexPath.item
 
 				return cell
