@@ -8,13 +8,7 @@
 
 import UIKit
 
-enum DisplayState {
-	case Neutral
-	case Valid
-	case Invalid
-}
-
-class ServicesCollectionViewCell: UICollectionViewCell, UITextFieldDelegate {
+class ServicesCollectionViewCell: AbleCollectionViewCell, UITextFieldDelegate {
     
 	// MARK: - Control outlets
 	
@@ -41,6 +35,22 @@ class ServicesCollectionViewCell: UICollectionViewCell, UITextFieldDelegate {
 		
     }
 	
+	override func setStateEnabled( enabled: (Bool) ) {
+
+		serviceNameField.enabled = enabled
+		uuidField.enabled = enabled
+		uuidButton.enabled = enabled
+		primarySwitch.enabled = enabled
+
+	}
+	
+	override func verifyTextReady() -> Bool {
+		
+		var textReady = textFieldNotEmpty( serviceNameField )
+		textReady = textFieldNotEmpty( uuidField ) && textReady
+		return textReady
+	}
+	
 	// MARK: - UITextFieldDelegate
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
@@ -61,52 +71,6 @@ class ServicesCollectionViewCell: UICollectionViewCell, UITextFieldDelegate {
 	}
 	
 	// MARK: - State management
-	
-	func setStateEnabled( enabled: (Bool) ) {
-		
-		serviceNameField.enabled = enabled
-		uuidField.enabled = enabled
-		uuidButton.enabled = enabled
-		primarySwitch.enabled = enabled
-		
-	}
-
-	func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
-
-		switch toDisplayState {
-		case .Neutral:
-			textField.layer.borderColor = UIColor.lightGrayColor().CGColor
-		case .Valid:
-			textField.layer.borderColor = UIColor.greenColor().CGColor
-		case .Invalid:
-			textField.layer.borderColor = UIColor.redColor().CGColor
-		}
-
-	}
-	
-	// Verify data is valid for advertising
-	func verifyTextReady() -> Bool {
-
-		var textReady = textFieldNotEmpty( serviceNameField )
-		textReady = textFieldNotEmpty( uuidField ) && textReady
-		return textReady
-	}
-	
-	func textFieldNotEmpty( textField: (UITextField) ) -> Bool {
-		
-		if let text = textField.text {
-			if text.isEmpty {
-				setBorderOf( textField, toDisplayState: .Invalid )
-				return false
-			} else {
-				setBorderOf( textField, toDisplayState: .Valid )
-				return true
-			}
-		} else {
-			setBorderOf( textField, toDisplayState: .Invalid )
-			return false
-		}
-	}
 	
 
 }

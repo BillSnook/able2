@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CharacteristicsCollectionViewCell: UICollectionViewCell {
+class CharacteristicsCollectionViewCell: AbleCollectionViewCell, UITextViewDelegate {
 	
 	// UUID				CBUUID
 	@IBOutlet weak var uuidField: UITextField!
@@ -74,5 +74,29 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell {
 		
 	}
 	
+	override func setStateEnabled( enabled: (Bool) ) {
+		
+		uuidField.enabled = enabled
+		uuidButton.enabled = enabled
+//		primarySwitch.enabled = enabled
+		
+	}
 	
+	override func verifyTextReady() -> Bool {
+		
+		return textFieldNotEmpty( uuidField )
+	}
+	
+	// MARK: - UITextViewDelegate
+
+	func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+	
+		guard textView != uuidField else { return false }	// false because uuidField should never allow changes to its text
+		return true
+	}
+
+	func textViewDidEndEditing(textView: UITextView) {
+		
+	}
+
 }
