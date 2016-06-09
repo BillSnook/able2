@@ -72,6 +72,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         let cell = collectionView.cellForItemAtIndexPath( indexPath ) as! ServicesCollectionViewCell
         service!.name = cell.serviceNameField.text
         service!.uuid = cell.uuidField.text
+        service!.primary = NSNumber( bool: cell.primarySwitch.on )
         builder?.save()
     }
 
@@ -133,7 +134,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 			cell.uuidField.delegate = cell
             cell.tag = indexPath.item
 			cell.verifyTextReady()
-			
+
+            if let primary = service!.primary {
+                cell.primarySwitch.on = primary.boolValue
+            } else {
+                cell.primarySwitch.on = false
+            }
+
             return cell
         } else {
 			if indexPath.row > 0 { // For characteristic setup
