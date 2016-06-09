@@ -277,13 +277,33 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="tempID" id="fHF-vS-R1W">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="serviceView" textLabel="zvz-Jo-8iP" detailTextLabel="vT7-wc-Drn" style="IBUITableViewCellStyleSubtitle" id="fHF-vS-R1W">
                                 <rect key="frame" x="0.0" y="92" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fHF-vS-R1W" id="SYb-LJ-scR">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zvz-Jo-8iP">
+                                            <rect key="frame" x="15" y="6" width="31.5" height="19.5"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vT7-wc-Drn">
+                                            <rect key="frame" x="15" y="25.5" width="40.5" height="13.5"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="nq1-EV-3qV" kind="show" identifier="toShow" id="qOs-B8-zth"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -340,12 +360,25 @@
                                             <action selector="advertiseChange:" destination="nq1-EV-3qV" eventType="touchUpInside" id="SRn-Vj-LNp"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M1D-xT-Tyr" userLabel="AddCharacteristicButton">
+                                        <rect key="frame" x="286" y="14" width="22" height="22"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="22" id="CFK-3S-9f4"/>
+                                            <constraint firstAttribute="width" constant="22" id="q3q-Zr-J7g"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="addCharacteristicAction:" destination="nq1-EV-3qV" eventType="touchUpInside" id="Bbu-5B-VSH"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="VCx-8A-4na" firstAttribute="top" secondItem="GiS-1o-LBX" secondAttribute="top" constant="10" id="B4P-s7-b4A"/>
                                     <constraint firstAttribute="height" constant="50" id="Itg-2z-1Qu"/>
+                                    <constraint firstAttribute="trailing" secondItem="M1D-xT-Tyr" secondAttribute="trailing" constant="12" id="SI9-jJ-mfF"/>
                                     <constraint firstItem="VCx-8A-4na" firstAttribute="centerX" secondItem="GiS-1o-LBX" secondAttribute="centerX" id="UkP-cj-cfg"/>
+                                    <constraint firstItem="M1D-xT-Tyr" firstAttribute="centerY" secondItem="GiS-1o-LBX" secondAttribute="centerY" id="Wjo-sy-eSE"/>
                                     <constraint firstAttribute="bottom" secondItem="VCx-8A-4na" secondAttribute="bottom" constant="10" id="auc-3l-tTc"/>
                                 </constraints>
                             </view>
@@ -373,6 +406,14 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                            <real key="value" value="0.5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="6"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
                                                 </textField>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Service UUID" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Afj-FY-3k7">
                                                     <rect key="frame" x="8" y="62" width="254" height="30"/>
@@ -1231,5 +1272,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="e6N-bh-gkL"/>
+        <segue reference="qOs-B8-zth"/>
     </inferredMetricsTieBreakers>
 </document>

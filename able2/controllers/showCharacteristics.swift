@@ -39,6 +39,8 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
 		outputString = ""
         
         prepareCharacteristicsProperties()
+        prepareDescriptorDescription()
+        prepareValueDescription()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(preferredContentSizeChanged(_:)), name: UIContentSizeCategoryDidChangeNotification, object: nil)
 

@@ -17,6 +17,11 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     
     var advertising = false
     
+    var builder: Builder?
+    
+    var service: Service?
+    var characteristics: [Characteristic]?
+    
 //--    ----    ----    ----
     
     override func viewDidLoad() {
@@ -28,6 +33,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         advertiseButton.layer.borderWidth = 1.0
         advertiseButton.layer.cornerRadius = 6.0
         advertiseButton.setTitle( "Advertise", forState: .Normal )
+        
+//        builder = Builder.sharedBuilder
+        builder?.setupFromService( service )
+        service = builder?.service
+        characteristics = builder?.characteristics
+        
+        
 }
     
 //    override func viewDidAppear(animated: Bool) {
@@ -43,9 +55,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     
     @IBAction func saveAction(sender: AnyObject) {
 
+        guard service != nil else { print( "save failed" ); return }
         // Gather and save data from fields and create service
-        // Dismiss page
-        self.navigationController?.popViewControllerAnimated( true )
+        let indexPath = NSIndexPath(forItem: 0, inSection: 0 )
+        let cell = collectionView.cellForItemAtIndexPath( indexPath ) as! ServicesCollectionViewCell
+        service!.name = cell.serviceNameField.text
+        service!.uuid = cell.uuidField.text
+        builder?.save()
     }
 
     @IBAction func advertiseChange(sender: AnyObject) {
@@ -72,16 +88,25 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         }
     }
     
+    @IBAction func addCharacteristicAction(sender: UIButton) {
+        
+        print( "addCharacteristicAction" )
+    }
     // MARK: - Collection View
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
+        guard service != nil else { return 0 }
         return 1
     }
     
     func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
     
         return 2
+        if let count = characteristics?.count {
+            return 1 + count
+        }
+        return 1
     }
     
     func collectionView( collectionView: UICollectionView,
@@ -89,16 +114,16 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         if indexPath.row == 0 { // For advertised service setup
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "ServiceView", forIndexPath: indexPath ) as! ServicesCollectionViewCell
             
-            cell.serviceNameField.text = ""
-            cell.serviceNameField.layer.cornerRadius = 6.0
-            cell.serviceNameField.layer.borderWidth = 0.5
-            cell.serviceNameField.layer.borderColor = UIColor.lightGrayColor().CGColor
+            cell.serviceNameField.text = service!.name
+//            cell.serviceNameField.layer.cornerRadius = 6.0
+//            cell.serviceNameField.layer.borderWidth = 0.5
+//            cell.serviceNameField.layer.borderColor = UIColor.lightGrayColor().CGColor
 			cell.serviceNameField.delegate = cell
 			
-            cell.uuidField.text = ""
-            cell.uuidField.layer.cornerRadius = 6.0
-            cell.uuidField.layer.borderWidth = 0.5
-            cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
+            cell.uuidField.text = service!.uuid
+//            cell.uuidField.layer.cornerRadius = 6.0
+//            cell.uuidField.layer.borderWidth = 0.5
+//            cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
             cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
 			cell.uuidField.delegate = cell
             cell.tag = indexPath.item
@@ -106,21 +131,21 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 			
             return cell
         } else {
-			if indexPath.row == 1 { // For characteristic setup
+			if indexPath.row > 0 { // For characteristic setup
 				let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
 				
 				cell.uuidField.text = ""
-				cell.uuidField.layer.cornerRadius = 6.0
-				cell.uuidField.layer.borderWidth = 0.5
-				cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
+//				cell.uuidField.layer.cornerRadius = 6.0
+//				cell.uuidField.layer.borderWidth = 0.5
+//				cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
 				cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
 //				cell.uuidField.delegate = cell
 				cell.tag = indexPath.item
 
 				cell.valueTextView.text = ""
-				cell.valueTextView.layer.cornerRadius = 6.0
-				cell.valueTextView.layer.borderWidth = 0.5
-				cell.valueTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
+//				cell.valueTextView.layer.cornerRadius = 6.0
+//				cell.valueTextView.layer.borderWidth = 0.5
+//				cell.valueTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
 //				cell.valueTextView.inputView = UIView.init( frame: CGRectZero );    // No keyboard
 //				cell.delegate = self		// !!
 				cell.tag = indexPath.item

@@ -10,6 +10,11 @@
 		17E09EB300BD4A9BF4DCB27C /* Pods_able2Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 512A15235563A6C9633F8013 /* Pods_able2Tests.framework */; };
 		6940040E9F98505897829FAB /* Pods_able2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E3A285895AB8FA3464E5DFF /* Pods_able2.framework */; };
 		984198BEF36C5A2DC9060475 /* Pods_able2UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A57BFC47FB584418E9D8A1D /* Pods_able2UITests.framework */; };
+		A91379A21D07BABC00B7FC36 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91379A11D07BABC00B7FC36 /* Builder.swift */; };
+		A91379A71D09015500B7FC36 /* Characteristic+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91379A31D09015500B7FC36 /* Characteristic+CoreDataProperties.swift */; };
+		A91379A81D09015500B7FC36 /* Characteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91379A41D09015500B7FC36 /* Characteristic.swift */; };
+		A91379A91D09015500B7FC36 /* Service+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91379A51D09015500B7FC36 /* Service+CoreDataProperties.swift */; };
+		A91379AA1D09015500B7FC36 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91379A61D09015500B7FC36 /* Service.swift */; };
 		A917F3BD1CBC630B005A898B /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = A917F3BC1CBC630B005A898B /* Podfile */; };
 		A917F3BF1CBC64B4005A898B /* Podfile.lock in Resources */ = {isa = PBXBuildFile; fileRef = A917F3BE1CBC64B4005A898B /* Podfile.lock */; };
 		A91EC6A41CBD61BA00C8ABA3 /* CharacteristicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91EC6A31CBD61BA00C8ABA3 /* CharacteristicCell.swift */; };
@@ -76,6 +81,11 @@
 		512A15235563A6C9633F8013 /* Pods_able2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_able2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E3A285895AB8FA3464E5DFF /* Pods_able2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_able2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		929F7B8691370972B143D86E /* Pods-able2Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-able2Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-able2Tests/Pods-able2Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		A91379A11D07BABC00B7FC36 /* Builder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Builder.swift; path = managers/Builder.swift; sourceTree = "<group>"; };
+		A91379A31D09015500B7FC36 /* Characteristic+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Characteristic+CoreDataProperties.swift"; path = "managedClasses/Characteristic+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A91379A41D09015500B7FC36 /* Characteristic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Characteristic.swift; path = managedClasses/Characteristic.swift; sourceTree = "<group>"; };
+		A91379A51D09015500B7FC36 /* Service+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Service+CoreDataProperties.swift"; path = "managedClasses/Service+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		A91379A61D09015500B7FC36 /* Service.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Service.swift; path = managedClasses/Service.swift; sourceTree = "<group>"; };
 		A917F3BC1CBC630B005A898B /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A917F3BE1CBC64B4005A898B /* Podfile.lock */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile.lock; sourceTree = "<group>"; };
 		A91EC6A31CBD61BA00C8ABA3 /* CharacteristicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CharacteristicCell.swift; path = cells/CharacteristicCell.swift; sourceTree = "<group>"; };
@@ -251,6 +261,10 @@
 		A98165941CA99E3A00D0E65E /* managedClasses */ = {
 			isa = PBXGroup;
 			children = (
+				A91379A31D09015500B7FC36 /* Characteristic+CoreDataProperties.swift */,
+				A91379A41D09015500B7FC36 /* Characteristic.swift */,
+				A91379A51D09015500B7FC36 /* Service+CoreDataProperties.swift */,
+				A91379A61D09015500B7FC36 /* Service.swift */,
 				A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */,
 				A9ABE1901CAC500D004C1EF7 /* Sighting.swift */,
 				A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */,
@@ -277,6 +291,7 @@
 				A981659A1CA9A59300D0E65E /* Scanner.swift */,
 				A9688ECB1CB19ED60036DA5E /* Interrogator.swift */,
 				A9E2F03A1CC188ED00B18013 /* Characterizer.swift */,
+				A91379A11D07BABC00B7FC36 /* Builder.swift */,
 			);
 			name = managers;
 			sourceTree = "<group>";
@@ -675,14 +690,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */,
+				A91379AA1D09015500B7FC36 /* Service.swift in Sources */,
 				A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */,
 				A93B1A8D1CA5AD46004F9B4F /* able2.xcdatamodeld in Sources */,
 				A9ABE1941CAC500D004C1EF7 /* Sighting.swift in Sources */,
+				A91379A91D09015500B7FC36 /* Service+CoreDataProperties.swift in Sources */,
+				A91379A71D09015500B7FC36 /* Characteristic+CoreDataProperties.swift in Sources */,
 				A93B1ABD1CA5E588004F9B4F /* BLEView.swift in Sources */,
 				A9E2F03B1CC188ED00B18013 /* Characterizer.swift in Sources */,
 				A9C329491CFBDA5F0074CFB5 /* ServicesCollectionViewCell.swift in Sources */,
 				A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */,
 				A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */,
+				A91379A81D09015500B7FC36 /* Characteristic.swift in Sources */,
 				A9688ECC1CB19ED60036DA5E /* Interrogator.swift in Sources */,
 				A9ABE1931CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift in Sources */,
 				A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */,
@@ -697,6 +716,7 @@
 				A9688ECA1CB093970036DA5E /* ServiceCell.swift in Sources */,
 				A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */,
 				A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */,
+				A91379A21D07BABC00B7FC36 /* Builder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
