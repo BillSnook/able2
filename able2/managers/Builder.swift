@@ -16,10 +16,6 @@ class Builder {
 
     var managedObjectContext: NSManagedObjectContext
     
-//    var name = ""
-//    var uuid = ""
-//    var primary = false
-    
     var serviceEntity: NSEntityDescription?
     var service: Service?
     var characteristics = [Characteristic]()
@@ -45,7 +41,6 @@ class Builder {
         serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
         if serviceEntity != nil {
             self.service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
-            print( "setupFromService new service" )
         }
         return [self.service!]
     }
@@ -53,7 +48,6 @@ class Builder {
     func save() {
         
         guard service != nil else { return }
-        print( "save with name: \(service!.name)" )
         do {
             try managedObjectContext.save()
         } catch let error as NSError {
@@ -70,24 +64,9 @@ class Builder {
             serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
             if serviceEntity != nil {
                 self.service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
-                print( "setupFromService new service" )
             }
         } else {
             self.service = service
-            print( "setupFromService with name: \(service!.name)" )
-//            let fetch = NSFetchRequest( entityName: "Service" )
-//            let predicate = NSPredicate( format: "uuid == '\(uuid)'" )
-//            fetch.predicate = predicate
-//            
-//            do {
-//                let results = try managedObjectContext.executeFetchRequest( fetch )
-//                service = results.first as? Service
-//            } catch let error as NSError {
-//                Log.error("Could not fetch \(error), \(error.userInfo)")
-//            }
-//            catch {
-//                Log.error("Could not fetch \(error)")
-//            }
         }
     }
     

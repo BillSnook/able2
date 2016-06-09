@@ -31,7 +31,6 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
 
         builder = Builder.sharedBuilder
-//        print( "getList[0] with name: \(services![0].name)" )
 
     }
     
@@ -42,13 +41,6 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         services = builder?.getList()
         tableView.reloadData()
     }
-    
-    
-//    override func viewWillDisappear(animated: Bool) {
-//
-//        super.viewWillDisappear( animated )
-//        
-//    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
@@ -63,9 +55,6 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
                 dest.service = services![indexPath.row]
             }
         }
-
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
     }
 
     
@@ -78,7 +67,6 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier( "serviceView" )
-        print( "cellForRowAtIndexPath name: \(services![indexPath.row].name)" )
         cell?.textLabel!.text = services![indexPath.row].name
         cell?.detailTextLabel!.text = services![indexPath.row].uuid
         return cell!

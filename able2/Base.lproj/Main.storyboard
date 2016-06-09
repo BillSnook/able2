@@ -372,7 +372,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="VCx-8A-4na" firstAttribute="top" secondItem="GiS-1o-LBX" secondAttribute="top" constant="10" id="B4P-s7-b4A"/>
                                     <constraint firstAttribute="height" constant="50" id="Itg-2z-1Qu"/>
@@ -383,8 +383,8 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tc0-2Q-Wkx">
-                                <rect key="frame" x="0.0" y="114" width="320" height="637"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="114" width="320" height="636"/>
+                                <color key="backgroundColor" red="0.41022321581840515" green="0.99753707647323608" blue="0.0036917971447110176" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="0.0" id="pdJ-73-OVj">
                                     <size key="itemSize" width="320" height="100"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -455,7 +455,7 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" red="0.0074107999359999998" green="1" blue="0.83760146140000002" alpha="0.24859913789999999" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="509-rB-apT" firstAttribute="leading" secondItem="4Tc-pl-nBY" secondAttribute="leading" constant="8" id="B7u-UX-Db2"/>
                                             <constraint firstItem="Afj-FY-3k7" firstAttribute="leading" secondItem="4Tc-pl-nBY" secondAttribute="leading" constant="8" id="Dof-QL-CUr"/>
@@ -935,7 +935,7 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" red="0.020189593263610583" green="1" blue="0.14672705169641354" alpha="0.24859913793103447" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="ged-hN-HBz" firstAttribute="top" secondItem="ioU-FM-GHC" secondAttribute="top" constant="8" id="22c-gV-qC4"/>
                                             <constraint firstItem="mCV-hy-O9o" firstAttribute="top" secondItem="AOR-kv-V7R" secondAttribute="bottom" constant="4" id="52U-zQ-LR1"/>
@@ -978,19 +978,18 @@
                                 </connections>
                             </collectionView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.49335106379999999" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="GiS-1o-LBX" firstAttribute="top" secondItem="0hf-vt-28Z" secondAttribute="bottom" id="5U0-9V-E7G"/>
+                            <constraint firstItem="Tc0-2Q-Wkx" firstAttribute="leading" secondItem="ueI-vU-Tnf" secondAttribute="leading" id="8v7-Ax-swi"/>
+                            <constraint firstItem="Tc0-2Q-Wkx" firstAttribute="top" secondItem="GiS-1o-LBX" secondAttribute="bottom" id="Oy1-3v-SEZ"/>
                             <constraint firstAttribute="trailing" secondItem="GiS-1o-LBX" secondAttribute="trailing" id="S2T-rX-n8r"/>
-                            <constraint firstItem="Tc0-2Q-Wkx" firstAttribute="top" secondItem="GiS-1o-LBX" secondAttribute="bottom" id="adC-q0-pLf"/>
+                            <constraint firstAttribute="bottom" secondItem="Tc0-2Q-Wkx" secondAttribute="bottom" id="d2u-Nf-CJ9"/>
                             <constraint firstItem="GiS-1o-LBX" firstAttribute="leading" secondItem="ueI-vU-Tnf" secondAttribute="leading" id="k9m-QO-O0L"/>
-                            <constraint firstAttribute="trailing" secondItem="Tc0-2Q-Wkx" secondAttribute="trailing" id="pbI-Vg-NNL"/>
-                            <constraint firstItem="1qz-oY-uGC" firstAttribute="top" secondItem="Tc0-2Q-Wkx" secondAttribute="bottom" constant="-1" id="s12-C3-Q0U"/>
-                            <constraint firstItem="Tc0-2Q-Wkx" firstAttribute="leading" secondItem="ueI-vU-Tnf" secondAttribute="leading" id="ybv-BQ-QbE"/>
+                            <constraint firstAttribute="trailing" secondItem="Tc0-2Q-Wkx" secondAttribute="trailing" id="z2W-OV-1PL"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Build Peripheral" id="viY-uK-wif">
-                        <barButtonItem key="backBarButtonItem" title="Jabber" id="sNP-kC-LXF"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="F1w-0c-kME">
                             <connections>
                                 <action selector="saveAction:" destination="nq1-EV-3qV" id="T7e-T4-Mj4"/>

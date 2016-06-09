@@ -38,21 +38,32 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         builder?.setupFromService( service )
         service = builder?.service
         characteristics = builder?.characteristics
+
+    }
+
+    override func viewWillAppear(animated: Bool) {
         
+        super.viewWillAppear( animated )
         
-}
+        service = builder?.service
+        characteristics = builder?.characteristics
+    }
     
-//    override func viewDidAppear(animated: Bool) {
-//        super.viewDidAppear( animated )
-//        
-//    }
-//    
-//    override func didReceiveMemoryWarning() {
-//        super.didReceiveMemoryWarning()
-//        // Dispose of any resources that can be recreated.
-//    }
-    
-    
+    override func viewWillTransitionToSize(size: CGSize,
+                                           withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        // Code here will execute before the rotation begins.
+        // Equivalent to placing it in the deprecated method -[willRotateToInterfaceOrientation:duration:]
+        coordinator.animateAlongsideTransition({ (context) -> Void in
+            // Place code here to perform animations during the rotation.
+            // You can pass nil for this closure if not necessary.
+            },
+           completion: { (context) -> Void in
+            // Code here will execute after the rotation has finished.
+            // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
+            self.collectionView.reloadData()
+        }) }
+
     @IBAction func saveAction(sender: AnyObject) {
 
         guard service != nil else { print( "save failed" ); return }
@@ -115,15 +126,9 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "ServiceView", forIndexPath: indexPath ) as! ServicesCollectionViewCell
             
             cell.serviceNameField.text = service!.name
-//            cell.serviceNameField.layer.cornerRadius = 6.0
-//            cell.serviceNameField.layer.borderWidth = 0.5
-//            cell.serviceNameField.layer.borderColor = UIColor.lightGrayColor().CGColor
 			cell.serviceNameField.delegate = cell
 			
             cell.uuidField.text = service!.uuid
-//            cell.uuidField.layer.cornerRadius = 6.0
-//            cell.uuidField.layer.borderWidth = 0.5
-//            cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
             cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
 			cell.uuidField.delegate = cell
             cell.tag = indexPath.item
@@ -135,19 +140,10 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 				let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
 				
 				cell.uuidField.text = ""
-//				cell.uuidField.layer.cornerRadius = 6.0
-//				cell.uuidField.layer.borderWidth = 0.5
-//				cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
 				cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
-//				cell.uuidField.delegate = cell
 				cell.tag = indexPath.item
 
 				cell.valueTextView.text = ""
-//				cell.valueTextView.layer.cornerRadius = 6.0
-//				cell.valueTextView.layer.borderWidth = 0.5
-//				cell.valueTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
-//				cell.valueTextView.inputView = UIView.init( frame: CGRectZero );    // No keyboard
-//				cell.delegate = self		// !!
 				cell.tag = indexPath.item
 
 				return cell
