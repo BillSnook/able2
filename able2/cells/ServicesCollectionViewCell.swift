@@ -18,12 +18,14 @@ class ServicesCollectionViewCell: AbleCollectionViewCell, UITextFieldDelegate {
     @IBOutlet weak var uuidButton: UIButton!
 	
 	var displayState = DisplayState.Neutral
+    var cellValid = false
 	
 
 	// MARK: - Control actions
 	
     @IBAction func primaryAction(sender: AnyObject) {
         
+        stateDidChange()
     }
     
     @IBAction func makeNewUUIDAction(sender: AnyObject) {
@@ -31,10 +33,13 @@ class ServicesCollectionViewCell: AbleCollectionViewCell, UITextFieldDelegate {
         let uuid = NSUUID.init()
         uuidField.text = uuid.UUIDString
         uuidField.enabled = true    // Allows selection
-		textFieldNotEmpty( uuidField )
+		textFieldBorderSetup( uuidField )
+        stateDidChange()
 		
     }
 	
+    // MARK: - State methods
+    
 	override func setStateEnabled( enabled: (Bool) ) {
 
 		serviceNameField.enabled = enabled
@@ -43,8 +48,16 @@ class ServicesCollectionViewCell: AbleCollectionViewCell, UITextFieldDelegate {
 		primarySwitch.enabled = enabled
 
 	}
-	
-	override func verifyTextReady() -> Bool {
+
+    override func cellIsValid() -> Bool {
+        
+        var isValid = verifyTextFieldsReady()
+        isValid = cellValid || isValid
+        cellValid = false
+        return isValid
+    }
+    
+	override func verifyTextFieldsReady() -> Bool {   // True if all text fields have entries
 		
 		var textReady = textFieldNotEmpty( serviceNameField )
 		textReady = textFieldNotEmpty( uuidField ) && textReady
@@ -54,20 +67,36 @@ class ServicesCollectionViewCell: AbleCollectionViewCell, UITextFieldDelegate {
 	// MARK: - UITextFieldDelegate
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-		
-		guard textField != uuidField else { return false }	// false because uuidField should never allow changes to its text
-		
-		if string.isEmpty {
-			setBorderOf( textField, toDisplayState: .Invalid )
-		} else {
-			setBorderOf( textField, toDisplayState: .Valid )
-		}
+
+//		if string.isEmpty {
+//			setBorderOf( textField, toDisplayState: .Invalid )
+//		} else {
+//			setBorderOf( textField, toDisplayState: .Valid )
+//		}
+        if textField == uuidField {
+            return false	// false because uuidField should never allow changes to its text
+        }
+        
+        cellValid = false
+        setBorderOf( textField, toDisplayState: .Invalid )
+        if let text = textField.text {
+            print( "\ntext: \(text), length: \(text.characters.count)" )
+            print( "range location: \(range.location), length: \(range.length)" )
+            print( "string: \(string), length: \(string.characters.count)" )
+            let nonEmptyField = !text.isEmpty // && ( range.length < text.characters.count )
+            let nonEmptyReplacement = !string.isEmpty
+            if nonEmptyReplacement || nonEmptyField {
+                cellValid = true
+                setBorderOf( textField, toDisplayState: .Valid )
+            }
+        }
+        stateDidChange()
         return true
     }
 	
 	func textFieldDidEndEditing(textField: (UITextField)) {
 	
-		textFieldNotEmpty( textField )
+		textFieldBorderSetup( textField )
 	}
 	
 	// MARK: - State management

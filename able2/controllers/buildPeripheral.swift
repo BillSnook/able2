@@ -8,12 +8,18 @@
 
 import UIKit
 
-let sampleUUID = "180D"
 
-class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+protocol CellStateChangeProtocol {
+    
+    func stateDidChange()
+}
+
+
+class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CellStateChangeProtocol {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var advertiseButton: UIButton!
+    @IBOutlet weak var saveButton: UIBarButtonItem!
     
     var advertising = false
     
@@ -21,6 +27,8 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     
     var service: Service?
     var characteristics: [Characteristic]?
+    
+    var savedState = false
     
 //--    ----    ----    ----
     
@@ -33,11 +41,18 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         advertiseButton.layer.borderWidth = 1.0
         advertiseButton.layer.cornerRadius = 6.0
         advertiseButton.setTitle( "Advertise", forState: .Normal )
-        
-//        builder = Builder.sharedBuilder
+        advertiseButton.setTitleColor( UIColor.blackColor(), forState: .Normal )
+        advertiseButton.setTitleColor( UIColor.lightGrayColor(), forState: .Disabled )
+        if service != nil {
+            savedState = true
+            advertiseButton.enabled = true
+        } else {
+            advertiseButton.enabled = false
+        }
+        saveButton.enabled = false
         builder?.setupFromService( service )
-        service = builder?.service
-        characteristics = builder?.characteristics
+//        service = builder?.service
+//        characteristics = builder?.characteristics
 
     }
 
@@ -62,7 +77,8 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
             // Code here will execute after the rotation has finished.
             // Equivalent to placing it in the deprecated method -[didRotateFromInterfaceOrientation:]
             self.collectionView.reloadData()
-        }) }
+        })
+    }
 
     @IBAction func saveAction(sender: AnyObject) {
 
@@ -74,6 +90,8 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         service!.uuid = cell.uuidField.text
         service!.primary = NSNumber( bool: cell.primarySwitch.on )
         builder?.save()
+        saveButton.enabled = false
+        advertiseButton.enabled = true
     }
 
     @IBAction func advertiseChange(sender: AnyObject) {
@@ -82,7 +100,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         let indexPath = NSIndexPath(forItem: adButton.tag, inSection: 0 )
         let cell = collectionView.cellForItemAtIndexPath( indexPath ) as! ServicesCollectionViewCell
         if !advertising {           // If we were not advertising, now we want to start
-			if cell.verifyTextReady() {
+			if cell.cellIsValid() {
 				cell.setStateEnabled( false )
                 adButton.setTitle( "Stop Advertising", forState: .Normal )
                 advertising = true
@@ -104,6 +122,20 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         
         print( "addCharacteristicAction" )
     }
+
+    // MARK: - CellStateChangeProtocol support
+
+    func stateDidChange() {
+        
+        print( "buildPeripheral stateDidChange" )
+        savedState = false
+        
+        let indexPath = NSIndexPath(forItem: 0, inSection: 0 )
+        let cell = collectionView.cellForItemAtIndexPath( indexPath ) as! ServicesCollectionViewCell
+        saveButton.enabled = cell.cellIsValid()
+        advertiseButton.enabled = false
+    }
+
     // MARK: - Collection View
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -114,7 +146,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     
     func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
     
-        return 2
+//        return 2
         if let count = characteristics?.count {
             return 1 + count
         }
@@ -133,7 +165,6 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
             cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
 			cell.uuidField.delegate = cell
             cell.tag = indexPath.item
-			cell.verifyTextReady()
 
             if let primary = service!.primary {
                 cell.primarySwitch.on = primary.boolValue
@@ -141,23 +172,23 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
                 cell.primarySwitch.on = false
             }
 
+            cell.textFieldBorderSetup(cell.serviceNameField)
+            cell.textFieldBorderSetup(cell.uuidField)
+            cell.delegate = self
             return cell
         } else {
-			if indexPath.row > 0 { // For characteristic setup
-				let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
-				
-				cell.uuidField.text = ""
-				cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
-				cell.tag = indexPath.item
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
+            
+            cell.uuidField.text = ""
+            cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
+            cell.tag = indexPath.item
 
-				cell.valueTextView.text = ""
-				cell.tag = indexPath.item
+            cell.valueTextView.text = ""
+            cell.tag = indexPath.item
 
-				return cell
-			} else {
-				let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
-				return cell
-			}
+            cell.textFieldBorderSetup(cell.uuidField)
+            cell.delegate = self
+            return cell
         }
     }
     
@@ -166,7 +197,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 		if sizeForItemAtIndexPath.row == 0 { // For advertised service setup
 			return CGSizeMake( collectionView.frame.size.width, 100 )
 		} else {
-			if sizeForItemAtIndexPath.row == 1 { // For characteristic setup
+			if sizeForItemAtIndexPath.row >= 1 { // For characteristic setup
 				return CGSizeMake( collectionView.frame.size.width, 425 )
 			} else {
 				return CGSizeZero

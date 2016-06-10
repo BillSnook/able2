@@ -415,7 +415,7 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </textField>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Service UUID" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Afj-FY-3k7">
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Service UUID" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Afj-FY-3k7">
                                                     <rect key="frame" x="8" y="62" width="254" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="254" id="8cx-ZV-AZG"/>
@@ -1009,6 +1009,7 @@
                     <connections>
                         <outlet property="advertiseButton" destination="VCx-8A-4na" id="IYu-0t-3IM"/>
                         <outlet property="collectionView" destination="Tc0-2Q-Wkx" id="rFe-q3-bav"/>
+                        <outlet property="saveButton" destination="F1w-0c-kME" id="wFs-bd-62K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tqo-G8-Npt" userLabel="First Responder" sceneMemberID="firstResponder"/>

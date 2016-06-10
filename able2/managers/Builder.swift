@@ -38,11 +38,13 @@ class Builder {
         catch {
             Log.error("Could not fetch \(error)")
         }
+        
         serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
         if serviceEntity != nil {
-            self.service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
+            service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
+            return [service!]
         }
-        return [self.service!]
+        return []
     }
     
     func save() {
@@ -58,15 +60,16 @@ class Builder {
         }
     }
 
-    func setupFromService( service: Service? ) {
+    func setupFromService( editService: Service? ) {
 
-        if service == nil {
+        if editService == nil {
             serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
             if serviceEntity != nil {
-                self.service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
+                service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
+                service?.primary = true
             }
         } else {
-            self.service = service
+            service = editService
         }
     }
     

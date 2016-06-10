@@ -71,7 +71,8 @@ class CharacteristicsCollectionViewCell: AbleCollectionViewCell, UITextViewDeleg
 		let uuid = NSUUID.init()
 		uuidField.text = uuid.UUIDString
 		uuidField.enabled = true    // Allows selection
-		
+        textFieldBorderSetup( uuidField )
+        stateDidChange()
 	}
 	
 	override func setStateEnabled( enabled: (Bool) ) {
@@ -82,7 +83,13 @@ class CharacteristicsCollectionViewCell: AbleCollectionViewCell, UITextViewDeleg
 		
 	}
 	
-	override func verifyTextReady() -> Bool {
+    override func cellIsValid() -> Bool {
+
+        // Also verify switch combinations
+        return verifyTextFieldsReady()
+    }
+    
+	override func verifyTextFieldsReady() -> Bool {
 		
 		return textFieldNotEmpty( uuidField )
 	}
@@ -92,11 +99,13 @@ class CharacteristicsCollectionViewCell: AbleCollectionViewCell, UITextViewDeleg
 	func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
 	
 		guard textView != uuidField else { return false }	// false because uuidField should never allow changes to its text
+        stateDidChange()
 		return true
 	}
 
 	func textViewDidEndEditing(textView: UITextView) {
-		
+        
+        stateDidChange()
 	}
 
 }
