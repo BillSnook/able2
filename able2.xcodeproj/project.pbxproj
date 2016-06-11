@@ -41,7 +41,6 @@
 		A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
 		A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
 		A9C329471CF6BE6F0074CFB5 /* buildPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C329461CF6BE6F0074CFB5 /* buildPeripheral.swift */; };
-		A9C329491CFBDA5F0074CFB5 /* ServicesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C329481CFBDA5F0074CFB5 /* ServicesCollectionViewCell.swift */; };
 		A9C3294B1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */; };
 		A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */; };
 		A9D44E781CB58D2A0065F9FA /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */; };
@@ -698,7 +697,6 @@
 				A91379A71D09015500B7FC36 /* Characteristic+CoreDataProperties.swift in Sources */,
 				A93B1ABD1CA5E588004F9B4F /* BLEView.swift in Sources */,
 				A9E2F03B1CC188ED00B18013 /* Characterizer.swift in Sources */,
-				A9C329491CFBDA5F0074CFB5 /* ServicesCollectionViewCell.swift in Sources */,
 				A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */,
 				A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */,
 				A91379A81D09015500B7FC36 /* Characteristic.swift in Sources */,
