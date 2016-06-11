@@ -77,19 +77,22 @@ class ServicesCollectionViewCell: AbleCollectionViewCell, UITextFieldDelegate {
             return false	// false because uuidField should never allow changes to its text
         }
         
-        cellValid = false
-        setBorderOf( textField, toDisplayState: .Invalid )
+        cellValid = false       // Set if cell will be
+        var displayState = DisplayState.Invalid // .Neutral
         if let text = textField.text {
-            print( "\ntext: \(text), length: \(text.characters.count)" )
-            print( "range location: \(range.location), length: \(range.length)" )
-            print( "string: \(string), length: \(string.characters.count)" )
-            let nonEmptyField = !text.isEmpty // && ( range.length < text.characters.count )
+//            print( "\ntext: \(text), length: \(text.characters.count)" )
+//            print( "range location: \(range.location), length: \(range.length)" )
+//            print( "string: \(string), length: \(string.characters.count)" )
+            let nonEmptyText = !text.isEmpty && ( range.length != text.characters.count )
             let nonEmptyReplacement = !string.isEmpty
-            if nonEmptyReplacement || nonEmptyField {
+            if nonEmptyReplacement || nonEmptyText {
                 cellValid = true
-                setBorderOf( textField, toDisplayState: .Valid )
+                displayState = .Valid
+            } else {
+                displayState = .Invalid
             }
         }
+        setBorderOf( textField, toDisplayState: displayState )
         stateDidChange()
         return true
     }

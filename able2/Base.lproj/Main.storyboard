@@ -416,7 +416,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </textField>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Service UUID" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="Afj-FY-3k7">
-                                                    <rect key="frame" x="8" y="62" width="254" height="30"/>
+                                                    <rect key="frame" x="8" y="62" width="260" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="254" id="8cx-ZV-AZG"/>
                                                     </constraints>
@@ -463,7 +463,7 @@
                                             <constraint firstItem="509-rB-apT" firstAttribute="top" secondItem="4Tc-pl-nBY" secondAttribute="top" constant="8" id="GPI-JD-7iI"/>
                                             <constraint firstItem="Hbw-UW-6x4" firstAttribute="leading" secondItem="509-rB-apT" secondAttribute="trailing" constant="8" id="Kfy-b2-1Vp"/>
                                             <constraint firstAttribute="trailing" secondItem="Kmd-gx-USv" secondAttribute="trailing" constant="8" id="L3J-Ud-mB5"/>
-                                            <constraint firstItem="Icc-kB-g5P" firstAttribute="leading" secondItem="Afj-FY-3k7" secondAttribute="trailing" priority="900" constant="21" id="UaK-37-Cpq"/>
+                                            <constraint firstItem="Icc-kB-g5P" firstAttribute="leading" secondItem="Afj-FY-3k7" secondAttribute="trailing" priority="900" constant="15" id="UaK-37-Cpq"/>
                                             <constraint firstAttribute="bottom" secondItem="Afj-FY-3k7" secondAttribute="bottom" constant="8" id="bAI-Re-j36"/>
                                             <constraint firstItem="Hbw-UW-6x4" firstAttribute="top" secondItem="4Tc-pl-nBY" secondAttribute="top" constant="7" id="bIY-5q-Su4"/>
                                             <constraint firstAttribute="trailing" secondItem="Hbw-UW-6x4" secondAttribute="trailing" constant="8" id="cmk-5V-D69"/>

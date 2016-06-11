@@ -64,6 +64,14 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         characteristics = builder?.characteristics
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        
+        if advertising {
+            stopAdvertising()
+        }
+        super.viewDidDisappear( animated )
+    }
+    
     override func viewWillTransitionToSize(size: CGSize,
                                            withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
@@ -83,6 +91,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     @IBAction func saveAction(sender: AnyObject) {
 
         guard service != nil else { print( "save failed" ); return }
+        saveButton.enabled = false
         // Gather and save data from fields and create service
         let indexPath = NSIndexPath(forItem: 0, inSection: 0 )
         let cell = collectionView.cellForItemAtIndexPath( indexPath ) as! ServicesCollectionViewCell
@@ -90,7 +99,6 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         service!.uuid = cell.uuidField.text
         service!.primary = NSNumber( bool: cell.primarySwitch.on )
         builder?.save()
-        saveButton.enabled = false
         advertiseButton.enabled = true
     }
 
@@ -103,18 +111,14 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 			if cell.cellIsValid() {
 				cell.setStateEnabled( false )
                 adButton.setTitle( "Stop Advertising", forState: .Normal )
-                advertising = true
-                // Start advertising
+                startAdvertising()
             } else {
-                // Say why we failed
+                // Say why we failed - border colors are handled in cell
             }
         } else {
-//            cell.serviceNameField.layer.borderColor = UIColor.lightGrayColor().CGColor
-//            cell.uuidField.layer.borderColor = UIColor.lightGrayColor().CGColor
             adButton.setTitle( "Advertise", forState: .Normal )
 			cell.setStateEnabled( true )
-            advertising = false
-            // Stop advertising
+            stopAdvertising()
         }
     }
     
@@ -123,6 +127,18 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         print( "addCharacteristicAction" )
     }
 
+    // MARK: - Advertising support
+    
+    func startAdvertising() {
+        
+        advertising = true
+    }
+    
+    func stopAdvertising() {
+        
+        advertising = false
+    }
+    
     // MARK: - CellStateChangeProtocol support
 
     func stateDidChange() {
@@ -146,7 +162,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     
     func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
     
-//        return 2
+        return 2
         if let count = characteristics?.count {
             return 1 + count
         }
