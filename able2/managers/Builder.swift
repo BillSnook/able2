@@ -19,6 +19,8 @@ class Builder {
     var serviceEntity: NSEntityDescription?
     var service: Service?
     var characteristics = [Characteristic]()
+	
+	var buildService: BuildService?
     
     init() {
         
@@ -49,7 +51,12 @@ class Builder {
     
     func save() {
         
-        guard service != nil else { return }
+        guard buildService != nil else { return }
+		serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
+		if serviceEntity != nil {
+			let service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
+			service?.primary = buildService?.primary
+		}
         do {
             try managedObjectContext.save()
         } catch let error as NSError {
@@ -60,17 +67,17 @@ class Builder {
         }
     }
 
-    func setupFromService( editService: Service? ) {
+    func setupFromService( editService: Service? )-> BuildService? {
 
-        if editService == nil {
-            serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
-            if serviceEntity != nil {
-                service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
-                service?.primary = true
-            }
-        } else {
-            service = editService
-        }
+		var buildService = BuildService( fromService: service )
+//        if editService == nil {
+//            serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
+//            if serviceEntity != nil {
+//                service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
+//                service?.primary = true
+//            }
+//        }
+		return buildService
     }
     
 }

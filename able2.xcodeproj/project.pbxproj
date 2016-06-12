@@ -53,6 +53,8 @@
 		A9E72D731CBEF20F00E7260C /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981659A1CA9A59300D0E65E /* Scanner.swift */; };
 		A9E72D741CBEF20F00E7260C /* Interrogator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9688ECB1CB19ED60036DA5E /* Interrogator.swift */; };
 		A9E72D751CBEF83800E7260C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */; };
+		A9F679721D0CEF3500A6C8BC /* BuildService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F679711D0CEF3500A6C8BC /* BuildService.swift */; };
+		A9F679751D0CF44D00A6C8BC /* BuildCharacteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F679741D0CF44D00A6C8BC /* BuildCharacteristic.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,6 +126,8 @@
 		A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		A9D44E811CB5D4C50065F9FA /* CBPeripheralMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBPeripheralMock.swift; sourceTree = "<group>"; };
 		A9E2F03A1CC188ED00B18013 /* Characterizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Characterizer.swift; path = managers/Characterizer.swift; sourceTree = "<group>"; };
+		A9F679711D0CEF3500A6C8BC /* BuildService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BuildService.swift; path = models/BuildService.swift; sourceTree = "<group>"; };
+		A9F679741D0CF44D00A6C8BC /* BuildCharacteristic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BuildCharacteristic.swift; path = models/BuildCharacteristic.swift; sourceTree = "<group>"; };
 		E6F15527E819A4CD85A6D197 /* Pods-able2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-able2.debug.xcconfig"; path = "Pods/Target Support Files/Pods-able2/Pods-able2.debug.xcconfig"; sourceTree = "<group>"; };
 		F32629C9F661323B4744F8C3 /* Pods-able2UITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-able2UITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-able2UITests/Pods-able2UITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -225,6 +229,7 @@
 				A93B1A8E1CA5AD46004F9B4F /* MasterViewController.swift */,
 				A98165991CA9A58300D0E65E /* controllers */,
 				A981659C1CA9A59A00D0E65E /* managers */,
+				A9F679731D0CEF3A00A6C8BC /* models */,
 				A925C67F1CAB4A1C00FAE766 /* cells */,
 				A93B1ABC1CA5E588004F9B4F /* BLEView.swift */,
 				A93B1A921CA5AD46004F9B4F /* Main.storyboard */,
@@ -293,6 +298,15 @@
 				A91379A11D07BABC00B7FC36 /* Builder.swift */,
 			);
 			name = managers;
+			sourceTree = "<group>";
+		};
+		A9F679731D0CEF3A00A6C8BC /* models */ = {
+			isa = PBXGroup;
+			children = (
+				A9F679711D0CEF3500A6C8BC /* BuildService.swift */,
+				A9F679741D0CF44D00A6C8BC /* BuildCharacteristic.swift */,
+			);
+			name = models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -698,6 +712,7 @@
 				A93B1ABD1CA5E588004F9B4F /* BLEView.swift in Sources */,
 				A9E2F03B1CC188ED00B18013 /* Characterizer.swift in Sources */,
 				A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */,
+				A9F679721D0CEF3500A6C8BC /* BuildService.swift in Sources */,
 				A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */,
 				A91379A81D09015500B7FC36 /* Characteristic.swift in Sources */,
 				A9688ECC1CB19ED60036DA5E /* Interrogator.swift in Sources */,
@@ -709,6 +724,7 @@
 				A97E7CAC1D04F3CA00346F5D /* AbleCollectionViewCell.swift in Sources */,
 				A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */,
 				A95FC1011CBF4C2B001ACB0C /* showCharacteristics.swift in Sources */,
+				A9F679751D0CF44D00A6C8BC /* BuildCharacteristic.swift in Sources */,
 				A9C3294B1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift in Sources */,
 				A91EC6A41CBD61BA00C8ABA3 /* CharacteristicCell.swift in Sources */,
 				A9688ECA1CB093970036DA5E /* ServiceCell.swift in Sources */,

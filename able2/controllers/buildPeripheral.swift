@@ -62,15 +62,15 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         saveButton.enabled = false
         builder?.setupFromService( service )
 
+		service = builder?.service
+		characteristics = builder?.characteristics
+		
     }
 
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear( animated )
         
-        service = builder?.service
-        characteristics = builder?.characteristics
-
         serviceNameField.text = service!.name
         
         uuidField.text = service!.uuid
@@ -143,12 +143,12 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     @IBAction func characteristicAction(sender: UIButton) {
         
         print( "characteristicAction" )
-        serviceModified()
+        serviceModified( nameFieldValid )
     }
 
     @IBAction func primaryAction(sender: AnyObject) {
         
-        serviceModified()
+		serviceModified( nameFieldValid )
     }
     
     @IBAction func makeNewUUIDAction(sender: AnyObject) {
@@ -158,8 +158,8 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         uuidField.enabled = true    // Allows selection
         uuidFieldValid = true
         textFieldBorderSetup( uuidField )
-        serviceModified()
-        
+		serviceModified( nameFieldValid )
+		
     }
     
     // MARK: - State methods
@@ -187,13 +187,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     }
     
 
-    func serviceModified( nameValid: Bool = true ) {
+    func serviceModified( nameValid: Bool = false ) {
         
-        print( "buildPeripheral serviceModified" )
-        
-        let validToSave = nameValid && uuidFieldValid
+        print( "buildPeripheral serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
+		
+        let validToSave = uuidFieldValid && nameValid
         saveButton.enabled = validToSave
-        advertiseButton.enabled = !validToSave
+        advertiseButton.enabled = !validToSave && nameFieldValid
     }
     
     func validateService() -> Bool {    // All text fields have text in them
