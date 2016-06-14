@@ -16,11 +16,6 @@ class Builder {
 
     var managedObjectContext: NSManagedObjectContext
     
-    var serviceEntity: NSEntityDescription?
-    var service: Service?
-    var characteristics = [Characteristic]()
-	
-	var buildService: BuildService?
     
     init() {
         
@@ -28,35 +23,36 @@ class Builder {
         managedObjectContext = appDelegate.managedObjectContext
     }
     
-    func getList() -> [Service]? {
-        
+    func getList() -> [BuildService]? {
+
         let fetch = NSFetchRequest( entityName: "Service" )
         do {
             let results = try managedObjectContext.executeFetchRequest( fetch )
-            return results as? [Service]
+            var buildServices = [BuildService]()
+            for service in results as! [Service] {
+                let buildService = BuildService( fromService: service )
+                buildServices.append( buildService )
+            }
+            return buildServices
+            
         } catch let error as NSError {
             Log.error("Could not fetch \(error), \(error.userInfo)")
         }
         catch {
             Log.error("Could not fetch \(error)")
         }
-        
-        serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
-        if serviceEntity != nil {
-            service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
-            return [service!]
-        }
-        return []
+        return nil
     }
     
-    func save() {
+    func bareService() -> BuildService {
         
-        guard buildService != nil else { return }
-		serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
-		if serviceEntity != nil {
-			let service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
-			service?.primary = buildService?.primary
-		}
+        return BuildService( fromService: nil )
+    }
+    
+    func delete( buildService: BuildService ) {
+        
+        guard buildService.service != nil else { return }
+        managedObjectContext.deleteObject( buildService.service! )
         do {
             try managedObjectContext.save()
         } catch let error as NSError {
@@ -66,18 +62,36 @@ class Builder {
             Log.error("Could not fetch \(error)")
         }
     }
-
-    func setupFromService( editService: Service? )-> BuildService? {
-
-		var buildService = BuildService( fromService: service )
-//        if editService == nil {
-//            serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
-//            if serviceEntity != nil {
-//                service = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service
-//                service?.primary = true
-//            }
-//        }
-		return buildService
-    }
     
+    func save( buildService: BuildService ) {
+        
+        if let service = buildService.service {
+            service.name = buildService.name
+            service.uuid = buildService.uuid
+            service.primary = buildService.primary
+        } else {
+            let serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
+            if serviceEntity != nil {
+                if let newService = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service {
+                    buildService.service = newService
+                    newService.name = buildService.name
+                    newService.uuid = buildService.uuid
+                    newService.primary = buildService.primary
+                    // Characteristics
+                    
+                }
+            }
+        }
+        if buildService.service != nil {
+            do {
+                try managedObjectContext.save()
+            } catch let error as NSError {
+                Log.error("Could not fetch \(error), \(error.userInfo)")
+            }
+            catch {
+                Log.error("Could not fetch \(error)")
+            }
+        }
+    }
+
 }

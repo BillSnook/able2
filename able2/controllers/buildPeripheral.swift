@@ -22,13 +22,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
     var builder: Builder?
-    var service: Service?
+    var buildService: BuildService?
     var characteristics: [Characteristic]?
     
     var advertising = false
     
     
-    @IBOutlet weak var serviceNameField: UITextField!
+    @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var uuidField: UITextField!
     @IBOutlet weak var primarySwitch: UISwitch!
     @IBOutlet weak var uuidButton: UIButton!
@@ -54,35 +54,35 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         advertiseButton.setTitleColor( UIColor.blackColor(), forState: .Normal )
         advertiseButton.setTitleColor( UIColor.lightGrayColor(), forState: .Disabled )
         
-        let serviceValid = service != nil
+        let serviceValid = ( buildService != nil )
         advertiseButton.enabled = serviceValid
         nameFieldValid = serviceValid
         uuidFieldValid = serviceValid
-        
-        saveButton.enabled = false
-        builder?.setupFromService( service )
 
-		service = builder?.service
-		characteristics = builder?.characteristics
-		
+        builder = Builder.sharedBuilder
+        if buildService == nil {
+            buildService = builder?.bareService()
+        }
+
+        saveButton.enabled = false
     }
 
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear( animated )
         
-        serviceNameField.text = service!.name
+        nameField.text = buildService!.name
         
-        uuidField.text = service!.uuid
+        uuidField.text = buildService!.uuid
         uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
         
-        if let primary = service!.primary {
+        if let primary = buildService!.primary {
             primarySwitch.on = primary.boolValue
         } else {
             primarySwitch.on = false
         }
         
-        textFieldBorderSetup(serviceNameField)
+        textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
 
     }
@@ -114,13 +114,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
     @IBAction func saveAction(sender: AnyObject) {
 
-        guard service != nil else { print( "save failed" ); return }
+        guard buildService != nil else { print( "save failed" ); return }
         saveButton.enabled = false
         // Gather and save data from fields and create service
-        service!.name = serviceNameField.text
-        service!.uuid = uuidField.text
-        service!.primary = NSNumber( bool: primarySwitch.on )
-        builder?.save()
+        buildService!.name = nameField.text
+        buildService!.uuid = uuidField.text
+        buildService!.primary = primarySwitch.on
+        builder!.save( buildService! )
         advertiseButton.enabled = true
     }
 
@@ -166,7 +166,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     
     func setControlsEnabled( enabled: (Bool) ) {
         
-        serviceNameField.enabled = enabled
+        nameField.enabled = enabled
         uuidField.enabled = enabled
         uuidButton.enabled = enabled
         primarySwitch.enabled = enabled
@@ -189,7 +189,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
     func serviceModified( nameValid: Bool = false ) {
         
-        print( "buildPeripheral serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
+//        print( "buildPeripheral serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
 		
         let validToSave = uuidFieldValid && nameValid
         saveButton.enabled = validToSave
@@ -284,7 +284,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
         return 0
-        guard service != nil else { return 0 }
+        guard buildService != nil else { return 0 }
         return 1
     }
     
@@ -309,7 +309,6 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         cell.tag = indexPath.item
 
         cell.textFieldBorderSetup(cell.uuidField)
-//        cell.delegate = self
         return cell
     }
     

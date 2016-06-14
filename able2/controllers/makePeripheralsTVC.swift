@@ -15,12 +15,9 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     var navigationPaneBarButtonItem: UIBarButtonItem?
 
     var builder: Builder?
-    
-    var services: [Service]?
-    
-    var uuid: String?
+    var services: [BuildService]?
 
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,13 +43,11 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         
         if segue.identifier == "toBuild" {
             let dest = segue.destinationViewController as! buildPeripheral
-            dest.builder = builder
-            dest.service = nil
+            dest.buildService = nil
         } else if segue.identifier == "toShow" {
             let dest = segue.destinationViewController as! buildPeripheral
-            dest.builder = builder
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                dest.service = services![indexPath.row]
+                dest.buildService = services![indexPath.row]
             }
         }
     }
@@ -70,6 +65,18 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         cell?.textLabel!.text = services![indexPath.row].name
         cell?.detailTextLabel!.text = services![indexPath.row].uuid
         return cell!
+    }
+    
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            builder?.delete( services![indexPath.row] )
+            services = builder?.getList()
+            tableView.reloadData()
+        }
     }
     
 

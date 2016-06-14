@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct BuildService {
+class BuildService {
 	
 	var service: Service?
 	var name: String?
