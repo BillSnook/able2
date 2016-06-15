@@ -8,7 +8,15 @@
 
 import UIKit
 
-class CharacteristicsCollectionViewCell: AbleCollectionViewCell, UITextViewDelegate {
+
+enum DisplayState {
+    case Neutral
+    case Valid
+    case Invalid
+}
+
+
+class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 	
 	// UUID				CBUUID
 	@IBOutlet weak var uuidField: UITextField!
@@ -57,12 +65,14 @@ class CharacteristicsCollectionViewCell: AbleCollectionViewCell, UITextViewDeleg
 	}
 */
 	// Value			NSData?
+    
 	@IBOutlet weak var valueTextView: UITextView!
 	
-
 	// isNotifying		Boolean		True if notifications/indications are enabled
 
 	
+    var delegate: CellStateChangeProtocol?
+    
 	var displayState = DisplayState.Neutral
 
 	
@@ -75,7 +85,20 @@ class CharacteristicsCollectionViewCell: AbleCollectionViewCell, UITextViewDeleg
         stateDidChange()
 	}
 	
-	override func setStateEnabled( enabled: (Bool) ) {
+    func stateDidChange() {
+        
+        if delegate != nil {
+            delegate?.stateDidChange()
+        }
+    }
+    
+    func cellIsValid() -> Bool {
+
+        // Also verify switch combinations
+        return verifyTextFieldsReady()
+    }
+    
+	func setStateEnabled( enabled: (Bool) ) {
 		
 		uuidField.enabled = enabled
 		uuidButton.enabled = enabled
@@ -83,17 +106,52 @@ class CharacteristicsCollectionViewCell: AbleCollectionViewCell, UITextViewDeleg
 		
 	}
 	
-    override func cellIsValid() -> Bool {
-
-        // Also verify switch combinations
-        return verifyTextFieldsReady()
+    func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
+        
+        textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 6.0
+        switch toDisplayState {
+        case .Neutral:
+            textField.layer.borderColor = UIColor.lightGrayColor().CGColor
+        case .Valid:
+            textField.layer.borderColor = UIColor.greenColor().CGColor
+        case .Invalid:
+            textField.layer.borderColor = UIColor.redColor().CGColor
+        }
+        
     }
     
-	override func verifyTextFieldsReady() -> Bool {
+	func verifyTextFieldsReady() -> Bool {
 		
 		return textFieldNotEmpty( uuidField )
 	}
 	
+    func textFieldNotEmpty( textField: (UITextField) ) -> Bool {
+        
+        if let text = textField.text {
+            if text.isEmpty {
+                return false
+            } else {
+                return true
+            }
+        } else {
+            return false
+        }
+    }
+    
+    func textFieldBorderSetup( textField: (UITextField) ) {
+        
+        if let text = textField.text {
+            if text.isEmpty {
+                setBorderOf( textField, toDisplayState: .Invalid )
+            } else {
+                setBorderOf( textField, toDisplayState: .Valid )
+            }
+        } else {
+            setBorderOf( textField, toDisplayState: .Neutral )
+        }
+    }
+    
 	// MARK: - UITextViewDelegate
 
 	func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {

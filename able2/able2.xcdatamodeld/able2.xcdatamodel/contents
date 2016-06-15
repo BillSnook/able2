@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Automatic">
     <entity name="Characteristic" representedClassName=".Characteristic" syncable="YES">
+        <attribute name="permissions" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="properties" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="Binary" syncable="YES"/>
         <relationship name="service" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Service" inverseName="characteristics" inverseEntity="Service" syncable="YES"/>
     </entity>
     <entity name="Peripheral" representedClassName="Peripheral" syncable="YES">
@@ -28,6 +31,6 @@
         <element name="Peripheral" positionX="-0" positionY="243" width="144" height="120"/>
         <element name="Sighting" positionX="261" positionY="243" width="153" height="120"/>
         <element name="Service" positionX="-0" positionY="450" width="144" height="103"/>
-        <element name="Characteristic" positionX="259" positionY="474" width="155" height="73"/>
+        <element name="Characteristic" positionX="259" positionY="474" width="155" height="28"/>
     </elements>
 </model>

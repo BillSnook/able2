@@ -9,13 +9,6 @@
 import UIKit
 
 
-enum DisplayState {
-	case Neutral
-	case Valid
-	case Invalid
-}
-
-
 class AbleCollectionViewCell: UICollectionViewCell {
     
     var delegate: CellStateChangeProtocol?
@@ -58,30 +51,4 @@ class AbleCollectionViewCell: UICollectionViewCell {
 	
 
 	// Verify data is valid for advertising
-    func textFieldNotEmpty( textField: (UITextField) ) -> Bool {
-        
-        if let text = textField.text {
-            if text.isEmpty {
-                return false
-            } else {
-                return true
-            }
-        } else {
-            return false
-        }
-    }
-    
-    func textFieldBorderSetup( textField: (UITextField) ) {
-        
-        if let text = textField.text {
-            if text.isEmpty {
-                setBorderOf( textField, toDisplayState: .Invalid )
-            } else {
-                setBorderOf( textField, toDisplayState: .Valid )
-            }
-        } else {
-            setBorderOf( textField, toDisplayState: .Neutral )
-        }
-    }
-    
 }

@@ -995,6 +995,7 @@
                         <outlet property="advertiseButton" destination="VCx-8A-4na" id="IYu-0t-3IM"/>
                         <outlet property="collectionView" destination="Tc0-2Q-Wkx" id="rFe-q3-bav"/>
                         <outlet property="nameField" destination="509-rB-apT" id="hFm-aX-6Bt"/>
+                        <outlet property="newCharacteristicButton" destination="M1D-xT-Tyr" id="rlU-6N-F7F"/>
                         <outlet property="primarySwitch" destination="Hbw-UW-6x4" id="9PY-vd-a4X"/>
                         <outlet property="saveButton" destination="F1w-0c-kME" id="wFs-bd-62K"/>
                         <outlet property="uuidButton" destination="Icc-kB-g5P" id="WXb-Zx-vMD"/>

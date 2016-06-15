@@ -18,12 +18,13 @@ protocol CellStateChangeProtocol {
 class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var advertiseButton: UIButton!
     @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var advertiseButton: UIButton!
+    @IBOutlet weak var newCharacteristicButton: UIButton!
     
     var builder: Builder?
     var buildService: BuildService?
-    var characteristics: [Characteristic]?
+//    var buildCharacteristics: Array<BuildCharacteristic>?  //[BuildCharacteristic]?
     
     var advertising = false
     
@@ -56,12 +57,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         
         let serviceValid = ( buildService != nil )
         advertiseButton.enabled = serviceValid
+        newCharacteristicButton.enabled = serviceValid
         nameFieldValid = serviceValid
         uuidFieldValid = serviceValid
 
         builder = Builder.sharedBuilder
-        if buildService == nil {
-            buildService = builder?.bareService()
+        if !serviceValid {
+            buildService = builder!.bareService()
         }
 
         saveButton.enabled = false
@@ -120,6 +122,10 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         buildService!.name = nameField.text
         buildService!.uuid = uuidField.text
         buildService!.primary = primarySwitch.on
+        
+        // characteristics
+//        let buildCharacteristic = buildService!.buildCharacteristics[ 0 ]
+        
         builder!.save( buildService! )
         advertiseButton.enabled = true
     }
@@ -143,7 +149,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     @IBAction func characteristicAction(sender: UIButton) {
         
         print( "characteristicAction" )
+        if let buildCharacteristic = builder?.bareCharacteristic() {
+            buildCharacteristic.index = buildService!.buildCharacteristics.count // Give it order
+            buildService!.buildCharacteristics.append( buildCharacteristic )
+        }
+
         serviceModified( nameFieldValid )
+        collectionView.reloadData()
     }
 
     @IBAction func primaryAction(sender: AnyObject) {
@@ -189,7 +201,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
     func serviceModified( nameValid: Bool = false ) {
         
-//        print( "buildPeripheral serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
+//    print( "buildPeripheral serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
 		
         let validToSave = uuidFieldValid && nameValid
         saveButton.enabled = validToSave
@@ -283,32 +295,29 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
-        return 0
-        guard buildService != nil else { return 0 }
         return 1
     }
     
     func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
     
-        if let count = characteristics?.count {
-            return count
-        }
-        return 0
+        return buildService!.buildCharacteristics.count
     }
     
     func collectionView( collectionView: UICollectionView,
                           cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
-            
-        cell.uuidField.text = ""
+        
+        let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
+        cell.uuidField.text = buildCharacteristic.uuid
         cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
-        cell.tag = indexPath.item
+        cell.textFieldBorderSetup(cell.uuidField)
 
         cell.valueTextView.text = ""
-        cell.tag = indexPath.item
 
-        cell.textFieldBorderSetup(cell.uuidField)
+        
+        cell.tag = indexPath.item
+        cell.delegate = buildService
         return cell
     }
     
