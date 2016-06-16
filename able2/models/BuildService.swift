@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class BuildService: CellStateChangeProtocol {
+class BuildService {
 	
 	var service: Service?
 	var name: String?
@@ -74,6 +74,7 @@ class BuildService: CellStateChangeProtocol {
                 let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
                 if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
                     newCharacteristic.uuid = buildCharacteristic.uuid
+                    newCharacteristic.value = buildCharacteristic.value
                     newSet.addObject( newCharacteristic )
                 }
             }
@@ -92,8 +93,4 @@ class BuildService: CellStateChangeProtocol {
 
     }
 	
-    func stateDidChange() {
-        
-    }
-
 }

@@ -9,10 +9,7 @@
 import UIKit
 
 
-protocol CellStateChangeProtocol {
-    
-    func stateDidChange()
-}
+let kCharacteristicChangedKey = "CharacteristicChangedKey"
 
 
 class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate {
@@ -87,10 +84,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
 
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(characteristicChanged( _: )), name: kCharacteristicChangedKey, object: nil)
     }
     
     override func viewDidDisappear(animated: Bool) {
         
+        NSNotificationCenter.defaultCenter().removeObserver( self )
+
         if advertising {
             stopAdvertising()
         }
@@ -154,7 +154,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
             buildService!.buildCharacteristics.append( buildCharacteristic )
         }
 
-        serviceModified( nameFieldValid )
+//        serviceModified( nameFieldValid )
         collectionView.reloadData()
     }
 
@@ -206,6 +206,12 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         let validToSave = uuidFieldValid && nameValid
         saveButton.enabled = validToSave
         advertiseButton.enabled = !validToSave && nameFieldValid
+    }
+
+    func characteristicChanged(notification: NSNotification) {
+
+        saveButton.enabled = true
+        advertiseButton.enabled = false
     }
     
     func validateService() -> Bool {    // All text fields have text in them
@@ -313,11 +319,17 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
         cell.textFieldBorderSetup(cell.uuidField)
 
-        cell.valueTextView.text = ""
+        if let value = buildCharacteristic.value {
+            let nsString = NSString(data: value, encoding: NSUTF8StringEncoding)!
+            cell.valueTextView.text = nsString as String
+        } else {
+            cell.valueTextView.text = ""
+        }
+        cell.valueTextView.delegate = buildCharacteristic
+        buildCharacteristic.cell = cell
 
         
-        cell.tag = indexPath.item
-        cell.delegate = buildService
+        cell.delegate = buildCharacteristic
         return cell
     }
     

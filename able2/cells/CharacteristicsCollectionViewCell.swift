@@ -22,6 +22,8 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
 	@IBOutlet weak var uuidField: UITextField!
 	@IBOutlet weak var uuidButton: UIButton!
 	
+	@IBOutlet weak var valueTextView: UITextView!
+	
 	// Permissions		CBAttributePermissions	Read, Write, and encryption permissions for value
 /*
 	typedef enum {
@@ -66,8 +68,6 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
 */
 	// Value			NSData?
     
-	@IBOutlet weak var valueTextView: UITextView!
-	
 	// isNotifying		Boolean		True if notifications/indications are enabled
 
 	
@@ -88,7 +88,7 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
     func stateDidChange() {
         
         if delegate != nil {
-            delegate?.stateDidChange()
+            delegate?.stateDidChange( forCell: self )
         }
     }
     
@@ -152,15 +152,22 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
         }
     }
     
-	// MARK: - UITextViewDelegate
-
-	func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-	
-		guard textView != uuidField else { return false }	// false because uuidField should never allow changes to its text
+    // MARK: - UITextFieldDelegate
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange: NSRange, replacementString: NSString) -> Bool {
+    
         stateDidChange()
-		return true
-	}
-
+        return false
+    }
+    
+    // MARK: - UITextViewDelegate
+    
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        
+        stateDidChange()
+        return true
+    }
+    
 	func textViewDidEndEditing(textView: UITextView) {
         
         stateDidChange()
