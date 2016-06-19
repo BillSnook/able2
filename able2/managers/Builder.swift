@@ -82,7 +82,7 @@ class Builder {
             } else {
                 if name.characters.count > 7 {
                     let checkRange = name[name.startIndex..<name.startIndex.advancedBy(8)]
-                    //                        print("checkRange: \(checkRange)" )
+                    //                        Log.info("checkRange: \(checkRange)" )
                     if (Int(checkRange) != nil) {
                         entry.name = "~\(peripheral.name!)"
                     } else {
@@ -112,11 +112,11 @@ class Builder {
     
     do {
     try managedContext.save()
-    //            print("storeEntry After Try")
+    //            Log.info("storeEntry After Try")
     } catch let error as NSError  {
     Log.error("Could not save \(error), \(error.userInfo)")
     }
-    //        print("storeEntry After do-loop")
+    //        Log.info("storeEntry After do-loop")
 */
     
     func save( buildService: BuildService ) {

@@ -22,7 +22,7 @@ func setUpInMemoryManagedObjectContext() -> NSManagedObjectContext {
     do {
         try persistentStoreCoordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil)
     } catch {
-        print("Adding in-memory persistent store failed")
+        Log.info("Adding in-memory persistent store failed")
     }
     
     let managedContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
@@ -43,9 +43,9 @@ func deleteAllPeripherals( managedContext: NSManagedObjectContext ) {
             }
             try managedContext.save()
         } catch let error as NSError {
-            print( "Error while fetching or saving batch: \(error)" )
+            Log.info( "Error while fetching or saving batch: \(error)" )
         }
     } else {
-        print( "Failed to get entity in deleteAllPeripherals" )
+        Log.info( "Failed to get entity in deleteAllPeripherals" )
     }
 }

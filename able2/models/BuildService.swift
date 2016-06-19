@@ -25,21 +25,13 @@ class BuildService {
 			name = service!.name
 			uuid = service!.uuid
 			primary = service!.primary?.boolValue
-
-            print( "service name: \(name)" )
-
             let characteristics = service!.characteristics
-            print( "characteristics count: \(characteristics?.count)" )
-//        Log.trace("set count: \(characteristics!.count)" )
             buildCharacteristics = []
             for characteristic in characteristics! {
-//                print( "characteristic: \(characteristic.description)" )
                 let buildCharacteristic = BuildCharacteristic( fromCharacteristic: characteristic as? Characteristic)
-                print( "buildCharacteristic: \(buildCharacteristic.description)" )
                 buildCharacteristics.append( buildCharacteristic )
             }
-
-        
+            // WFS char setup
         } else {
 			service = nil
 			name = ""
@@ -63,8 +55,6 @@ class BuildService {
                     newService.name = name
                     newService.uuid = uuid
                     newService.primary = primary
-                    
-                    // Characteristics
                 }
             }
         }
@@ -73,8 +63,8 @@ class BuildService {
             for buildCharacteristic in buildCharacteristics {
                 let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
                 if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
-                    newCharacteristic.uuid = buildCharacteristic.uuid
-                    newCharacteristic.value = buildCharacteristic.value
+                    buildCharacteristic.save( newCharacteristic )
+                    // WFS Characteristic setup
                     newSet.addObject( newCharacteristic )
                 }
             }

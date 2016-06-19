@@ -51,6 +51,7 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
 //    var characteristic: Characteristic?
     var value: NSData?
     var uuid: String?
+    var primary: Bool?
     var properties: CBCharacteristicProperties?
     var permissions: CBAttributePermissions?
     var index = 0
@@ -66,27 +67,122 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
             uuid = fromCharacteristic!.uuid
             value = fromCharacteristic!.value
 //            primary = fromCharacteristic!.primary?.boolValue
+            permissions = CBAttributePermissions( rawValue: fromCharacteristic!.permissions!.unsignedIntegerValue )
+            properties = CBCharacteristicProperties( rawValue: fromCharacteristic!.properties!.unsignedIntegerValue )
         } else {
 //            characteristic = nil
             uuid = ""
             value = nil
-            properties = CBCharacteristicProperties()
             permissions = CBAttributePermissions()
+            properties = CBCharacteristicProperties()
         }
     }
+    
+    func save( toCharacteristic: Characteristic ) {
+        
+        toCharacteristic.uuid = uuid
+        toCharacteristic.value = value
+        toCharacteristic.permissions = cellToPermissions()
+        toCharacteristic.properties = cellToProperties()
 
+    }
+    
+    func cellToPermissions() -> NSNumber {
+        
+        permissions = CBAttributePermissions()
+        if let safeCell = cell {
+            if safeCell.permReadSwitch.on {
+                permissions!.insert( .Readable )
+            }
+            if safeCell.permWriteSwitch.on {
+                permissions!.insert( .Writeable )
+            }
+            if safeCell.permReadWithEncryptionSwitch.on {
+                permissions!.insert( .ReadEncryptionRequired )
+            }
+            if safeCell.permWriteWithEncryptionSwitch.on {
+                permissions!.insert( .WriteEncryptionRequired )
+            }
+        }
+
+        return NSNumber( unsignedInteger: permissions!.rawValue )
+    }
+
+    func cellToProperties() -> NSNumber {
+        
+        properties = CBCharacteristicProperties()
+        if let safeCell = cell {
+            if safeCell.propReadSwitch.on {
+                properties!.insert( .Read )
+            }
+            if safeCell.propWriteSwitch.on {
+                properties!.insert( .WriteWithoutResponse )
+            }
+            if safeCell.propAuthenticateSwitch.on {
+                properties!.insert( .AuthenticatedSignedWrites )
+            }
+            if safeCell.propWriteWithResponseSwitch.on {
+                properties!.insert( .Write )
+            }
+            if safeCell.propNotifySwitch.on {
+                properties!.insert( .Notify )
+            }
+            if safeCell.propIndicateSwitch.on {
+                properties!.insert( .Indicate )
+            }
+            if safeCell.propNotifyWithEncryptionSwitch.on {
+                properties!.insert( .NotifyEncryptionRequired )
+            }
+            if safeCell.propIndicateWithEncryptionSwitch.on {
+                properties!.insert( .IndicateEncryptionRequired )
+            }
+        }
+        return NSNumber( unsignedInteger: properties!.rawValue )
+    }
+    
     func stateDidChange( forCell cell: CharacteristicsCollectionViewCell? ) {
 
         if cell != nil {
             uuid = cell!.uuidField.text
             let nsString = cell!.valueTextView.text as NSString
             value = nsString.dataUsingEncoding(NSUTF8StringEncoding)!
+            // WFS Characteristic setup
         }
-        
-//        modified = true
 
         NSNotificationCenter.defaultCenter().postNotificationName( kCharacteristicChangedKey, object: nil )
-}
+    }
+    
+    func setupCell( cell : CharacteristicsCollectionViewCell ) {
+
+        cell.uuidField.text = uuid
+        cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
+        cell.textFieldBorderSetup(cell.uuidField)
+        
+        if let valueData = value {
+            let nsString = NSString(data: valueData, encoding: NSUTF8StringEncoding)!
+            cell.valueTextView.text = nsString as String
+        } else {
+            cell.valueTextView.text = ""
+        }
+        cell.valueTextView.delegate = self
+
+        cell.permReadSwitch.on = permissions!.contains( .Readable )
+        cell.permWriteSwitch.on = permissions!.contains( .Writeable )
+        cell.permReadWithEncryptionSwitch.on = permissions!.contains( .ReadEncryptionRequired )
+        cell.permWriteWithEncryptionSwitch.on = permissions!.contains( .WriteEncryptionRequired )
+        
+        cell.propReadSwitch.on = properties!.contains( .Read )
+        cell.propWriteSwitch.on = properties!.contains( .WriteWithoutResponse )
+        cell.propAuthenticateSwitch.on = properties!.contains( .AuthenticatedSignedWrites )
+        cell.propWriteWithResponseSwitch.on = properties!.contains( .Write )
+        cell.propNotifySwitch.on = properties!.contains( .Notify)
+        cell.propIndicateSwitch.on = properties!.contains( .Indicate )
+        cell.propNotifyWithEncryptionSwitch.on = properties!.contains( .NotifyEncryptionRequired )
+        cell.propIndicateWithEncryptionSwitch.on = properties!.contains( .IndicateEncryptionRequired )
+        
+        self.cell = cell
+        cell.delegate = self
+    }
 
     // MARK: - Text Input support
     
@@ -111,9 +207,9 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
         
         var displayState = DisplayState.Neutral
         if let viewText = textView.text {
-//            print( "\ntext: \(text), length: \(text.characters.count)" )
-//            print( "range location: \(range.location), length: \(range.length)" )
-//            print( "string: \(string), length: \(string.characters.count)" )
+//            Log.info( "\ntext: \(text), length: \(text.characters.count)" )
+//            Log.info( "range location: \(range.location), length: \(range.length)" )
+//            Log.info( "string: \(string), length: \(string.characters.count)" )
             let nonEmptyText = !viewText.isEmpty && ( range.length != viewText.characters.count )
             let nonEmptyReplacement = !text.isEmpty
             if nonEmptyReplacement || nonEmptyText {
@@ -134,7 +230,6 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
         let nsString = textView.text as NSString
         value = nsString.dataUsingEncoding(NSUTF8StringEncoding)!
         stateDidChange( forCell: cell )
-//        modified = true
     }
     
 }

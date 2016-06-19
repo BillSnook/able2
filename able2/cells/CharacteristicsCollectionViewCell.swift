@@ -95,7 +95,8 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
     func cellIsValid() -> Bool {
 
         // Also verify switch combinations
-        return verifyTextFieldsReady()
+        let valid = textFieldNotEmpty( uuidField )
+        return valid
     }
     
 	func setStateEnabled( enabled: (Bool) ) {
@@ -121,11 +122,6 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
         
     }
     
-	func verifyTextFieldsReady() -> Bool {
-		
-		return textFieldNotEmpty( uuidField )
-	}
-	
     func textFieldNotEmpty( textField: (UITextField) ) -> Bool {
         
         if let text = textField.text {
@@ -152,7 +148,7 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
         }
     }
     
-    // MARK: - UITextFieldDelegate
+    // MARK: - UITextFieldDelegate - UUID - make it unchangeable via user touches
     
     func textField(textField: UITextField, shouldChangeCharactersInRange: NSRange, replacementString: NSString) -> Bool {
     
@@ -160,11 +156,13 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
         return false
     }
     
-    // MARK: - UITextViewDelegate
+    // MARK: - UITextViewDelegate - Value field
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         
-        stateDidChange()
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
+            self.stateDidChange()
+        })
         return true
     }
     
@@ -173,4 +171,17 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
         stateDidChange()
 	}
 
+    @IBAction func permissionControl(sender: UISwitch) {
+
+        
+        stateDidChange()
+    }
+    
+    @IBAction func propertiesChanged(sender: UISwitch) {
+
+        
+        stateDidChange()
+}
+    
+    
 }

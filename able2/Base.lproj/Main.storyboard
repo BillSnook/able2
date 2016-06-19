@@ -211,7 +211,7 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DrY-Bi-n04">
                                 <rect key="frame" x="40" y="112" width="240" height="44"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <accessibility key="accessibilityConfiguration" identifier="becomeCentral" label="becomeCentral"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="QOp-wr-IsW"/>
@@ -221,13 +221,21 @@
                                 <state key="normal" title="Scan For Peripherals">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <segue destination="496-hM-mK5" kind="showDetail" identifier="showCentralDetail" id="e6N-bh-gkL"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mMq-Ya-2Yd">
                                 <rect key="frame" x="40" y="190" width="240" height="44"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <accessibility key="accessibilityConfiguration" identifier="becomePeripheral"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="rku-1s-FrT"/>
@@ -237,6 +245,14 @@
                                 <state key="normal" title="Create Peripheral">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <segue destination="hbn-Yc-QQS" kind="showDetail" identifier="showPeripheralDetail" id="vk1-6r-jvy"/>
                                 </connections>
@@ -432,7 +448,7 @@
                                         </connections>
                                     </textField>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.41022321581840515" green="0.99753707647323608" blue="0.0036917971447110176" alpha="0.24869791666666666" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="509-rB-apT" firstAttribute="top" secondItem="VCx-8A-4na" secondAttribute="bottom" constant="16" id="1Dn-pF-jsy"/>
                                     <constraint firstItem="Icc-kB-g5P" firstAttribute="leading" secondItem="Afj-FY-3k7" secondAttribute="trailing" priority="900" constant="18" id="4Ml-OT-nlW"/>
@@ -566,6 +582,9 @@
                                                                         <constraint firstAttribute="width" constant="49" id="pBH-BT-AGt"/>
                                                                         <constraint firstAttribute="height" constant="31" id="r8U-j5-PJx"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="permissionControl:" destination="ioU-FM-GHC" eventType="valueChanged" id="p7s-xm-7W3"/>
+                                                                    </connections>
                                                                 </switch>
                                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="01j-ed-DkN">
                                                                     <rect key="frame" x="0.0" y="2" width="51" height="31"/>
@@ -574,6 +593,9 @@
                                                                         <constraint firstAttribute="width" constant="49" id="dGh-Nl-US6"/>
                                                                         <constraint firstAttribute="height" constant="31" id="loi-wU-Wth"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="permissionControl:" destination="ioU-FM-GHC" eventType="valueChanged" id="kd8-Sv-gkI"/>
+                                                                    </connections>
                                                                 </switch>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Read with Encryption" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vap-lY-Wfb">
                                                                     <rect key="frame" x="57" y="43" width="95" height="35"/>
@@ -621,6 +643,9 @@
                                                                         <constraint firstAttribute="width" constant="49" id="2iF-vV-c5B"/>
                                                                         <constraint firstAttribute="height" constant="31" id="inF-KX-KoX"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="permissionControl:" destination="ioU-FM-GHC" eventType="valueChanged" id="4fm-5R-BI9"/>
+                                                                    </connections>
                                                                 </switch>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Write with Encryption" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9km-gu-60x">
                                                                     <rect key="frame" x="57" y="43" width="95" height="35"/>
@@ -639,6 +664,9 @@
                                                                         <constraint firstAttribute="height" constant="31" id="PSx-W1-NJI"/>
                                                                         <constraint firstAttribute="width" constant="49" id="ozK-MX-xx8"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="permissionControl:" destination="ioU-FM-GHC" eventType="valueChanged" id="nrP-b4-8aR"/>
+                                                                    </connections>
                                                                 </switch>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -714,6 +742,9 @@
                                                                         <constraint firstAttribute="height" constant="31" id="Jtr-Jw-453"/>
                                                                         <constraint firstAttribute="width" constant="49" id="woK-FJ-g6L"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="propertiesChanged:" destination="ioU-FM-GHC" eventType="valueChanged" id="hrK-QW-Y1d"/>
+                                                                    </connections>
                                                                 </switch>
                                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="JTH-fZ-OCn">
                                                                     <rect key="frame" x="0.0" y="46" width="51" height="31"/>
@@ -722,6 +753,9 @@
                                                                         <constraint firstAttribute="width" constant="49" id="801-gZ-syD"/>
                                                                         <constraint firstAttribute="height" constant="31" id="bBh-1I-eBv"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="propertiesChanged:" destination="ioU-FM-GHC" eventType="valueChanged" id="sU9-1G-oDP"/>
+                                                                    </connections>
                                                                 </switch>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -759,6 +793,9 @@
                                                                         <constraint firstAttribute="height" constant="31" id="BXe-Tu-g93"/>
                                                                         <constraint firstAttribute="width" constant="49" id="Ee7-iR-eYR"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="propertiesChanged:" destination="ioU-FM-GHC" eventType="valueChanged" id="mRb-R7-ET9"/>
+                                                                    </connections>
                                                                 </switch>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Write with Response" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLx-SO-CuL">
                                                                     <rect key="frame" x="57" y="43" width="95" height="35"/>
@@ -777,6 +814,9 @@
                                                                         <constraint firstAttribute="height" constant="31" id="eQy-zO-8Ja"/>
                                                                         <constraint firstAttribute="width" constant="49" id="gy3-HA-26D"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="propertiesChanged:" destination="ioU-FM-GHC" eventType="valueChanged" id="llZ-c8-aGS"/>
+                                                                    </connections>
                                                                 </switch>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -814,6 +854,9 @@
                                                                         <constraint firstAttribute="width" constant="49" id="8KF-Ds-Vy9"/>
                                                                         <constraint firstAttribute="height" constant="31" id="Kzo-tG-EKd"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="propertiesChanged:" destination="ioU-FM-GHC" eventType="valueChanged" id="WXV-7B-Xbi"/>
+                                                                    </connections>
                                                                 </switch>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notify with Encryption" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6B-8o-JKs">
                                                                     <rect key="frame" x="57" y="43" width="103" height="35"/>
@@ -832,6 +875,9 @@
                                                                         <constraint firstAttribute="width" constant="49" id="DAx-1h-fvQ"/>
                                                                         <constraint firstAttribute="height" constant="31" id="N6P-CW-vku"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="propertiesChanged:" destination="ioU-FM-GHC" eventType="valueChanged" id="LLM-1p-dls"/>
+                                                                    </connections>
                                                                 </switch>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -869,6 +915,9 @@
                                                                         <constraint firstAttribute="height" constant="31" id="Nmy-XJ-gyn"/>
                                                                         <constraint firstAttribute="width" constant="49" id="PUN-8L-lwB"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="propertiesChanged:" destination="ioU-FM-GHC" eventType="valueChanged" id="bVf-fp-2J0"/>
+                                                                    </connections>
                                                                 </switch>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Indicate with Encryption" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NeT-rg-klr">
                                                                     <rect key="frame" x="57" y="43" width="95" height="35"/>
@@ -887,6 +936,9 @@
                                                                         <constraint firstAttribute="width" constant="49" id="3JY-Ni-SKb"/>
                                                                         <constraint firstAttribute="height" constant="31" id="APT-ao-dKK"/>
                                                                     </constraints>
+                                                                    <connections>
+                                                                        <action selector="propertiesChanged:" destination="ioU-FM-GHC" eventType="valueChanged" id="wJu-rM-L26"/>
+                                                                    </connections>
                                                                 </switch>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -928,7 +980,7 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" red="0.0" green="1" blue="0.59909641287316351" alpha="0.25102504432624112" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="ged-hN-HBz" firstAttribute="top" secondItem="ioU-FM-GHC" secondAttribute="top" constant="8" id="22c-gV-qC4"/>
                                             <constraint firstItem="mCV-hy-O9o" firstAttribute="top" secondItem="AOR-kv-V7R" secondAttribute="bottom" constant="4" id="52U-zQ-LR1"/>

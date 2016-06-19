@@ -64,6 +64,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         }
 
         saveButton.enabled = false
+        checkAddCharacteristicButton()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -116,7 +117,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
     @IBAction func saveAction(sender: AnyObject) {
 
-        guard buildService != nil else { print( "save failed" ); return }
+        guard buildService != nil else { Log.info( "save failed" ); return }
         saveButton.enabled = false
         // Gather and save data from fields and create service
         buildService!.name = nameField.text
@@ -128,6 +129,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         
         builder!.save( buildService! )
         advertiseButton.enabled = true
+        checkAddCharacteristicButton()
     }
 
     @IBAction func advertiseAction(sender: AnyObject) {
@@ -144,14 +146,16 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 			setControlsEnabled( true )
             stopAdvertising()
         }
+        checkAddCharacteristicButton()
     }
     
     @IBAction func characteristicAction(sender: UIButton) {
         
-        print( "characteristicAction" )
+        Log.info( "characteristicAction" )
         if let buildCharacteristic = builder?.bareCharacteristic() {
             buildCharacteristic.index = buildService!.buildCharacteristics.count // Give it order
             buildService!.buildCharacteristics.append( buildCharacteristic )
+            checkAddCharacteristicButton()
         }
 
 //        serviceModified( nameFieldValid )
@@ -176,15 +180,24 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     
     // MARK: - State methods
     
-    func setControlsEnabled( enabled: (Bool) ) {
+    func setControlsEnabled( enabled: Bool ) {
         
         nameField.enabled = enabled
         uuidField.enabled = enabled
         uuidButton.enabled = enabled
         primarySwitch.enabled = enabled
         
+        permissionSwitches( enabled )
+        propertiesSwitches( enabled )
     }
     
+    func permissionSwitches( enabled: Bool ) {
+        
+    }
+    
+    func propertiesSwitches( enabled: Bool ) {
+        
+    }
 
     // MARK: - Advertising support
     
@@ -201,7 +214,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
     func serviceModified( nameValid: Bool = false ) {
         
-//    print( "buildPeripheral serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
+//    Log.info( "buildPeripheral serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
 		
         let validToSave = uuidFieldValid && nameValid
         saveButton.enabled = validToSave
@@ -212,8 +225,18 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
         saveButton.enabled = true
         advertiseButton.enabled = false
+        checkAddCharacteristicButton()
     }
     
+    func checkAddCharacteristicButton() {
+        
+        if let count = buildService?.buildCharacteristics.count where count > 0{   // Only one for now
+            newCharacteristicButton.enabled = false
+        } else {
+            newCharacteristicButton.enabled = !advertising
+        }
+    }
+
     func validateService() -> Bool {    // All text fields have text in them
         
         guard nameFieldValid else { return false }
@@ -275,9 +298,9 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         nameFieldValid = false       // Set if cell will be
         var displayState = DisplayState.Invalid // .Neutral
         if let text = textField.text {
-//            print( "\ntext: \(text), length: \(text.characters.count)" )
-//            print( "range location: \(range.location), length: \(range.length)" )
-//            print( "string: \(string), length: \(string.characters.count)" )
+//            Log.info( "\ntext: \(text), length: \(text.characters.count)" )
+//            Log.info( "range location: \(range.location), length: \(range.length)" )
+//            Log.info( "string: \(string), length: \(string.characters.count)" )
             let nonEmptyText = !text.isEmpty && ( range.length != text.characters.count )
             let nonEmptyReplacement = !string.isEmpty
             if nonEmptyReplacement || nonEmptyText {
@@ -315,6 +338,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
         
         let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
+        buildCharacteristic.setupCell( cell )
         cell.uuidField.text = buildCharacteristic.uuid
         cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
         cell.textFieldBorderSetup(cell.uuidField)
