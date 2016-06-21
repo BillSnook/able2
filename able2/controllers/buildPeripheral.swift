@@ -123,10 +123,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         buildService!.name = nameField.text
         buildService!.uuid = uuidField.text
         buildService!.primary = primarySwitch.on
-        
-        // characteristics
-//        let buildCharacteristic = buildService!.buildCharacteristics[ 0 ]
-        
+
         builder!.save( buildService! )
         advertiseButton.enabled = true
         checkAddCharacteristicButton()
@@ -186,19 +183,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         uuidField.enabled = enabled
         uuidButton.enabled = enabled
         primarySwitch.enabled = enabled
-        
-        permissionSwitches( enabled )
-        propertiesSwitches( enabled )
-    }
-    
-    func permissionSwitches( enabled: Bool ) {
-        
-    }
-    
-    func propertiesSwitches( enabled: Bool ) {
-        
-    }
 
+        // characteristics
+        for buildCharacteristic in buildService!.buildCharacteristics {
+            buildCharacteristic.enabled( enabled )
+        }
+    }
+    
     // MARK: - Advertising support
     
     func startAdvertising() {
@@ -339,19 +330,6 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         
         let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
         buildCharacteristic.setupCell( cell )
-        cell.uuidField.text = buildCharacteristic.uuid
-        cell.uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
-        cell.textFieldBorderSetup(cell.uuidField)
-
-        if let value = buildCharacteristic.value {
-            let nsString = NSString(data: value, encoding: NSUTF8StringEncoding)!
-            cell.valueTextView.text = nsString as String
-        } else {
-            cell.valueTextView.text = ""
-        }
-        cell.valueTextView.delegate = buildCharacteristic
-        buildCharacteristic.cell = cell
-
         
         cell.delegate = buildCharacteristic
         return cell

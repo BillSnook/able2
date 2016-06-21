@@ -259,7 +259,34 @@
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="586-6w-Zm7">
                                 <rect key="frame" x="0.0" y="268" width="320" height="300"/>
+                                <subviews>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fNu-df-1EK">
+                                        <rect key="frame" x="8" y="8" width="304" height="284"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Warning" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obl-W1-BOI">
+                                                <rect key="frame" x="8" y="8" width="288" height="268"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="obl-W1-BOI" secondAttribute="bottom" constant="8" id="2CD-FS-04X"/>
+                                            <constraint firstItem="obl-W1-BOI" firstAttribute="leading" secondItem="fNu-df-1EK" secondAttribute="leading" constant="8" id="ejJ-mW-8ut"/>
+                                            <constraint firstAttribute="trailing" secondItem="obl-W1-BOI" secondAttribute="trailing" constant="8" id="jA5-Al-iiq"/>
+                                            <constraint firstItem="obl-W1-BOI" firstAttribute="top" secondItem="fNu-df-1EK" secondAttribute="top" constant="8" id="kRP-fY-I2L"/>
+                                            <constraint firstItem="obl-W1-BOI" firstAttribute="width" secondItem="fNu-df-1EK" secondAttribute="width" constant="-16" id="rv0-Fc-Mzy"/>
+                                        </constraints>
+                                    </scrollView>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="fNu-df-1EK" secondAttribute="trailing" constant="8" id="4dh-cv-K34"/>
+                                    <constraint firstItem="fNu-df-1EK" firstAttribute="leading" secondItem="586-6w-Zm7" secondAttribute="leading" constant="8" id="Aic-ZH-kR6"/>
+                                    <constraint firstAttribute="bottom" secondItem="fNu-df-1EK" secondAttribute="bottom" constant="8" id="kmd-5Y-Zah"/>
+                                    <constraint firstItem="fNu-df-1EK" firstAttribute="top" secondItem="586-6w-Zm7" secondAttribute="top" constant="8" id="mud-M3-ARS"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -267,10 +294,10 @@
                             <constraint firstItem="DrY-Bi-n04" firstAttribute="top" secondItem="7gm-it-UBd" secondAttribute="bottom" constant="48" id="7tE-cH-ncj"/>
                             <constraint firstAttribute="trailing" secondItem="586-6w-Zm7" secondAttribute="trailing" id="LcO-Jj-d1g"/>
                             <constraint firstItem="mMq-Ya-2Yd" firstAttribute="top" secondItem="DrY-Bi-n04" secondAttribute="bottom" constant="34" id="ReA-fc-jkC"/>
-                            <constraint firstItem="OQC-hF-WpE" firstAttribute="top" secondItem="586-6w-Zm7" secondAttribute="bottom" id="SKX-MQ-WDB"/>
                             <constraint firstItem="mMq-Ya-2Yd" firstAttribute="centerX" secondItem="Ij4-pN-x7x" secondAttribute="centerX" id="VO4-7H-zlr"/>
                             <constraint firstItem="DrY-Bi-n04" firstAttribute="centerX" secondItem="Ij4-pN-x7x" secondAttribute="centerX" id="ds7-63-nS2"/>
                             <constraint firstItem="586-6w-Zm7" firstAttribute="top" secondItem="mMq-Ya-2Yd" secondAttribute="bottom" constant="34" id="e8j-Wy-9dX"/>
+                            <constraint firstItem="OQC-hF-WpE" firstAttribute="top" secondItem="586-6w-Zm7" secondAttribute="bottom" id="hLM-ho-uKV"/>
                             <constraint firstItem="586-6w-Zm7" firstAttribute="leading" secondItem="Ij4-pN-x7x" secondAttribute="leading" id="uYy-F4-iGf"/>
                         </constraints>
                     </view>
@@ -278,6 +305,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="arenaView" destination="586-6w-Zm7" id="wBg-l6-xY5"/>
+                        <outlet property="messageLabel" destination="obl-W1-BOI" id="7yi-FJ-4Gu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uxs-rN-tEY" userLabel="First Responder" sceneMemberID="firstResponder"/>

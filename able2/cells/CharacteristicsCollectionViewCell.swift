@@ -173,15 +173,13 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
 
     @IBAction func permissionControl(sender: UISwitch) {
 
-        
         stateDidChange()
     }
     
     @IBAction func propertiesChanged(sender: UISwitch) {
 
-        
         stateDidChange()
-}
+    }
     
     
 }

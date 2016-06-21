@@ -56,7 +56,7 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
     var permissions: CBAttributePermissions?
     var index = 0
     
-    var cell: CharacteristicsCollectionViewCell?
+    weak var cell: CharacteristicsCollectionViewCell?
     
 //    var primary: Bool?
     
@@ -140,6 +140,29 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
         return NSNumber( unsignedInteger: properties!.rawValue )
     }
     
+    func enabled( enabled: Bool ) {
+        
+        if let safeCell = cell {
+            safeCell.uuidField.enabled = enabled
+            safeCell.uuidButton.enabled = enabled
+            safeCell.valueTextView.editable = enabled
+
+            safeCell.permReadSwitch.enabled = enabled
+            safeCell.permWriteSwitch.enabled = enabled
+            safeCell.permReadWithEncryptionSwitch.enabled = enabled
+            safeCell.permWriteWithEncryptionSwitch.enabled = enabled
+
+            safeCell.propReadSwitch.enabled = enabled
+            safeCell.propWriteSwitch.enabled = enabled
+            safeCell.propAuthenticateSwitch.enabled = enabled
+            safeCell.propWriteWithResponseSwitch.enabled = enabled
+            safeCell.propNotifySwitch.enabled = enabled
+            safeCell.propIndicateSwitch.enabled = enabled
+            safeCell.propNotifyWithEncryptionSwitch.enabled = enabled
+            safeCell.propIndicateWithEncryptionSwitch.enabled = enabled
+        }
+    }
+    
     func stateDidChange( forCell cell: CharacteristicsCollectionViewCell? ) {
 
         if cell != nil {
@@ -180,7 +203,15 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
         cell.propNotifyWithEncryptionSwitch.on = properties!.contains( .NotifyEncryptionRequired )
         cell.propIndicateWithEncryptionSwitch.on = properties!.contains( .IndicateEncryptionRequired )
         
+        if let displayValue = value {
+            let nsString = NSString(data: displayValue, encoding: NSUTF8StringEncoding)!
+            cell.valueTextView.text = nsString as String
+        } else {
+            cell.valueTextView.text = ""
+        }
+        cell.valueTextView.delegate = self
         self.cell = cell
+        
         cell.delegate = self
     }
 

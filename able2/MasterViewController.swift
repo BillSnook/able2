@@ -18,6 +18,7 @@ class MasterViewController: UIViewController {
     var bleList = [BLEView]()
     
     @IBOutlet weak var arenaView: UIView!
+    @IBOutlet weak var messageLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +27,10 @@ class MasterViewController: UIViewController {
         managedObjectContext = appDelegate!.managedObjectContext
 //        Log.trace( "MasterViewController, viewDidLoad, managedObjectContext: \(managedObjectContext)" )
         appDelegate!.deleteAllPeripherals()
+        messageLabel.text = "\u{26A0}  Warning\n\nThis app uses a lot of power in scan mode. You have been warned."
+//        messageLabel.text = "qwertyuiopasdfghjkl; qwert yuiopasdfghjkl;qwertyuiopas dfghjkl;qwertyuiopasd fghjkl;qwertyuiopasdfghjkl;wertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwe rtyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopas dfghjkl;qwertyuiopasdfghjk l;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuio pasdfghjkl;"
+
+        messageLabel.textColor = UIColor.blackColor()
     }
 
     override func viewDidAppear(animated: Bool) {
