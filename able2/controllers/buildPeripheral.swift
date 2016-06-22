@@ -60,7 +60,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
         builder = Builder.sharedBuilder
         if !serviceValid {
-            buildService = builder!.bareService()
+            buildService = BuildService( fromService: nil )
         }
 
         saveButton.enabled = false
@@ -149,13 +149,12 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     @IBAction func characteristicAction(sender: UIButton) {
         
         Log.info( "characteristicAction" )
-        if let buildCharacteristic = builder?.bareCharacteristic() {
-            buildCharacteristic.index = buildService!.buildCharacteristics.count // Give it order
-            buildService!.buildCharacteristics.append( buildCharacteristic )
-            checkAddCharacteristicButton()
-        }
+        guard buildService != nil else { Log.info( "But buildService is nil" ); return }
+        let buildCharacteristic = BuildCharacteristic( fromCharacteristic: nil )
+        buildCharacteristic.index = buildService!.buildCharacteristics.count // Give it order
+        buildService!.buildCharacteristics.append( buildCharacteristic )
+        checkAddCharacteristicButton()
 
-//        serviceModified( nameFieldValid )
         collectionView.reloadData()
     }
 
