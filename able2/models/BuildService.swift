@@ -8,6 +8,8 @@
 
 import Foundation
 import CoreData
+import CoreBluetooth
+
 
 class BuildService {
 	
@@ -80,7 +82,19 @@ class BuildService {
                 Log.error("Could not fetch \(error)")
             }
         }
+    }
+    
+    func toBluetooth() -> CBMutableService {
+        
+        let mutableService = CBMutableService( type: CBUUID(string: uuid!), primary: primary! )
+        var mutableCharacteristics = [CBMutableCharacteristic]()
+        for buildCharacteristic in buildCharacteristics {
 
+            let mutableCharacteristic = CBMutableCharacteristic( type: CBUUID(string: buildCharacteristic.uuid!), properties: buildCharacteristic.properties!, value: buildCharacteristic.value, permissions: buildCharacteristic.permissions! )
+            mutableCharacteristics.append( mutableCharacteristic )
+        }
+        mutableService.characteristics = mutableCharacteristics
+        return mutableService
     }
 	
 }

@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import CoreBluetooth
 
 
 let kCharacteristicChangedKey = "CharacteristicChangedKey"
 
 
-class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate {
+class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -35,6 +36,8 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     var nameFieldValid = false
     var uuidFieldValid = false
     
+    var peripheralManager: CBPeripheralManager?
+
     
 //--    ----    ----    ----
     
@@ -189,16 +192,85 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         }
     }
     
+    // MARK: - CBPeripheralManagerDelegate support
+    
+    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager) {
+        
+        var state = ""
+        switch ( peripheral.state ) {
+        case .Unknown:
+            state = "Currently in an unknown state."
+        case .Resetting:
+            state = "Peripheral Manager is resetting."
+        case .Unsupported:
+            state = "No support for Bluetooth Low Energy."
+        case .Unauthorized:
+            state = "Not authorized to use Bluetooth Low Energy."
+        case .PoweredOff:
+            state = "Currently powered off."
+        case .PoweredOn:
+            state = "Currently powered on."
+        }
+        Log.info( "Bluetooth peripheral manager state: \(state)" )
+        
+        if (peripheral.state != .PoweredOn) {		// In a real app, you'd deal with all the states correctly
+//            resetScanList()
+            return
+        }
+        // The state must be CBCentralManagerStatePoweredOn...
+        // ... so start scanning
+        self.startPublish()
+
+    }
+    
+    func peripheralManagerDidStartAdvertising(peripheral: CBPeripheralManager, error: NSError?) {
+        
+        if ( error != nil ) {
+            print( "peripheralManagerDidStartAdvertising, error: \(error!.localizedDescription)" )
+        } else {
+            print( "peripheralManagerDidStartAdvertising, success!!)" )
+        }
+    }
+    
+    func peripheralManager(peripheral: CBPeripheralManager, didAddService service: CBService, error: NSError?) {
+        
+        if ( error != nil ) {
+            print( "didAddService, error: \(error!.localizedDescription)" )
+        } else {
+            print( "didAddService, success!!)" )
+            peripheralManager?.startAdvertising( nil )
+        }
+    }
+
+
+    
     // MARK: - Advertising support
     
     func startAdvertising() {
         
         advertising = true
+        
+        peripheralManager = CBPeripheralManager( delegate: self, queue: nil )
+        
     }
     
     func stopAdvertising() {
         
+        guard peripheralManager != nil else { return }
+        guard peripheralManager!.isAdvertising else { return }
+        peripheralManager!.stopAdvertising()
+        peripheralManager!.removeAllServices()
+        
         advertising = false
+    }
+    
+    func startPublish() {
+        
+        guard buildService != nil else { return }
+
+        let mutableService = buildService!.toBluetooth()
+        peripheralManager?.addService( mutableService )
+        
     }
     
 
