@@ -228,7 +228,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         if ( error != nil ) {
             print( "peripheralManagerDidStartAdvertising, error: \(error!.localizedDescription)" )
         } else {
-            print( "peripheralManagerDidStartAdvertising, success!!)" )
+            print( "peripheralManagerDidStartAdvertising, success!!" )
         }
     }
     
@@ -237,8 +237,9 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         if ( error != nil ) {
             print( "didAddService, error: \(error!.localizedDescription)" )
         } else {
-            print( "didAddService, success!!)" )
-            peripheralManager?.startAdvertising( nil )
+            print( "didAddService, success!! Send: \(service.UUID.UUIDString)" )
+            let adverts = [CBAdvertisementDataLocalNameKey:buildService!.name!, CBAdvertisementDataServiceUUIDsKey:[CBUUID( string: buildService!.uuid! )]] as [String:AnyObject]
+            peripheralManager?.startAdvertising( adverts )
         }
     }
 
@@ -267,9 +268,10 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     func startPublish() {
         
         guard buildService != nil else { return }
+        guard peripheralManager != nil else { return }
 
         let mutableService = buildService!.toBluetooth()
-        peripheralManager?.addService( mutableService )
+        peripheralManager!.addService( mutableService )
         
     }
     
