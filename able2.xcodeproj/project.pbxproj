@@ -54,6 +54,7 @@
 		A9E72D751CBEF83800E7260C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93B1A891CA5AD46004F9B4F /* AppDelegate.swift */; };
 		A9F679721D0CEF3500A6C8BC /* BuildService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F679711D0CEF3500A6C8BC /* BuildService.swift */; };
 		A9F679751D0CF44D00A6C8BC /* BuildCharacteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F679741D0CF44D00A6C8BC /* BuildCharacteristic.swift */; };
+		A9F6FD7C1D1B7FBA00CD1728 /* ServicesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F6FD7B1D1B7FBA00CD1728 /* ServicesCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,6 +126,7 @@
 		A9E2F03A1CC188ED00B18013 /* Characterizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Characterizer.swift; path = managers/Characterizer.swift; sourceTree = "<group>"; };
 		A9F679711D0CEF3500A6C8BC /* BuildService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BuildService.swift; path = models/BuildService.swift; sourceTree = "<group>"; };
 		A9F679741D0CF44D00A6C8BC /* BuildCharacteristic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BuildCharacteristic.swift; path = models/BuildCharacteristic.swift; sourceTree = "<group>"; };
+		A9F6FD7B1D1B7FBA00CD1728 /* ServicesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ServicesCollectionViewCell.swift; path = cells/ServicesCollectionViewCell.swift; sourceTree = "<group>"; };
 		E6F15527E819A4CD85A6D197 /* Pods-able2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-able2.debug.xcconfig"; path = "Pods/Target Support Files/Pods-able2/Pods-able2.debug.xcconfig"; sourceTree = "<group>"; };
 		F32629C9F661323B4744F8C3 /* Pods-able2UITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-able2UITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-able2UITests/Pods-able2UITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -188,6 +190,7 @@
 				A9688EC91CB093970036DA5E /* ServiceCell.swift */,
 				A91EC6A31CBD61BA00C8ABA3 /* CharacteristicCell.swift */,
 				A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */,
+				A9F6FD7B1D1B7FBA00CD1728 /* ServicesCollectionViewCell.swift */,
 			);
 			name = cells;
 			sourceTree = "<group>";
@@ -723,6 +726,7 @@
 				A91EC6A41CBD61BA00C8ABA3 /* CharacteristicCell.swift in Sources */,
 				A9688ECA1CB093970036DA5E /* ServiceCell.swift in Sources */,
 				A93B1A8A1CA5AD46004F9B4F /* AppDelegate.swift in Sources */,
+				A9F6FD7C1D1B7FBA00CD1728 /* ServicesCollectionViewCell.swift in Sources */,
 				A93B1A8F1CA5AD46004F9B4F /* MasterViewController.swift in Sources */,
 				A91379A21D07BABC00B7FC36 /* Builder.swift in Sources */,
 			);

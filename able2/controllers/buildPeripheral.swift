@@ -19,6 +19,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var advertiseButton: UIButton!
     @IBOutlet weak var newCharacteristicButton: UIButton!
+    @IBOutlet weak var newServiceButton: UIButton!
     
     var builder: Builder?
     var buildService: BuildService?
@@ -27,16 +28,17 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
     var advertising = false
     
     
-    @IBOutlet weak var nameField: UITextField!
-    @IBOutlet weak var uuidField: UITextField!
-    @IBOutlet weak var primarySwitch: UISwitch!
-    @IBOutlet weak var uuidButton: UIButton!
+//    @IBOutlet weak var nameField: UITextField!
+//    @IBOutlet weak var uuidField: UITextField!
+//    @IBOutlet weak var primarySwitch: UISwitch!
+//    @IBOutlet weak var uuidButton: UIButton!
     
     var displayState = DisplayState.Neutral
     var nameFieldValid = false
     var uuidFieldValid = false
     
     var peripheralManager: CBPeripheralManager?
+
 
     
 //--    ----    ----    ----
@@ -55,38 +57,40 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         advertiseButton.setTitleColor( UIColor.blackColor(), forState: .Normal )
         advertiseButton.setTitleColor( UIColor.lightGrayColor(), forState: .Disabled )
         
-        let serviceValid = ( buildService != nil )
+        assert(builder != nil, "builder should never be nil" )
+        
+        let serviceValid = ( builder!.indexPath != nil )  // indexPath is set or nil by parent view controller
+        // Non-nil builder!.indexPath is an indication that it is valid and references a service
         advertiseButton.enabled = serviceValid
         newCharacteristicButton.enabled = serviceValid
-        nameFieldValid = serviceValid
-        uuidFieldValid = serviceValid
+        newServiceButton.enabled = serviceValid
+//        nameFieldValid = serviceValid
+//        uuidFieldValid = serviceValid
 
-        builder = Builder.sharedBuilder
-        if !serviceValid {
-            buildService = BuildService( fromService: nil )
-        }
+//        builder = Builder.sharedBuilder
+        buildService = builder!.atSelectedIndex()
 
         saveButton.enabled = false
-        checkAddCharacteristicButton()
+        checkAddButtons()
     }
 
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear( animated )
         
-        nameField.text = buildService!.name
-        
-        uuidField.text = buildService!.uuid
-        uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
-        
-        if let primary = buildService!.primary {
-            primarySwitch.on = primary.boolValue
-        } else {
-            primarySwitch.on = false
-        }
-        
-        textFieldBorderSetup(nameField)
-        textFieldBorderSetup(uuidField)
+//        nameField.text = buildService!.name
+//        
+//        uuidField.text = buildService!.uuid
+//        uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
+//        
+//        if let primary = buildService!.primary {
+//            primarySwitch.on = primary.boolValue
+//        } else {
+//            primarySwitch.on = false
+//        }
+//        
+//        textFieldBorderSetup(nameField)
+//        textFieldBorderSetup(uuidField)
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(characteristicChanged( _: )), name: kCharacteristicChangedKey, object: nil)
     }
@@ -123,13 +127,13 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         guard buildService != nil else { Log.info( "save failed" ); return }
         saveButton.enabled = false
         // Gather and save data from fields and create service
-        buildService!.name = nameField.text
-        buildService!.uuid = uuidField.text
-        buildService!.primary = primarySwitch.on
+//        buildService!.name = nameField.text
+//        buildService!.uuid = uuidField.text
+//        buildService!.primary = primarySwitch.on
 
         builder!.save( buildService! )
         advertiseButton.enabled = true
-        checkAddCharacteristicButton()
+        checkAddButtons()
     }
 
     @IBAction func advertiseAction(sender: AnyObject) {
@@ -142,11 +146,17 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
             adButton.setTitle( "Stop Advertising", forState: .Normal )
             startAdvertising()
         } else {
+            stopAdvertising()
             adButton.setTitle( "Advertise", forState: .Normal )
 			setControlsEnabled( true )
-            stopAdvertising()
         }
-        checkAddCharacteristicButton()
+        checkAddButtons()
+    }
+    
+    @IBAction func serviceAction(sender: UIButton) {
+        
+        Log.info( "serviceAction" )
+        guard buildService != nil else { Log.info( "But buildService is nil" ); return }
     }
     
     @IBAction func characteristicAction(sender: UIButton) {
@@ -156,40 +166,33 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         let buildCharacteristic = BuildCharacteristic( fromCharacteristic: nil )
         buildCharacteristic.index = buildService!.buildCharacteristics.count // Give it order
         buildService!.buildCharacteristics.append( buildCharacteristic )
-        checkAddCharacteristicButton()
+        checkAddButtons()
 
         collectionView.reloadData()
     }
 
-    @IBAction func primaryAction(sender: AnyObject) {
-        
-		serviceModified( nameFieldValid )
-    }
-    
-    @IBAction func makeNewUUIDAction(sender: AnyObject) {
-        
-        let uuid = NSUUID.init()
-        uuidField.text = uuid.UUIDString
-        uuidField.enabled = true    // Allows selection
-        uuidFieldValid = true
-        textFieldBorderSetup( uuidField )
-		serviceModified( nameFieldValid )
-		
-    }
+//    @IBAction func primaryAction(sender: AnyObject) {
+//        
+//		serviceModified( nameFieldValid )
+//    }
+//    
+//    @IBAction func makeNewUUIDAction(sender: AnyObject) {
+//        
+//        let uuid = NSUUID.init()
+//        uuidField.text = uuid.UUIDString
+//        uuidField.enabled = true    // Allows selection
+//        uuidFieldValid = true
+//        textFieldBorderSetup( uuidField )
+//		serviceModified( nameFieldValid )
+//		
+//    }
     
     // MARK: - State methods
     
     func setControlsEnabled( enabled: Bool ) {
         
-        nameField.enabled = enabled
-        uuidField.enabled = enabled
-        uuidButton.enabled = enabled
-        primarySwitch.enabled = enabled
-
-        // characteristics
-        for buildCharacteristic in buildService!.buildCharacteristics {
-            buildCharacteristic.enabled( enabled )
-        }
+        // All services and characteristics
+        builder!.enabled( enabled )
     }
     
     // MARK: - CBPeripheralManagerDelegate support
@@ -243,7 +246,6 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
         }
     }
 
-
     
     // MARK: - Advertising support
     
@@ -289,15 +291,17 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
         saveButton.enabled = true
         advertiseButton.enabled = false
-        checkAddCharacteristicButton()
+        checkAddButtons()
     }
     
-    func checkAddCharacteristicButton() {
+    func checkAddButtons() {
         
-        if let count = buildService?.buildCharacteristics.count where count > 0{   // Only one for now
+        if let count = buildService?.buildCharacteristics.count where count >= 1 {   // Only one of each for now
             newCharacteristicButton.enabled = false
+            newServiceButton.enabled = false
         } else {
             newCharacteristicButton.enabled = !advertising
+            newServiceButton.enabled = !advertising
         }
     }
 

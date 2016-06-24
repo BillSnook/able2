@@ -20,6 +20,8 @@ class BuildService {
 //	var characteristics: Set<Characteristic>?
     var buildCharacteristics: Array<BuildCharacteristic>
 	
+    weak var cell: ServicesCollectionViewCell?
+    
 	init( fromService: Service? ) {
 		
 		if fromService != nil {
@@ -33,7 +35,6 @@ class BuildService {
                 let buildCharacteristic = BuildCharacteristic( fromCharacteristic: characteristic as? Characteristic)
                 buildCharacteristics.append( buildCharacteristic )
             }
-            // WFS char setup
         } else {
 			service = nil
 			name = ""
@@ -41,7 +42,18 @@ class BuildService {
 			primary = true
 			buildCharacteristics = []
 		}
-	}
+    }
+    
+//    func save( toService service: Service? ) {
+//        
+//        if service != nil {
+//            service?.name = name
+//            service?.uuid = uuid
+//            service?.primary = primary
+//        } else {
+//            
+//        }
+//    }
     
     func save( managedObjectContext: NSManagedObjectContext ) {
         
@@ -97,4 +109,18 @@ class BuildService {
         return mutableService
     }
 	
+    func enabled( enabled: Bool ) {
+        
+        if let safeCell = cell {
+            safeCell.nameField.enabled = enabled
+            safeCell.uuidField.enabled = enabled
+            safeCell.uuidButton.enabled = enabled
+            safeCell.primarySwitch.enabled = enabled
+            
+        }
+        for buildCharacteristic in buildCharacteristics {
+            buildCharacteristic.enabled( enabled )
+        }
+    }
+
 }

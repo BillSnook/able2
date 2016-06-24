@@ -16,6 +16,11 @@ class Builder {
 
     var managedObjectContext: NSManagedObjectContext
     
+    var buildList: [BuildService]?
+    
+    var maybeStale = true
+    
+    var indexPath: NSIndexPath?
     
     init() {
         
@@ -25,6 +30,8 @@ class Builder {
     
     func getList() -> [BuildService]? {
 
+        guard maybeStale else { return buildList }
+        indexPath = nil
         let fetch = NSFetchRequest( entityName: "Service" )
         do {
             let results = try managedObjectContext.executeFetchRequest( fetch )
@@ -33,7 +40,9 @@ class Builder {
                 let buildService = BuildService( fromService: service )
                 buildServices.append( buildService )
             }
-            return buildServices
+            buildList = buildServices
+            maybeStale = false
+            return buildList
             
         } catch let error as NSError {
             Log.error("Could not fetch \(error), \(error.userInfo)")
@@ -41,7 +50,7 @@ class Builder {
         catch {
             Log.error("Could not fetch \(error)")
         }
-        return nil
+        return buildList
     }
     
     func delete( buildService: BuildService ) {
@@ -57,11 +66,28 @@ class Builder {
             Log.error("Could not fetch \(error)")
         }
         buildService.service = nil
+        maybeStale = true
     }
     
     func save( buildService: BuildService ) {
         
         buildService.save( managedObjectContext )
+        maybeStale = true
+    }
+    
+    func atSelectedIndex() -> BuildService {
+        
+        if indexPath != nil {
+            return buildList![indexPath!.row]
+        }
+        return BuildService( fromService: nil )
+    }
+    
+    func enabled( enabled: Bool ) {
+     
+        for service in buildList! {
+            service.enabled( enabled )
+        }
 
     }
 

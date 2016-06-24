@@ -43,11 +43,14 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         
         if segue.identifier == "toBuild" {
             let dest = segue.destinationViewController as! buildPeripheral
-            dest.buildService = nil
+            builder!.indexPath = nil
+            dest.builder = builder
         } else if segue.identifier == "toShow" {
             let dest = segue.destinationViewController as! buildPeripheral
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                dest.buildService = services![indexPath.row]
+                builder!.indexPath = indexPath
+                dest.builder = builder
+//                dest.buildService = services![indexPath.row]
             }
         }
     }
