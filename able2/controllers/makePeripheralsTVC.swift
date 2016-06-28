@@ -42,10 +42,10 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "toBuild" {
-            let dest = segue.destinationViewController as! buildPeripheral
+            let dest = segue.destinationViewController as! buildPeripheralCVC
             dest.buildService = nil
         } else if segue.identifier == "toShow" {
-            let dest = segue.destinationViewController as! buildPeripheral
+            let dest = segue.destinationViewController as! buildPeripheralCVC
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 dest.buildService = services![indexPath.row]
             }

@@ -263,9 +263,12 @@
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fNu-df-1EK">
                                         <rect key="frame" x="8" y="8" width="304" height="284"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Warning" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obl-W1-BOI">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Warning" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obl-W1-BOI">
                                                 <rect key="frame" x="8" y="8" width="288" height="268"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="268" placeholder="YES" id="O9I-jU-KzA"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -312,7 +315,7 @@
             </objects>
             <point key="canvasLocation" x="57" y="33"/>
         </scene>
-        <!--Create Peripheral-->
+        <!--List Devices-->
         <scene sceneID="6IQ-pd-wO3">
             <objects>
                 <tableViewController storyboardIdentifier="setupPeripheral" id="TuD-oe-xvq" customClass="makePeripheralsTVC" customModule="able2" customModuleProvider="target" sceneMemberID="viewController">
@@ -345,9 +348,6 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <connections>
-                                    <segue destination="nq1-EV-3qV" kind="show" identifier="toShow" id="qOs-B8-zth"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -355,12 +355,8 @@
                             <outlet property="delegate" destination="TuD-oe-xvq" id="vCP-He-mC3"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Create Peripheral" id="39s-oS-e8M">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="bTp-wl-MXU">
-                            <connections>
-                                <segue destination="nq1-EV-3qV" kind="show" identifier="toBuild" id="qXA-Ni-GiP"/>
-                            </connections>
-                        </barButtonItem>
+                    <navigationItem key="navigationItem" title="List Devices" id="39s-oS-e8M">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="bTp-wl-MXU"/>
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                 </tableViewController>
@@ -368,10 +364,10 @@
             </objects>
             <point key="canvasLocation" x="1045" y="334"/>
         </scene>
-        <!--Build Peripheral-->
+        <!--Build Services-->
         <scene sceneID="kMb-vo-52G">
             <objects>
-                <viewController id="nq1-EV-3qV" customClass="buildPeripheral" customModule="able2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="nq1-EV-3qV" userLabel="Build Services" customClass="buildServiceCVC" customModule="able2" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0hf-vt-28Z"/>
                         <viewControllerLayoutGuide type="bottom" id="1qz-oY-uGC"/>
@@ -380,7 +376,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="750"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GiS-1o-LBX">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GiS-1o-LBX">
                                 <rect key="frame" x="0.0" y="64" width="320" height="150"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VCx-8A-4na">
@@ -498,7 +494,7 @@
                                     <constraint firstAttribute="trailing" secondItem="Hbw-UW-6x4" secondAttribute="trailing" constant="8" id="yPO-fb-oqV"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tc0-2Q-Wkx">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tc0-2Q-Wkx">
                                 <rect key="frame" x="0.0" y="214" width="320" height="536"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="0.0" id="pdJ-73-OVj">
@@ -1084,7 +1080,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tqo-G8-Npt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1563" y="425"/>
+            <point key="canvasLocation" x="2007" y="425"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Q2u-ww-gn3">
@@ -1344,12 +1340,101 @@
             </objects>
             <point key="canvasLocation" x="635" y="334"/>
         </scene>
+        <!--Build Peripheral-->
+        <scene sceneID="UKj-h5-RfE">
+            <objects>
+                <viewController id="Fnf-Es-r3s" customClass="buildPeripheralCVC" customModule="able2" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qf3-eA-7yK"/>
+                        <viewControllerLayoutGuide type="bottom" id="s5W-ol-l6u"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aEI-lx-WK3">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="750"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ukQ-zN-nM6">
+                                <rect key="frame" x="0.0" y="64" width="320" height="150"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRc-yi-d8i">
+                                        <rect key="frame" x="60" y="10" width="200" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <state key="normal" title="Advertise">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Myb-pU-nph" userLabel="AddCharacteristicButton">
+                                        <rect key="frame" x="286" y="14" width="22" height="22"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </button>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Service Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XbP-R9-lJF">
+                                        <rect key="frame" x="8" y="56" width="247" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <real key="value" value="0.5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="6"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </textField>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fPB-Qc-M0z">
+                                        <rect key="frame" x="263" y="56" width="51" height="31"/>
+                                    </switch>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Primary" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="knG-Pr-GEH">
+                                        <rect key="frame" x="252" y="84" width="60" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9bk-bl-12Q">
+                                        <rect key="frame" x="286" y="114" width="22" height="22"/>
+                                    </button>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Service UUID" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="fNr-Uv-q1n">
+                                        <rect key="frame" x="8" y="110" width="260" height="30"/>
+                                        <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="11"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" red="0.41022321579999999" green="0.99753707650000001" blue="0.003691797145" alpha="0.24869791669999999" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="vvK-WB-EYO">
+                                <rect key="frame" x="0.0" y="214" width="320" height="536"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="0.0" id="dOV-KZ-ZK4">
+                                    <size key="itemSize" width="320" height="100"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Build Peripheral" id="EvT-JX-Zf7">
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="jUT-Cd-tF0"/>
+                    </navigationItem>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="750"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qBE-jq-m0D" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1538" y="425"/>
+        </scene>
     </scenes>
     <resources>
         <image name="button_round_red_small" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="e6N-bh-gkL"/>
-        <segue reference="qOs-B8-zth"/>
     </inferredMetricsTieBreakers>
 </document>

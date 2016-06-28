@@ -1,5 +1,5 @@
 //
-//  buildPeripheral.swift
+//  buildPeripheralCVC.swift
 //  able2
 //
 //  Created by William Snook on 5/25/16.
@@ -13,7 +13,7 @@ import CoreBluetooth
 let kCharacteristicChangedKey = "CharacteristicChangedKey"
 
 
-class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate {
+class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -278,7 +278,7 @@ class buildPeripheral: UIViewController, UICollectionViewDelegate, UICollectionV
 
     func serviceModified( nameValid: Bool = false ) {
         
-//    Log.info( "buildPeripheral serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
+//    Log.info( "buildPeripheralCVC serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
 		
         let validToSave = uuidFieldValid && nameValid
         saveButton.enabled = validToSave

@@ -35,11 +35,12 @@
 		A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */; };
 		A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */; };
 		A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A981659A1CA9A59300D0E65E /* Scanner.swift */; };
+		A98DE5A51D2220C0001125A7 /* buildServiceCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98DE5A41D2220C0001125A7 /* buildServiceCVC.swift */; };
 		A9ABE1931CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */; };
 		A9ABE1941CAC500D004C1EF7 /* Sighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1901CAC500D004C1EF7 /* Sighting.swift */; };
 		A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
 		A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
-		A9C329471CF6BE6F0074CFB5 /* buildPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C329461CF6BE6F0074CFB5 /* buildPeripheral.swift */; };
+		A9C329471CF6BE6F0074CFB5 /* buildPeripheralCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C329461CF6BE6F0074CFB5 /* buildPeripheralCVC.swift */; };
 		A9C3294B1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */; };
 		A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */; };
 		A9D44E781CB58D2A0065F9FA /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */; };
@@ -113,11 +114,12 @@
 		A98165951CA99F7A00D0E65E /* listPeripheralsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listPeripheralsTVC.swift; path = controllers/listPeripheralsTVC.swift; sourceTree = "<group>"; };
 		A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = makePeripheralsTVC.swift; path = controllers/makePeripheralsTVC.swift; sourceTree = "<group>"; };
 		A981659A1CA9A59300D0E65E /* Scanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Scanner.swift; path = managers/Scanner.swift; sourceTree = "<group>"; };
+		A98DE5A41D2220C0001125A7 /* buildServiceCVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = buildServiceCVC.swift; path = controllers/buildServiceCVC.swift; sourceTree = "<group>"; };
 		A9ABE18F1CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Sighting+CoreDataProperties.swift"; path = "managedClasses/Sighting+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A9ABE1901CAC500D004C1EF7 /* Sighting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Sighting.swift; path = managedClasses/Sighting.swift; sourceTree = "<group>"; };
 		A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Peripheral+CoreDataProperties.swift"; path = "managedClasses/Peripheral+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Peripheral.swift; path = managedClasses/Peripheral.swift; sourceTree = "<group>"; };
-		A9C329461CF6BE6F0074CFB5 /* buildPeripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = buildPeripheral.swift; path = controllers/buildPeripheral.swift; sourceTree = "<group>"; };
+		A9C329461CF6BE6F0074CFB5 /* buildPeripheralCVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = buildPeripheralCVC.swift; path = controllers/buildPeripheralCVC.swift; sourceTree = "<group>"; };
 		A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CharacteristicsCollectionViewCell.swift; path = cells/CharacteristicsCollectionViewCell.swift; sourceTree = "<group>"; };
 		A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listServicesTVC.swift; path = controllers/listServicesTVC.swift; sourceTree = "<group>"; };
 		A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
@@ -279,7 +281,8 @@
 				A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */,
 				A95FC1001CBF4C2B001ACB0C /* showCharacteristics.swift */,
 				A98165971CA99FBA00D0E65E /* makePeripheralsTVC.swift */,
-				A9C329461CF6BE6F0074CFB5 /* buildPeripheral.swift */,
+				A9C329461CF6BE6F0074CFB5 /* buildPeripheralCVC.swift */,
+				A98DE5A41D2220C0001125A7 /* buildServiceCVC.swift */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -709,12 +712,13 @@
 				A925C6811CAB58C700FAE766 /* MessageCell.swift in Sources */,
 				A9F679721D0CEF3500A6C8BC /* BuildService.swift in Sources */,
 				A98165981CA99FBA00D0E65E /* makePeripheralsTVC.swift in Sources */,
+				A98DE5A51D2220C0001125A7 /* buildServiceCVC.swift in Sources */,
 				A91379A81D09015500B7FC36 /* Characteristic.swift in Sources */,
 				A9688ECC1CB19ED60036DA5E /* Interrogator.swift in Sources */,
 				A9ABE1931CAC500D004C1EF7 /* Sighting+CoreDataProperties.swift in Sources */,
 				A925C67E1CAB4A1600FAE766 /* PeripheralCell.swift in Sources */,
 				A981659B1CA9A59300D0E65E /* Scanner.swift in Sources */,
-				A9C329471CF6BE6F0074CFB5 /* buildPeripheral.swift in Sources */,
+				A9C329471CF6BE6F0074CFB5 /* buildPeripheralCVC.swift in Sources */,
 				A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */,
 				A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */,
 				A95FC1011CBF4C2B001ACB0C /* showCharacteristics.swift in Sources */,
