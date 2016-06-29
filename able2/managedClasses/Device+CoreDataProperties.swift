@@ -1,5 +1,5 @@
 //
-//  Characteristic+CoreDataProperties.swift
+//  Device+CoreDataProperties.swift
 //  able2
 //
 //  Created by William Snook on 6/28/16.
@@ -12,12 +12,10 @@
 import Foundation
 import CoreData
 
-extension Characteristic {
+extension Device {
 
-    @NSManaged var permissions: NSNumber?
-    @NSManaged var properties: NSNumber?
+    @NSManaged var name: String?
     @NSManaged var uuid: String?
-    @NSManaged var value: NSData?
-    @NSManaged var service: Service?
+    @NSManaged var services: NSOrderedSet?
 
 }

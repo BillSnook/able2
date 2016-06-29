@@ -18,7 +18,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var advertiseButton: UIButton!
-    @IBOutlet weak var newCharacteristicButton: UIButton!
+    @IBOutlet weak var newServiceButton: UIButton!
     
     var builder: Builder?
     var buildService: BuildService?
@@ -28,8 +28,8 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     @IBOutlet weak var nameField: UITextField!
+    @IBOutlet weak var primaryLabel: UILabel!
     @IBOutlet weak var uuidField: UITextField!
-    @IBOutlet weak var primarySwitch: UISwitch!
     @IBOutlet weak var uuidButton: UIButton!
     
     var displayState = DisplayState.Neutral
@@ -388,7 +388,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
-        return 1
+        return 0
     }
     
     func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {

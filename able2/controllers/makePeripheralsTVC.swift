@@ -15,7 +15,7 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     var navigationPaneBarButtonItem: UIBarButtonItem?
 
     var builder: Builder?
-    var services: [BuildService]?
+    var devices: [BuildDevice]?
 
 
     override func viewDidLoad() {
@@ -35,16 +35,16 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
 
         super.viewWillAppear( animated )
         
-        services = builder?.getList()
+        services = builder?.getDeviceList()
         tableView.reloadData()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if segue.identifier == "toBuild" {
+        if segue.identifier == "toNewPeripheral" {
             let dest = segue.destinationViewController as! buildPeripheralCVC
             dest.buildService = nil
-        } else if segue.identifier == "toShow" {
+        } else if segue.identifier == "toShowPeripheral" {
             let dest = segue.destinationViewController as! buildPeripheralCVC
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 dest.buildService = services![indexPath.row]

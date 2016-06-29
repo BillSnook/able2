@@ -7,6 +7,11 @@
         <attribute name="value" optional="YES" attributeType="Binary" syncable="YES"/>
         <relationship name="service" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Service" inverseName="characteristics" inverseEntity="Service" syncable="YES"/>
     </entity>
+    <entity name="Device" representedClassName=".Device" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="services" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Service" inverseName="device" inverseEntity="Service" syncable="YES"/>
+    </entity>
     <entity name="Peripheral" representedClassName="Peripheral" syncable="YES">
         <attribute name="connectable" attributeType="Boolean" syncable="YES"/>
         <attribute name="mainUUID" attributeType="String" indexed="YES" syncable="YES"/>
@@ -19,6 +24,7 @@
         <attribute name="primary" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="characteristics" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Characteristic" inverseName="service" inverseEntity="Characteristic" syncable="YES"/>
+        <relationship name="device" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Device" inverseName="services" inverseEntity="Device" syncable="YES"/>
     </entity>
     <entity name="Sighting" representedClassName=".Sighting" syncable="YES">
         <attribute name="date" attributeType="Date" syncable="YES"/>
@@ -28,9 +34,10 @@
         <relationship name="peripheral" maxCount="1" deletionRule="Nullify" destinationEntity="Peripheral" inverseName="sightings" inverseEntity="Peripheral" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Characteristic" positionX="216" positionY="450" width="155" height="118"/>
         <element name="Peripheral" positionX="-0" positionY="243" width="144" height="120"/>
-        <element name="Sighting" positionX="261" positionY="243" width="153" height="120"/>
-        <element name="Service" positionX="-0" positionY="450" width="144" height="103"/>
-        <element name="Characteristic" positionX="259" positionY="474" width="155" height="28"/>
+        <element name="Service" positionX="0" positionY="450" width="144" height="118"/>
+        <element name="Sighting" positionX="216" positionY="243" width="153" height="120"/>
+        <element name="Device" positionX="-200" positionY="452" width="128" height="88"/>
     </elements>
 </model>

@@ -10,7 +10,7 @@ import UIKit
 import CoreBluetooth
 
 
-let kCharacteristicChangedKey = "CharacteristicChangedKey"
+let kServiceChangedKey = "ServiceChangedKey"
 
 
 class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate {
@@ -88,7 +88,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(characteristicChanged( _: )), name: kCharacteristicChangedKey, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(characteristicChanged( _: )), name: kServiceChangedKey, object: nil)
     }
     
     override func viewDidDisappear(animated: Bool) {
