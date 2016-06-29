@@ -21,7 +21,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     @IBOutlet weak var newServiceButton: UIButton!
     
     var builder: Builder?
-    var buildService: BuildService?
+    var buildDevice: BuildDevice?
 //    var buildCharacteristics: Array<BuildCharacteristic>?  //[BuildCharacteristic]?
     
     var advertising = false
@@ -35,6 +35,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     var displayState = DisplayState.Neutral
     var nameFieldValid = false
     var uuidFieldValid = false
+    var deviceValid = false
     
     var peripheralManager: CBPeripheralManager?
 
@@ -55,35 +56,29 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         advertiseButton.setTitleColor( UIColor.blackColor(), forState: .Normal )
         advertiseButton.setTitleColor( UIColor.lightGrayColor(), forState: .Disabled )
         
-        let serviceValid = ( buildService != nil )
-        advertiseButton.enabled = serviceValid
-        newCharacteristicButton.enabled = serviceValid
-        nameFieldValid = serviceValid
-        uuidFieldValid = serviceValid
+        let deviceValid = ( buildDevice != nil )
+        advertiseButton.enabled = deviceValid
+        newServiceButton.enabled = deviceValid
+        nameFieldValid = deviceValid
+        uuidFieldValid = deviceValid
 
         builder = Builder.sharedBuilder
-        if !serviceValid {
-            buildService = BuildService( fromService: nil )
+        if !deviceValid {
+            buildDevice = BuildDevice( fromDevice: nil )
         }
 
         saveButton.enabled = false
-        checkAddCharacteristicButton()
+        checkAddServiceButton()
     }
 
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear( animated )
         
-        nameField.text = buildService!.name
+        nameField.text = buildDevice!.name
         
-        uuidField.text = buildService!.uuid
+        uuidField.text = buildDevice!.uuid
         uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
-        
-        if let primary = buildService!.primary {
-            primarySwitch.on = primary.boolValue
-        } else {
-            primarySwitch.on = false
-        }
         
         textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
@@ -120,21 +115,20 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     @IBAction func saveAction(sender: AnyObject) {
 
-        guard buildService != nil else { Log.info( "save failed" ); return }
+        guard buildDevice != nil else { Log.info( "save failed" ); return }
         saveButton.enabled = false
         // Gather and save data from fields and create service
-        buildService!.name = nameField.text
-        buildService!.uuid = uuidField.text
-        buildService!.primary = primarySwitch.on
+        buildDevice!.name = nameField.text
+        buildDevice!.uuid = uuidField.text
 
-        builder!.save( buildService! )
+        builder!.saveDevice( buildDevice! )
         advertiseButton.enabled = true
-        checkAddCharacteristicButton()
+        checkAddServiceButton()
     }
 
     @IBAction func advertiseAction(sender: AnyObject) {
         
-        guard validateService() else { return }
+        guard validateDevice() else { return }
         let adButton = sender as! UIButton
         if !advertising {           // If we were not advertising, now we want to start
             guard !saveButton.enabled else { return }   // But must be saved first - may need alert
@@ -146,26 +140,21 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 			setControlsEnabled( true )
             stopAdvertising()
         }
-        checkAddCharacteristicButton()
+        checkAddServiceButton()
     }
     
-    @IBAction func characteristicAction(sender: UIButton) {
+    @IBAction func serviceAction(sender: UIButton) {
         
-        Log.info( "characteristicAction" )
-        guard buildService != nil else { Log.info( "But buildService is nil" ); return }
-        let buildCharacteristic = BuildCharacteristic( fromCharacteristic: nil )
-        buildCharacteristic.index = buildService!.buildCharacteristics.count // Give it order
-        buildService!.buildCharacteristics.append( buildCharacteristic )
-        checkAddCharacteristicButton()
+        Log.info( "serviceAction" )
+//        guard buildDevice != nil else { Log.info( "But buildDevice is nil" ); return }
+//        let buildService = BuildService( fromCharacteristic: nil )
+//        buildDevice.index = buildDevice!.buildServices.count // Give it order
+//        buildDevice!.buildServices.append( buildService )
+//        checkAddServiceButton()
 
         collectionView.reloadData()
     }
 
-    @IBAction func primaryAction(sender: AnyObject) {
-        
-		serviceModified( nameFieldValid )
-    }
-    
     @IBAction func makeNewUUIDAction(sender: AnyObject) {
         
         let uuid = NSUUID.init()
@@ -173,7 +162,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         uuidField.enabled = true    // Allows selection
         uuidFieldValid = true
         textFieldBorderSetup( uuidField )
-		serviceModified( nameFieldValid )
+		deviceModified( nameFieldValid )
 		
     }
     
@@ -184,12 +173,11 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         nameField.enabled = enabled
         uuidField.enabled = enabled
         uuidButton.enabled = enabled
-        primarySwitch.enabled = enabled
 
         // characteristics
-        for buildCharacteristic in buildService!.buildCharacteristics {
-            buildCharacteristic.enabled( enabled )
-        }
+//        for buildCharacteristic in buildService!.buildCharacteristics {
+//            buildCharacteristic.enabled( enabled )
+//        }
     }
     
     // MARK: - CBPeripheralManagerDelegate support
@@ -238,11 +226,10 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
             print( "didAddService, error: \(error!.localizedDescription)" )
         } else {
             print( "didAddService, success!! Send: \(service.UUID.UUIDString)" )
-            let adverts = [CBAdvertisementDataLocalNameKey:buildService!.name!, CBAdvertisementDataServiceUUIDsKey:[CBUUID( string: buildService!.uuid! )]] as [String:AnyObject]
+            let adverts = [CBAdvertisementDataLocalNameKey:buildDevice!.name!, CBAdvertisementDataServiceUUIDsKey:[CBUUID( string: buildDevice!.uuid! )]] as [String:AnyObject]
             peripheralManager?.startAdvertising( adverts )
         }
     }
-
 
     
     // MARK: - Advertising support
@@ -267,18 +254,18 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     func startPublish() {
         
-        guard buildService != nil else { return }
+        guard buildDevice != nil else { return }
         guard peripheralManager != nil else { return }
 
-        let mutableService = buildService!.toBluetooth()
-        peripheralManager!.addService( mutableService )
+//        let mutableService = buildService!.toBluetooth()
+//        peripheralManager!.addService( mutableService )
         
     }
     
 
-    func serviceModified( nameValid: Bool = false ) {
+    func deviceModified( nameValid: Bool = false ) {
         
-//    Log.info( "buildPeripheralCVC serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
+//    Log.info( "buildPeripheralCVC deviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
 		
         let validToSave = uuidFieldValid && nameValid
         saveButton.enabled = validToSave
@@ -289,19 +276,19 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
         saveButton.enabled = true
         advertiseButton.enabled = false
-        checkAddCharacteristicButton()
+        checkAddServiceButton()
     }
     
-    func checkAddCharacteristicButton() {
+    func checkAddServiceButton() {
         
-        if let count = buildService?.buildCharacteristics.count where count > 0{   // Only one for now
-            newCharacteristicButton.enabled = false
+        if let count = buildDevice?.buildServices.count where count > 0 {   // Only one for now
+            newServiceButton.enabled = false
         } else {
-            newCharacteristicButton.enabled = !advertising
+            newServiceButton.enabled = !advertising
         }
     }
 
-    func validateService() -> Bool {    // All text fields have text in them
+    func validateDevice() -> Bool {    // All text fields have text in them
         
         guard nameFieldValid else { return false }
         guard uuidFieldValid else { return false }
@@ -375,7 +362,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
             }
         }
         setBorderOf( textField, toDisplayState: displayState )
-        serviceModified( nameFieldValid )
+        deviceModified( nameFieldValid )
         return true
     }
     
@@ -393,7 +380,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
     
-        return buildService!.buildCharacteristics.count
+        return buildDevice!.buildServices.count
     }
     
     func collectionView( collectionView: UICollectionView,
@@ -401,10 +388,10 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
         
-        let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
-        buildCharacteristic.setupCell( cell )
-        
-        cell.delegate = buildCharacteristic
+        let buildService = buildDevice!.buildServices[ indexPath.row ]
+//        buildService.setupCell( cell )
+//        
+//        cell.delegate = buildService
         return cell
     }
     

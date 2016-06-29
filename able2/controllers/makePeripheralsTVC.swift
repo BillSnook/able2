@@ -35,7 +35,7 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
 
         super.viewWillAppear( animated )
         
-        services = builder?.getDeviceList()
+        devices = builder?.getDeviceList()
         tableView.reloadData()
     }
     
@@ -43,11 +43,11 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         
         if segue.identifier == "toNewPeripheral" {
             let dest = segue.destinationViewController as! buildPeripheralCVC
-            dest.buildService = nil
+            dest.buildDevice = nil
         } else if segue.identifier == "toShowPeripheral" {
             let dest = segue.destinationViewController as! buildPeripheralCVC
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                dest.buildService = services![indexPath.row]
+                dest.buildDevice = devices![indexPath.row]
             }
         }
     }
@@ -55,15 +55,15 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        guard services != nil else { return 0 }
-        return services!.count
+        guard devices != nil else { return 0 }
+        return devices!.count
     }
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier( "serviceView" )
-        cell?.textLabel!.text = services![indexPath.row].name
-        cell?.detailTextLabel!.text = services![indexPath.row].uuid
+        cell?.textLabel!.text = devices![indexPath.row].name
+        cell?.detailTextLabel!.text = devices![indexPath.row].uuid
         return cell!
     }
     
@@ -73,8 +73,8 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            builder?.delete( services![indexPath.row] )
-            services = builder?.getList()
+            builder?.deleteDevice( devices![indexPath.row] )
+            devices = builder?.getDeviceList()
             tableView.reloadData()
         }
     }

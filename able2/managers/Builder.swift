@@ -22,7 +22,29 @@ class Builder {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         managedObjectContext = appDelegate.managedObjectContext
     }
+
+    func getDeviceList() -> [BuildDevice]? {
+        
+        let fetch = NSFetchRequest( entityName: "Device" )
+        do {
+            let results = try managedObjectContext.executeFetchRequest( fetch )
+            var buildDevices = [BuildDevice]()
+            for device in results as! [Device] {
+                let buildDevice = BuildDevice( fromDevice: device )
+                buildDevices.append( buildDevice )
+            }
+            return buildDevices
+            
+        } catch let error as NSError {
+            Log.error("Could not fetch \(error), \(error.userInfo)")
+        }
+        catch {
+            Log.error("Could not fetch \(error)")
+        }
+        return nil
+    }
     
+
     func getList() -> [BuildService]? {
 
         let fetch = NSFetchRequest( entityName: "Service" )
@@ -44,6 +66,33 @@ class Builder {
         return nil
     }
     
+    func saveDevice( buildDevice: BuildDevice ) {
+        
+        buildDevice.save( managedObjectContext )
+        
+    }
+    
+    func save( buildService: BuildService ) {
+        
+        buildService.save( managedObjectContext )
+        
+    }
+    
+    func deleteDevice( buildDevice: BuildDevice ) {
+        
+        guard buildDevice.device != nil else { return }
+        managedObjectContext.deleteObject( buildDevice.device! )
+        do {
+            try managedObjectContext.save()
+        } catch let error as NSError {
+            Log.error("Could not fetch \(error), \(error.userInfo)")
+        }
+        catch {
+            Log.error("Could not fetch \(error)")
+        }
+        buildDevice.device = nil
+    }
+    
     func delete( buildService: BuildService ) {
         
         guard buildService.service != nil else { return }
@@ -59,10 +108,4 @@ class Builder {
         buildService.service = nil
     }
     
-    func save( buildService: BuildService ) {
-        
-        buildService.save( managedObjectContext )
-
-    }
-
 }
