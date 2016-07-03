@@ -1378,7 +1378,7 @@
                                             <constraint firstAttribute="height" constant="22" id="wbg-JD-Sey"/>
                                         </constraints>
                                         <connections>
-                                            <segue destination="nq1-EV-3qV" kind="show" identifier="toNewService" id="Khc-pe-V9J"/>
+                                            <action selector="addServiceAction:" destination="Fnf-Es-r3s" eventType="touchUpInside" id="WeN-Pc-IvC"/>
                                         </connections>
                                     </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Device Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XbP-R9-lJF">
@@ -1469,7 +1469,6 @@
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Service Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vkh-DO-qwp">
                                                     <rect key="frame" x="8" y="4" width="224" height="30"/>
-                                                    <color key="backgroundColor" red="0.41022321581840515" green="0.99753707647323608" blue="0.0036917971447110176" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="OCc-dZ-whA"/>
                                                     </constraints>
@@ -1479,7 +1478,6 @@
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Service UUID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LD2-lQ-Lwh">
                                                     <rect key="frame" x="8" y="34" width="304" height="30"/>
-                                                    <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.49335106379999999" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="vqa-Ug-WoX"/>
                                                     </constraints>
@@ -1489,7 +1487,6 @@
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 characteristic" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AIn-as-gVV">
                                                     <rect key="frame" x="8" y="64" width="148" height="24"/>
-                                                    <color key="backgroundColor" red="0.41022321581840515" green="0.99753707647323608" blue="0.0036917971447110176" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="LmW-Et-JxV"/>
                                                     </constraints>
@@ -1498,7 +1495,6 @@
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No subservices" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NMZ-jd-xhp">
                                                     <rect key="frame" x="164" y="64" width="148" height="24"/>
-                                                    <color key="backgroundColor" red="0.41022321581840515" green="0.99753707647323608" blue="0.0036917971447110176" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="g4r-sL-O2O"/>
                                                     </constraints>
@@ -1507,7 +1503,6 @@
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azw-n7-xGA">
                                                     <rect key="frame" x="232" y="4" width="80" height="30"/>
-                                                    <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.49335106379999999" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="VlF-z6-z2D"/>
                                                         <constraint firstAttribute="width" constant="80" id="syz-US-19U"/>
@@ -1520,6 +1515,7 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <color key="backgroundColor" red="0.0" green="1" blue="0.59909641290000004" alpha="0.2510250443" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="Azw-n7-xGA" firstAttribute="leading" secondItem="Vkh-DO-qwp" secondAttribute="trailing" id="0nr-VT-qzx"/>
                                             <constraint firstItem="LD2-lQ-Lwh" firstAttribute="top" secondItem="Vkh-DO-qwp" secondAttribute="bottom" id="12o-nr-VQq"/>
@@ -1587,6 +1583,7 @@
                         <outlet property="saveButton" destination="jUT-Cd-tF0" id="Fj3-sz-txz"/>
                         <outlet property="uuidButton" destination="9bk-bl-12Q" id="SSq-w3-4zb"/>
                         <outlet property="uuidField" destination="fNr-Uv-q1n" id="Nh8-Je-yVm"/>
+                        <segue destination="nq1-EV-3qV" kind="show" identifier="toNewService" id="Kti-Mb-4la"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qBE-jq-m0D" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1600,6 +1597,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="e6N-bh-gkL"/>
         <segue reference="qfc-xZ-w4d"/>
-        <segue reference="Khc-pe-V9J"/>
+        <segue reference="iku-LJ-2rN"/>
     </inferredMetricsTieBreakers>
 </document>

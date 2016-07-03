@@ -48,10 +48,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
    
         Log.debug("")
 
-//        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
-        self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(title: "List", style: .Plain, target: self, action: #selector(self.goBack))
-        self.navigationItem.leftBarButtonItem = newBackButton;
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
 
         advertiseButton.layer.borderColor = UIColor.blackColor().CGColor
         advertiseButton.layer.borderWidth = 1.0
@@ -183,26 +180,26 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 		
     }
 
-    func goBack() {
+    @IBAction func addServiceAction(sender: AnyObject) {
         
         if saveButton.enabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. You need to do this before you can create new Services. Save now?", preferredStyle: .Alert)
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
-                self.navigationController?.popViewControllerAnimated(true)
+//                self.navigationController?.popViewControllerAnimated(true)
             }))
             
             alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.navigationController?.popViewControllerAnimated(true)
+                self.performSegueWithIdentifier( "toNewService", sender: nil )
             }))
             
             // Present Alert Controller
             presentViewController(alertController, animated: true, completion: nil)
         } else {
-            self.navigationController?.popViewControllerAnimated(true)
+            self.performSegueWithIdentifier( "toNewService", sender: nil )
         }
     }
     
@@ -431,7 +428,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
         
-		return CGSizeMake( collectionView.frame.size.width, 425 )
+		return CGSizeMake( collectionView.frame.size.width, 90 )
     }
 
 }
