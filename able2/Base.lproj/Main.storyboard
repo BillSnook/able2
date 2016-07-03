@@ -1378,7 +1378,7 @@
                                             <constraint firstAttribute="height" constant="22" id="wbg-JD-Sey"/>
                                         </constraints>
                                         <connections>
-                                            <action selector="serviceAction:" destination="Fnf-Es-r3s" eventType="touchUpInside" id="cr9-zF-Bao"/>
+                                            <segue destination="nq1-EV-3qV" kind="show" identifier="toNewService" id="Khc-pe-V9J"/>
                                         </connections>
                                     </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Device Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XbP-R9-lJF">
@@ -1468,7 +1468,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Service Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vkh-DO-qwp">
-                                                    <rect key="frame" x="8" y="4" width="304" height="30"/>
+                                                    <rect key="frame" x="8" y="4" width="224" height="30"/>
                                                     <color key="backgroundColor" red="0.41022321581840515" green="0.99753707647323608" blue="0.0036917971447110176" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="OCc-dZ-whA"/>
@@ -1505,10 +1505,23 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azw-n7-xGA">
+                                                    <rect key="frame" x="232" y="4" width="80" height="30"/>
+                                                    <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="0.49335106379999999" colorSpace="calibratedRGB"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="VlF-z6-z2D"/>
+                                                        <constraint firstAttribute="width" constant="80" id="syz-US-19U"/>
+                                                        <constraint firstAttribute="height" constant="30" id="v77-Gu-WFv"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="12"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
+                                            <constraint firstItem="Azw-n7-xGA" firstAttribute="leading" secondItem="Vkh-DO-qwp" secondAttribute="trailing" id="0nr-VT-qzx"/>
                                             <constraint firstItem="LD2-lQ-Lwh" firstAttribute="top" secondItem="Vkh-DO-qwp" secondAttribute="bottom" id="12o-nr-VQq"/>
                                             <constraint firstAttribute="trailing" secondItem="LD2-lQ-Lwh" secondAttribute="trailing" constant="8" id="1JB-rc-10N"/>
                                             <constraint firstAttribute="bottom" secondItem="AIn-as-gVV" secondAttribute="bottom" constant="2" id="4XH-cC-8me"/>
@@ -1517,20 +1530,32 @@
                                             <constraint firstItem="NMZ-jd-xhp" firstAttribute="width" secondItem="AIn-as-gVV" secondAttribute="width" id="IpU-Vw-DSc"/>
                                             <constraint firstItem="Vkh-DO-qwp" firstAttribute="top" secondItem="dwL-lM-ur7" secondAttribute="top" constant="4" id="Rl8-Zd-4Tg"/>
                                             <constraint firstItem="Vkh-DO-qwp" firstAttribute="leading" secondItem="dwL-lM-ur7" secondAttribute="leading" constant="8" id="YtU-OY-Sm6"/>
+                                            <constraint firstAttribute="trailing" secondItem="Azw-n7-xGA" secondAttribute="trailing" constant="8" id="Z2I-yc-DFT"/>
                                             <constraint firstAttribute="bottom" secondItem="NMZ-jd-xhp" secondAttribute="bottom" constant="2" id="fJC-oY-y3q"/>
                                             <constraint firstItem="NMZ-jd-xhp" firstAttribute="leading" secondItem="AIn-as-gVV" secondAttribute="trailing" constant="8" id="ubC-6B-aP8"/>
                                             <constraint firstItem="AIn-as-gVV" firstAttribute="leading" secondItem="dwL-lM-ur7" secondAttribute="leading" constant="8" id="x3p-kF-k0m"/>
                                             <constraint firstAttribute="trailing" secondItem="Vkh-DO-qwp" secondAttribute="trailing" constant="8" id="xDY-lV-YWI"/>
+                                            <constraint firstItem="Azw-n7-xGA" firstAttribute="top" secondItem="dwL-lM-ur7" secondAttribute="top" constant="4" id="xsA-Xc-8xu"/>
                                         </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="xDY-lV-YWI"/>
+                                            </mask>
+                                        </variation>
                                         <connections>
                                             <outlet property="characteristicsLabel" destination="AIn-as-gVV" id="0Bd-CT-yDi"/>
                                             <outlet property="nameLabel" destination="Vkh-DO-qwp" id="KnL-ND-RfN"/>
+                                            <outlet property="primaryLabel" destination="Azw-n7-xGA" id="FKd-3K-D0U"/>
                                             <outlet property="subservicesLabel" destination="NMZ-jd-xhp" id="UNm-ru-pyD"/>
                                             <outlet property="uuidLabel" destination="LD2-lQ-Lwh" id="MAD-eG-g6t"/>
                                             <segue destination="nq1-EV-3qV" kind="show" identifier="toEditService" id="iku-LJ-2rN"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="Fnf-Es-r3s" id="qRy-sm-2Wc"/>
+                                    <outlet property="delegate" destination="Fnf-Es-r3s" id="K5p-vx-S4b"/>
+                                </connections>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1575,5 +1600,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="e6N-bh-gkL"/>
         <segue reference="qfc-xZ-w4d"/>
+        <segue reference="Khc-pe-V9J"/>
     </inferredMetricsTieBreakers>
 </document>

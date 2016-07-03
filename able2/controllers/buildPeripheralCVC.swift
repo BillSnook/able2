@@ -10,9 +10,6 @@ import UIKit
 import CoreBluetooth
 
 
-let kCharacteristicChangedKey = "CharacteristicChangedKey"
-
-
 class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -39,6 +36,8 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     var peripheralManager: CBPeripheralManager?
 
+    var services: [BuildService]?
+
     
 //--    ----    ----    ----
     
@@ -46,8 +45,13 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+   
+        Log.debug("")
+
+//        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "List", style: .Plain, target: self, action: #selector(self.goBack))
+        self.navigationItem.leftBarButtonItem = newBackButton;
 
         advertiseButton.layer.borderColor = UIColor.blackColor().CGColor
         advertiseButton.layer.borderWidth = 1.0
@@ -74,7 +78,9 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear( animated )
-        
+   
+        Log.debug("")
+
         nameField.text = buildDevice!.name
         
         uuidField.text = buildDevice!.uuid
@@ -82,17 +88,18 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         
         textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
-
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(characteristicChanged( _: )), name: kCharacteristicChangedKey, object: nil)
+        
+        collectionView.reloadData()
     }
     
     override func viewDidDisappear(animated: Bool) {
         
-        NSNotificationCenter.defaultCenter().removeObserver( self )
+//        NSNotificationCenter.defaultCenter().removeObserver( self )
 
         if advertising {
             stopAdvertising()
         }
+        Log.debug("")
         super.viewDidDisappear( animated )
     }
     
@@ -113,17 +120,39 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     // MARK: - Control actions
 
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "toNewService" {
+            let dest = segue.destinationViewController as! buildServiceCVC
+            builder!.currentDevice = buildDevice
+            dest.buildService = nil
+            Log.debug("dest.buildService will be nil")
+        } else if segue.identifier == "toEditService" {
+            let dest = segue.destinationViewController as! buildServiceCVC
+            if let indexPaths = self.collectionView.indexPathsForSelectedItems() where indexPaths.count > 0 {
+                builder!.currentDevice = buildDevice
+                dest.buildService = buildDevice!.buildServices[indexPaths.first!.item]
+                Log.debug("dest.buildService will be a BuildServices instance")
+            }
+        }
+    }
+
     @IBAction func saveAction(sender: AnyObject) {
 
         guard buildDevice != nil else { Log.info( "save failed" ); return }
         saveButton.enabled = false
-        // Gather and save data from fields and create service
-        buildDevice!.name = nameField.text
-        buildDevice!.uuid = uuidField.text
-
-        builder!.saveDevice( buildDevice! )
+        
         advertiseButton.enabled = true
         checkAddServiceButton()
+        
+        saveDetails()
+    }
+    
+    func saveDetails() {
+        // Gather and save data from fields and save device
+        buildDevice!.name = nameField.text
+        buildDevice!.uuid = uuidField.text
+        builder!.saveDevice( buildDevice! )
     }
 
     @IBAction func advertiseAction(sender: AnyObject) {
@@ -143,18 +172,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         checkAddServiceButton()
     }
     
-    @IBAction func serviceAction(sender: UIButton) {
-        
-        Log.info( "serviceAction" )
-//        guard buildDevice != nil else { Log.info( "But buildDevice is nil" ); return }
-//        let buildService = BuildService( fromCharacteristic: nil )
-//        buildDevice.index = buildDevice!.buildServices.count // Give it order
-//        buildDevice!.buildServices.append( buildService )
-//        checkAddServiceButton()
-
-        collectionView.reloadData()
-    }
-
     @IBAction func makeNewUUIDAction(sender: AnyObject) {
         
         let uuid = NSUUID.init()
@@ -165,6 +182,30 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 		deviceModified( nameFieldValid )
 		
     }
+
+    func goBack() {
+        
+        if saveButton.enabled {
+            // Initialize Alert Controller
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. Save now?", preferredStyle: .Alert)
+            
+            // Configure Alert Controller
+            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+                self.navigationController?.popViewControllerAnimated(true)
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+                self.saveDetails()
+                self.navigationController?.popViewControllerAnimated(true)
+            }))
+            
+            // Present Alert Controller
+            presentViewController(alertController, animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewControllerAnimated(true)
+        }
+    }
+    
     
     // MARK: - State methods
     
@@ -271,13 +312,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         saveButton.enabled = validToSave
         advertiseButton.enabled = !validToSave && nameFieldValid
     }
-
-    func characteristicChanged(notification: NSNotification) {
-
-        saveButton.enabled = true
-        advertiseButton.enabled = false
-        checkAddServiceButton()
-    }
     
     func checkAddServiceButton() {
         
@@ -375,7 +409,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
-        return 0
+        return 1
     }
     
     func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
@@ -386,10 +420,10 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     func collectionView( collectionView: UICollectionView,
                           cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "ServicesCollectionViewCell", forIndexPath: indexPath ) as! ServicesCollectionViewCell
         
         let buildService = buildDevice!.buildServices[ indexPath.row ]
-//        buildService.setupCell( cell )
+        buildService.setupCell( cell )
 //        
 //        cell.delegate = buildService
         return cell

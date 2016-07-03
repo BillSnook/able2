@@ -172,7 +172,7 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
             // WFS Characteristic setup
         }
 
-        NSNotificationCenter.defaultCenter().postNotificationName( kCharacteristicChangedKey, object: nil )
+//        NSNotificationCenter.defaultCenter().postNotificationName( kCharacteristicChangedKey, object: nil )
     }
     
     func setupCell( cell : CharacteristicsCollectionViewCell ) {

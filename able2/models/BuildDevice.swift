@@ -24,6 +24,7 @@ class BuildDevice {
 			device = fromDevice
 			name = device!.name
 			uuid = device!.uuid
+            Log.debug("BuildDevice init from existing Device managed object: \(name)")
             let services = device!.services
             buildServices = []
             for service in services! {
@@ -32,6 +33,7 @@ class BuildDevice {
             }
             // WFS char setup
         } else {
+            Log.debug("BuildDevice init from nil")
 			device = nil
 			name = ""
 			uuid = ""
@@ -41,40 +43,47 @@ class BuildDevice {
     
     func save( managedObjectContext: NSManagedObjectContext ) {
         
-        if device != nil {
-            device!.name = name
-            device!.uuid = uuid
-        } else {
-            let deviceEntity = NSEntityDescription.entityForName("Device", inManagedObjectContext: managedObjectContext)
-            if deviceEntity != nil {
-                if let newDevice = NSManagedObject(entity: deviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Device {
+        Log.debug("BuildDevice save method")
+        if device == nil {
+            if let deviceEntity = NSEntityDescription.entityForName("Device", inManagedObjectContext: managedObjectContext) {
+                if let newDevice = NSManagedObject(entity: deviceEntity, insertIntoManagedObjectContext: managedObjectContext) as? Device {
+                    Log.debug("  Made new Device managed object")
                     device = newDevice
-                    newDevice.name = name
-                    newDevice.uuid = uuid
                 }
             }
         }
+        
         if device != nil {
+            device!.name = name
+            device!.uuid = uuid
             let newSet = NSMutableOrderedSet( capacity: buildServices.count  )
             for buildService in buildServices {
-                let serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
-                if let newService = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service {
-//                    buildService.save( newService )
-                    newSet.addObject( newService )
+                if buildService.service != nil {
+                    Log.debug("  Found existing Service managed object")
+                    buildService.save( managedObjectContext )
+                    newSet.addObject( buildService.service! )
+                } else {
+                    let serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
+                    if let newService = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service {
+                        Log.debug("  Made new Service managed object")
+                        buildService.save( managedObjectContext )
+                        newSet.addObject( newService )
+                    }
                 }
             }
             device!.services = newSet
         }
-        if device != nil {
-            do {
-                try managedObjectContext.save()
-            } catch let error as NSError {
-                Log.error("Could not fetch \(error), \(error.userInfo)")
-            }
-            catch {
-                Log.error("Could not fetch \(error)")
-            }
-        }
+//        if device != nil {
+//            do {
+//                try managedObjectContext.save()
+//                Log.debug("  Saved managed object(s)")
+//            } catch let error as NSError {
+//                Log.error("  Could not fetch \(error), \(error.userInfo)")
+//            }
+//            catch {
+//                Log.error("  Could not fetch \(error)")
+//            }
+//        }
     }
     
 //    func toBluetooth() -> CBMutableService {

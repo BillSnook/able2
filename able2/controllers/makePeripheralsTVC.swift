@@ -14,20 +14,20 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
 
     var navigationPaneBarButtonItem: UIBarButtonItem?
 
-    var builder: Builder?
+    let builder = Builder.sharedBuilder
     var devices: [BuildDevice]?
 
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Log.debug("")
+
         clearsSelectionOnViewWillAppear = false
 //        navigationItem.title = "Create Peripheral"
         
         // This back button is the one that will appear on the next (build) page
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
-
-        builder = Builder.sharedBuilder
 
     }
     
@@ -35,7 +35,9 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
 
         super.viewWillAppear( animated )
         
-        devices = builder?.getDeviceList()
+        Log.debug("")
+
+        devices = builder.getDeviceList()
         tableView.reloadData()
     }
     
@@ -44,10 +46,12 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         if segue.identifier == "toNewPeripheral" {
             let dest = segue.destinationViewController as! buildPeripheralCVC
             dest.buildDevice = nil
+            Log.debug("dest.buildDevice = nil")
         } else if segue.identifier == "toShowPeripheral" {
             let dest = segue.destinationViewController as! buildPeripheralCVC
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 dest.buildDevice = devices![indexPath.row]
+                Log.debug("dest.buildDevice is existing BuildDevice instance")
             }
         }
     }
@@ -73,9 +77,10 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            builder?.deleteDevice( devices![indexPath.row] )
-            devices = builder?.getDeviceList()
-            tableView.reloadData()
+            builder.deleteDevice( devices![indexPath.row] )
+            devices!.removeAtIndex( indexPath.row )
+//            devices = builder!.getDeviceList()
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
         }
     }
     

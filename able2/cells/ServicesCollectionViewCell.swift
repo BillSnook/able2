@@ -12,6 +12,7 @@ import UIKit
 class ServicesCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 	
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var primaryLabel: UILabel!
     @IBOutlet weak var uuidLabel: UILabel!
 
     @IBOutlet weak var characteristicsLabel: UILabel!

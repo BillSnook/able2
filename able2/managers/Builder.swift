@@ -14,8 +14,9 @@ class Builder {
     
     static let sharedBuilder = Builder()
 
-    var managedObjectContext: NSManagedObjectContext
+    let managedObjectContext: NSManagedObjectContext
     
+    var currentDevice: BuildDevice?
     
     init() {
         
@@ -25,6 +26,7 @@ class Builder {
 
     func getDeviceList() -> [BuildDevice]? {
         
+        Log.debug("Builder getDeviceList")
         let fetch = NSFetchRequest( entityName: "Device" )
         do {
             let results = try managedObjectContext.executeFetchRequest( fetch )
@@ -45,41 +47,46 @@ class Builder {
     }
     
 
-    func getList() -> [BuildService]? {
-
-        let fetch = NSFetchRequest( entityName: "Service" )
-        do {
-            let results = try managedObjectContext.executeFetchRequest( fetch )
-            var buildServices = [BuildService]()
-            for service in results as! [Service] {
-                let buildService = BuildService( fromService: service )
-                buildServices.append( buildService )
-            }
-            return buildServices
-            
-        } catch let error as NSError {
-            Log.error("Could not fetch \(error), \(error.userInfo)")
-        }
-        catch {
-            Log.error("Could not fetch \(error)")
-        }
-        return nil
-    }
+//    func getList() -> [BuildService]? {
+//
+//        let fetch = NSFetchRequest( entityName: "Service" )
+//        do {
+//            let results = try managedObjectContext.executeFetchRequest( fetch )
+//            var buildServices = [BuildService]()
+//            for service in results as! [Service] {
+//                let buildService = BuildService( fromService: service )
+//                buildServices.append( buildService )
+//            }
+//            return buildServices
+//            
+//        } catch let error as NSError {
+//            Log.error("Could not fetch \(error), \(error.userInfo)")
+//        }
+//        catch {
+//            Log.error("Could not fetch \(error)")
+//        }
+//        return nil
+//    }
     
     func saveDevice( buildDevice: BuildDevice ) {
         
+        Log.debug("Builder saveDevice: \(buildDevice.name)")
         buildDevice.save( managedObjectContext )
         
     }
     
-    func save( buildService: BuildService ) {
+    func saveService( buildService: BuildService ) {
         
-        buildService.save( managedObjectContext )
+        Log.debug("Builder saveService: \(buildService.name)")
+        guard currentDevice != nil else { return }
+        currentDevice!.buildServices.append( buildService )
+        currentDevice!.save( managedObjectContext )
         
     }
     
     func deleteDevice( buildDevice: BuildDevice ) {
         
+        Log.debug("Builder deleteDevice")
         guard buildDevice.device != nil else { return }
         managedObjectContext.deleteObject( buildDevice.device! )
         do {
@@ -93,8 +100,9 @@ class Builder {
         buildDevice.device = nil
     }
     
-    func delete( buildService: BuildService ) {
+    func deleteService( buildService: BuildService ) {
         
+        Log.debug("Builder deleteService")
         guard buildService.service != nil else { return }
         managedObjectContext.deleteObject( buildService.service! )
         do {

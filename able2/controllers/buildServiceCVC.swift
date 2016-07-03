@@ -13,19 +13,15 @@ import CoreBluetooth
 let kServiceChangedKey = "ServiceChangedKey"
 
 
-class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate {
+class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
-    @IBOutlet weak var advertiseButton: UIButton!
     @IBOutlet weak var newCharacteristicButton: UIButton!
     
     var builder: Builder?
     var buildService: BuildService?
 //    var buildCharacteristics: Array<BuildCharacteristic>?  //[BuildCharacteristic]?
-    
-    var advertising = false
-    
     
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var uuidField: UITextField!
@@ -46,17 +42,11 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Log.debug("")
+
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
 
-        advertiseButton.layer.borderColor = UIColor.blackColor().CGColor
-        advertiseButton.layer.borderWidth = 1.0
-        advertiseButton.layer.cornerRadius = 6.0
-        advertiseButton.setTitle( "Advertise", forState: .Normal )
-        advertiseButton.setTitleColor( UIColor.blackColor(), forState: .Normal )
-        advertiseButton.setTitleColor( UIColor.lightGrayColor(), forState: .Disabled )
-        
         let serviceValid = ( buildService != nil )
-        advertiseButton.enabled = serviceValid
         newCharacteristicButton.enabled = serviceValid
         nameFieldValid = serviceValid
         uuidFieldValid = serviceValid
@@ -74,13 +64,15 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         super.viewWillAppear( animated )
         
+        Log.debug("")
+
         nameField.text = buildService!.name
         
         uuidField.text = buildService!.uuid
         uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
         
-        if let primary = buildService!.primary {
-            primarySwitch.on = primary.boolValue
+        if buildService!.primary {
+            primarySwitch.on = buildService!.primary.boolValue
         } else {
             primarySwitch.on = false
         }
@@ -95,9 +87,8 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         NSNotificationCenter.defaultCenter().removeObserver( self )
 
-        if advertising {
-            stopAdvertising()
-        }
+        Log.debug("")
+
         super.viewDidDisappear( animated )
     }
     
@@ -122,33 +113,22 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
 
         guard buildService != nil else { Log.info( "save failed" ); return }
         saveButton.enabled = false
+
+        checkAddCharacteristicButton()
+        
+        saveDetails()
+    }
+    
+    func saveDetails() {
+
         // Gather and save data from fields and create service
         buildService!.name = nameField.text
         buildService!.uuid = uuidField.text
         buildService!.primary = primarySwitch.on
+        Log.debug("")
+        builder!.saveService( buildService! )
+}
 
-        builder!.save( buildService! )
-        advertiseButton.enabled = true
-        checkAddCharacteristicButton()
-    }
-
-    @IBAction func advertiseAction(sender: AnyObject) {
-        
-        guard validateService() else { return }
-        let adButton = sender as! UIButton
-        if !advertising {           // If we were not advertising, now we want to start
-            guard !saveButton.enabled else { return }   // But must be saved first - may need alert
-            setControlsEnabled( false )
-            adButton.setTitle( "Stop Advertising", forState: .Normal )
-            startAdvertising()
-        } else {
-            adButton.setTitle( "Advertise", forState: .Normal )
-			setControlsEnabled( true )
-            stopAdvertising()
-        }
-        checkAddCharacteristicButton()
-    }
-    
     @IBAction func characteristicAction(sender: UIButton) {
         
         Log.info( "characteristicAction" )
@@ -192,112 +172,26 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         }
     }
     
-    // MARK: - CBPeripheralManagerDelegate support
-    
-    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager) {
-        
-        var state = ""
-        switch ( peripheral.state ) {
-        case .Unknown:
-            state = "Currently in an unknown state."
-        case .Resetting:
-            state = "Peripheral Manager is resetting."
-        case .Unsupported:
-            state = "No support for Bluetooth Low Energy."
-        case .Unauthorized:
-            state = "Not authorized to use Bluetooth Low Energy."
-        case .PoweredOff:
-            state = "Currently powered off."
-        case .PoweredOn:
-            state = "Currently powered on."
-        }
-        Log.info( "Bluetooth peripheral manager state: \(state)" )
-        
-        if (peripheral.state != .PoweredOn) {		// In a real app, you'd deal with all the states correctly
-//            resetScanList()
-            return
-        }
-        // The state must be CBCentralManagerStatePoweredOn...
-        // ... so start scanning
-        self.startPublish()
-
-    }
-    
-    func peripheralManagerDidStartAdvertising(peripheral: CBPeripheralManager, error: NSError?) {
-        
-        if ( error != nil ) {
-            print( "peripheralManagerDidStartAdvertising, error: \(error!.localizedDescription)" )
-        } else {
-            print( "peripheralManagerDidStartAdvertising, success!!" )
-        }
-    }
-    
-    func peripheralManager(peripheral: CBPeripheralManager, didAddService service: CBService, error: NSError?) {
-        
-        if ( error != nil ) {
-            print( "didAddService, error: \(error!.localizedDescription)" )
-        } else {
-            print( "didAddService, success!! Send: \(service.UUID.UUIDString)" )
-            let adverts = [CBAdvertisementDataLocalNameKey:buildService!.name!, CBAdvertisementDataServiceUUIDsKey:[CBUUID( string: buildService!.uuid! )]] as [String:AnyObject]
-            peripheralManager?.startAdvertising( adverts )
-        }
-    }
-
-
-    
-    // MARK: - Advertising support
-    
-    func startAdvertising() {
-        
-        advertising = true
-        
-        peripheralManager = CBPeripheralManager( delegate: self, queue: nil )
-        
-    }
-    
-    func stopAdvertising() {
-        
-        guard peripheralManager != nil else { return }
-        guard peripheralManager!.isAdvertising else { return }
-        peripheralManager!.stopAdvertising()
-        peripheralManager!.removeAllServices()
-        
-        advertising = false
-    }
-    
-    func startPublish() {
-        
-        guard buildService != nil else { return }
-        guard peripheralManager != nil else { return }
-
-        let mutableService = buildService!.toBluetooth()
-        peripheralManager!.addService( mutableService )
-        
-    }
-    
-
     func serviceModified( nameValid: Bool = false ) {
         
 //    Log.info( "buildServiceCVC serviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
 		
         let validToSave = uuidFieldValid && nameValid
         saveButton.enabled = validToSave
-        advertiseButton.enabled = !validToSave && nameFieldValid
     }
 
     func characteristicChanged(notification: NSNotification) {
 
         saveButton.enabled = true
-        advertiseButton.enabled = false
         checkAddCharacteristicButton()
     }
     
     func checkAddCharacteristicButton() {
         
-        if let count = buildService?.buildCharacteristics.count where count > 0{   // Only one for now
+        if let count = buildService?.buildCharacteristics.count where count > 0 {   // Only one for now
             newCharacteristicButton.enabled = false
         } else {
-            newCharacteristicButton.enabled = !advertising
+            newCharacteristicButton.enabled = true
         }
     }
 
