@@ -15,21 +15,20 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var advertiseButton: UIButton!
+    
     @IBOutlet weak var newServiceButton: UIButton!
     @IBOutlet weak var addServiceLabel: UILabel!
+    
+    @IBOutlet weak var nameField: UITextField!
+    @IBOutlet weak var uuidField: UITextField!
+    @IBOutlet weak var uuidButton: UIButton!
+    
     
     var builder: Builder?
     var buildDevice: BuildDevice?
 //    var buildCharacteristics: Array<BuildCharacteristic>?  //[BuildCharacteristic]?
     
     var advertising = false
-    
-    
-    @IBOutlet weak var nameField: UITextField!
-    @IBOutlet weak var uuidField: UITextField!
-    @IBOutlet weak var uuidButton: UIButton!
-    
-    var displayState = DisplayState.Neutral
     var nameFieldValid = false
     var uuidFieldValid = false
     var deviceValid = false
@@ -38,6 +37,8 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     var services: [BuildService]?
 
+    var newBackButton: UIBarButtonItem?
+    
     
 //--    ----    ----    ----
     
@@ -48,10 +49,10 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
    
         Log.debug("")
 
-//        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
-        self.navigationItem.hidesBackButton = true
-        let newBackButton = UIBarButtonItem(title: "List", style: .Plain, target: self, action: #selector(self.goBack))
-        self.navigationItem.leftBarButtonItem = newBackButton;
+//        navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+//        navigationItem.hidesBackButton = true
+//        newBackButton = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedWarning))
+//        navigationItem.leftBarButtonItem = newBackButton
 
         advertiseButton.layer.borderColor = UIColor.blackColor().CGColor
         advertiseButton.layer.borderWidth = 1.0
@@ -80,15 +81,17 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
    
         Log.debug("")
 
+        navigationItem.title = "Current Device"
+
         nameField.text = buildDevice!.name
         
         uuidField.text = buildDevice!.uuid
-        uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
+        uuidField.inputView = UIView.init( frame: CGRectZero )    // No keyboard
         
         textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
-        
-        saveButton.enabled = false
+   
+        setSaveState( false )
         checkAddServiceButton()
         
         collectionView.reloadData()
@@ -124,6 +127,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
+        navigationItem.title = "Device"
         if segue.identifier == "toNewService" {
             let dest = segue.destinationViewController as! buildServiceCVC
             builder!.currentDevice = buildDevice
@@ -131,7 +135,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
             Log.debug("dest.buildService will be nil")
         } else if segue.identifier == "toEditService" {
             let dest = segue.destinationViewController as! buildServiceCVC
-            if let indexPaths = self.collectionView.indexPathsForSelectedItems() where indexPaths.count > 0 {
+            if let indexPaths = collectionView.indexPathsForSelectedItems() where indexPaths.count > 0 {
                 builder!.currentDevice = buildDevice
                 dest.buildService = buildDevice!.buildServices[indexPaths.first!.item]
                 Log.debug("dest.buildService will be a BuildServices instance")
@@ -142,7 +146,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     @IBAction func saveAction(sender: AnyObject) {
 
         guard buildDevice != nil else { Log.info( "save failed" ); return }
-        saveButton.enabled = false
+        setSaveState( false )
         
         advertiseButton.enabled = true
         checkAddServiceButton()
@@ -208,7 +212,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         }
     }
     
-    func goBack() {
+    func unsavedWarning() {
         
         if saveButton.enabled {
             // Initialize Alert Controller
@@ -267,6 +271,20 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 //        for buildCharacteristic in buildService!.buildCharacteristics {
 //            buildCharacteristic.enabled( enabled )
 //        }
+    }
+    
+    func setSaveState( enabled: Bool ) {
+        
+        saveButton.enabled = enabled
+        if enabled {
+            navigationItem.hidesBackButton = true
+            newBackButton = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedWarning))
+            navigationItem.leftBarButtonItem = newBackButton
+        } else {
+            navigationItem.leftBarButtonItem = nil
+            navigationItem.hidesBackButton = false
+        }
+        
     }
     
     // MARK: - CBPeripheralManagerDelegate support
@@ -357,7 +375,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 //    Log.info( "buildPeripheralCVC deviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
 		
         let validToSave = uuidFieldValid && nameValid
-        saveButton.enabled = validToSave
+        setSaveState( validToSave )
         advertiseButton.enabled = !validToSave && nameFieldValid
     }
     

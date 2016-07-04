@@ -45,7 +45,10 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         Log.debug("")
 
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+//        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+//        self.navigationItem.hidesBackButton = true
+//        let newBackButton = UIBarButtonItem(title: "List", style: .Plain, target: self, action: #selector(self.goBack))
+//        self.navigationItem.leftBarButtonItem = newBackButton;
 
         let serviceValid = ( buildService != nil )
         newCharacteristicButton.enabled = serviceValid
@@ -67,6 +70,8 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         super.viewWillAppear( animated )
         
         Log.debug("")
+
+        navigationItem.title = "Service"
 
         nameField.text = buildService!.name
         

@@ -12,10 +12,8 @@ import UIKit
 import CoreData
 
 
-class listPeripheralsTVC : UITableViewController, SubstitutableDetailViewProtocol, NSFetchedResultsControllerDelegate {
+class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDelegate {
     
-    var navigationPaneBarButtonItem: UIBarButtonItem?
-
     var managedObjectContext: NSManagedObjectContext? = nil
     
     lazy var fetchedResultsController: NSFetchedResultsController = {

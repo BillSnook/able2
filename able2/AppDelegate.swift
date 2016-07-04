@@ -63,11 +63,6 @@ let Log = Logger( formatter: .Constrained, theme: .MobileForming )
 var bluetoothNames = Dictionary<String, String>()
 
 
-protocol SubstitutableDetailViewProtocol {
-    var navigationPaneBarButtonItem: UIBarButtonItem?  { get set }
-}
-
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 

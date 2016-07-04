@@ -10,13 +10,16 @@ import Foundation
 import UIKit
 
 
-class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtocol {
-
-    var navigationPaneBarButtonItem: UIBarButtonItem?
+class makePeripheralsTVC : UITableViewController {
 
     let builder = Builder.sharedBuilder
+    
     var devices: [BuildDevice]?
 
+    
+//--    ----    ----    ----
+    
+    // MARK: - Lifecycle events
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,10 +27,9 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         Log.debug("")
 
         clearsSelectionOnViewWillAppear = false
-//        navigationItem.title = "Create Peripheral"
         
         // This back button is the one that will appear on the next (build) page
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+//        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
 
     }
     
@@ -37,25 +39,31 @@ class makePeripheralsTVC : UITableViewController, SubstitutableDetailViewProtoco
         
         Log.debug("")
 
+        navigationItem.title = "List Devices"
+
         devices = builder.getDeviceList()
         tableView.reloadData()
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
+        navigationItem.title = "List"   // Back button title for next page - buildPeripheral
+        let dest = segue.destinationViewController as! buildPeripheralCVC
         if segue.identifier == "toNewPeripheral" {
-            let dest = segue.destinationViewController as! buildPeripheralCVC
             dest.buildDevice = nil
             Log.debug("dest.buildDevice = nil")
         } else if segue.identifier == "toShowPeripheral" {
-            let dest = segue.destinationViewController as! buildPeripheralCVC
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 dest.buildDevice = devices![indexPath.row]
-                Log.debug("dest.buildDevice is existing BuildDevice instance")
+                Log.debug("dest.buildDevice is existing BuildDevice instance: \(dest.buildDevice?.name)")
             }
         }
     }
 
+    
+    //--    ----    ----    ----
+    
+    // MARK: - Table datasource events
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         

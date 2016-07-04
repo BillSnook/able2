@@ -1479,7 +1479,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azw-n7-xGA">
-                                                    <rect key="frame" x="232" y="4" width="80" height="30"/>
+                                                    <rect key="frame" x="232" y="6" width="80" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="80" id="syz-US-19U"/>
                                                         <constraint firstAttribute="height" constant="30" id="v77-Gu-WFv"/>
@@ -1489,7 +1489,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00000000-0000-0000-0000-000000000000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LD2-lQ-Lwh">
-                                                    <rect key="frame" x="8" y="34" width="304" height="30"/>
+                                                    <rect key="frame" x="8" y="32" width="304" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="vqa-Ug-WoX"/>
                                                     </constraints>
@@ -1541,7 +1541,7 @@
                                         <color key="backgroundColor" red="0.95294117649999999" green="0.61174167639999999" blue="0.1088925659" alpha="0.24609375" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="Azw-n7-xGA" firstAttribute="leading" secondItem="Vkh-DO-qwp" secondAttribute="trailing" id="0nr-VT-qzx"/>
-                                            <constraint firstItem="LD2-lQ-Lwh" firstAttribute="top" secondItem="Vkh-DO-qwp" secondAttribute="bottom" id="12o-nr-VQq"/>
+                                            <constraint firstItem="LD2-lQ-Lwh" firstAttribute="top" secondItem="Vkh-DO-qwp" secondAttribute="bottom" constant="-2" id="12o-nr-VQq"/>
                                             <constraint firstAttribute="trailing" secondItem="LD2-lQ-Lwh" secondAttribute="trailing" constant="8" id="1JB-rc-10N"/>
                                             <constraint firstAttribute="bottom" secondItem="9vl-ka-vUn" secondAttribute="bottom" constant="8" id="4Yr-fi-2e1"/>
                                             <constraint firstAttribute="trailing" secondItem="9vl-ka-vUn" secondAttribute="trailing" constant="12" id="6YN-7Z-Bhh"/>
@@ -1556,7 +1556,7 @@
                                             <constraint firstItem="AIn-as-gVV" firstAttribute="leading" secondItem="dwL-lM-ur7" secondAttribute="leading" constant="8" id="rWW-Bk-JWf"/>
                                             <constraint firstAttribute="bottom" secondItem="NMZ-jd-xhp" secondAttribute="bottom" constant="7" id="toF-aN-VaY"/>
                                             <constraint firstAttribute="trailing" secondItem="Vkh-DO-qwp" secondAttribute="trailing" constant="8" id="xDY-lV-YWI"/>
-                                            <constraint firstItem="Azw-n7-xGA" firstAttribute="top" secondItem="dwL-lM-ur7" secondAttribute="top" constant="4" id="xsA-Xc-8xu"/>
+                                            <constraint firstItem="Azw-n7-xGA" firstAttribute="top" secondItem="dwL-lM-ur7" secondAttribute="top" constant="6" id="xsA-Xc-8xu"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
