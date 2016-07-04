@@ -81,17 +81,6 @@ class BuildService {
             }
             service!.characteristics = newSet
         }
-        if service != nil {
-            do {
-                try managedObjectContext.save()
-                Log.debug("  Saved managed object(s)")
-            } catch let error as NSError {
-                Log.error("  Could not fetch \(error), \(error.userInfo)")
-            }
-            catch {
-                Log.error("  Could not fetch \(error)")
-            }
-        }
     }
     
     func setupCell( cell: ServicesCollectionViewCell ) {
@@ -108,6 +97,7 @@ class BuildService {
             cell.characteristicsLabel.text = "\(buildCharacteristics.count) Characteristics"
         }
         cell.subservicesLabel.text = "No Sub-Services"
+        
     }
     
     func toBluetooth() -> CBMutableService {

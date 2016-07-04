@@ -18,6 +18,10 @@ class Builder {
     
     var currentDevice: BuildDevice?
     
+    var needsSaving = false
+    
+    
+    
     init() {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -45,33 +49,26 @@ class Builder {
         }
         return nil
     }
-    
 
-//    func getList() -> [BuildService]? {
-//
-//        let fetch = NSFetchRequest( entityName: "Service" )
-//        do {
-//            let results = try managedObjectContext.executeFetchRequest( fetch )
-//            var buildServices = [BuildService]()
-//            for service in results as! [Service] {
-//                let buildService = BuildService( fromService: service )
-//                buildServices.append( buildService )
-//            }
-//            return buildServices
-//            
-//        } catch let error as NSError {
-//            Log.error("Could not fetch \(error), \(error.userInfo)")
-//        }
-//        catch {
-//            Log.error("Could not fetch \(error)")
-//        }
-//        return nil
-//    }
+    private func save() {
+        
+        do {
+            try managedObjectContext.save()
+            needsSaving = false
+        } catch let error as NSError {
+            Log.error("Could not fetch \(error), \(error.userInfo)")
+        }
+        catch {
+            Log.error("Could not fetch \(error)")
+        }
+
+    }
     
     func saveDevice( buildDevice: BuildDevice ) {
         
         Log.debug("Builder saveDevice: \(buildDevice.name)")
         buildDevice.save( managedObjectContext )
+        save()
         
     }
     
@@ -81,6 +78,7 @@ class Builder {
         guard currentDevice != nil else { return }
         currentDevice!.appendService( buildService )
         currentDevice!.save( managedObjectContext )
+        save()
         
     }
     
@@ -89,14 +87,7 @@ class Builder {
         Log.debug("Builder deleteDevice")
         guard buildDevice.device != nil else { return }
         managedObjectContext.deleteObject( buildDevice.device! )
-        do {
-            try managedObjectContext.save()
-        } catch let error as NSError {
-            Log.error("Could not fetch \(error), \(error.userInfo)")
-        }
-        catch {
-            Log.error("Could not fetch \(error)")
-        }
+        save()
         buildDevice.device = nil
     }
     
@@ -105,15 +96,9 @@ class Builder {
         Log.debug("Builder deleteService")
         guard buildService.service != nil else { return }
         managedObjectContext.deleteObject( buildService.service! )
-        do {
-            try managedObjectContext.save()
-        } catch let error as NSError {
-            Log.error("Could not fetch \(error), \(error.userInfo)")
-        }
-        catch {
-            Log.error("Could not fetch \(error)")
-        }
+        save()
         buildService.service = nil
     }
+    
     
 }

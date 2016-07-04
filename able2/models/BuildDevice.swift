@@ -17,6 +17,7 @@ class BuildDevice {
 	var name: String?
 	var uuid: String?
     var buildServices: Array<BuildService>
+//    var needsSaving = false
 	
 	init( fromDevice: Device? ) {
 		
@@ -73,17 +74,6 @@ class BuildDevice {
             }
             device!.services = newSet
         }
-//        if device != nil {
-//            do {
-//                try managedObjectContext.save()
-//                Log.debug("  Saved managed object(s)")
-//            } catch let error as NSError {
-//                Log.error("  Could not fetch \(error), \(error.userInfo)")
-//            }
-//            catch {
-//                Log.error("  Could not fetch \(error)")
-//            }
-//        }
     }
     
     func appendService( buildService: BuildService ) {
@@ -94,6 +84,12 @@ class BuildDevice {
             }
         }
         buildServices.append( buildService )
+        
+    }
+    
+    func removeServiceAtIndex( row: Int ) {
+        
+        buildServices.removeAtIndex( row )
     }
     
     

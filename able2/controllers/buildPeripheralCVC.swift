@@ -10,7 +10,7 @@ import UIKit
 import CoreBluetooth
 
 
-class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate {
+class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate, ServicesCVCDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -48,7 +48,10 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
    
         Log.debug("")
 
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+//        self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
+        self.navigationItem.hidesBackButton = true
+        let newBackButton = UIBarButtonItem(title: "List", style: .Plain, target: self, action: #selector(self.goBack))
+        self.navigationItem.leftBarButtonItem = newBackButton;
 
         advertiseButton.layer.borderColor = UIColor.blackColor().CGColor
         advertiseButton.layer.borderWidth = 1.0
@@ -203,6 +206,52 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         } else {
             self.performSegueWithIdentifier( "toNewService", sender: nil )
         }
+    }
+    
+    func goBack() {
+        
+        if saveButton.enabled {
+            // Initialize Alert Controller
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. Save now?", preferredStyle: .Alert)
+            
+            // Configure Alert Controller
+            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+                self.navigationController?.popViewControllerAnimated(true)
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+                self.saveDetails()
+                self.navigationController?.popViewControllerAnimated(true)
+            }))
+            
+            // Present Alert Controller
+            presentViewController(alertController, animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewControllerAnimated(true)
+        }
+    }
+    
+    func deleteCellAt( indexPath: NSIndexPath ) {
+        
+        let alertController = UIAlertController(title: "Warning", message: "You are about to remove a service from your device. This operation cannot be undone. Continue?", preferredStyle: .Alert)
+        
+        // Configure Alert Controller
+        alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Delete Service", style: .Default, handler: { (_) -> Void in
+            self.removeCellAt( indexPath )
+        }))
+        
+        // Present Alert Controller
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func removeCellAt( indexPath: NSIndexPath ) {
+        
+        buildDevice!.removeServiceAtIndex( indexPath.row )
+        builder!.saveDevice( buildDevice! )
+        collectionView.deleteItemsAtIndexPaths( [indexPath] )
     }
     
     
@@ -425,8 +474,9 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         
         let buildService = buildDevice!.buildServices[ indexPath.row ]
         buildService.setupCell( cell )
-//        
-//        cell.delegate = buildService
+        cell.indexPath = indexPath
+        cell.delegate = self
+
         return cell
     }
     

@@ -9,6 +9,12 @@
 import UIKit
 
 
+protocol ServicesCVCDelegate {
+    
+    func deleteCellAt( indexPath: NSIndexPath )
+    
+}
+
 class ServicesCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 	
     @IBOutlet weak var nameLabel: UILabel!
@@ -17,5 +23,19 @@ class ServicesCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 
     @IBOutlet weak var characteristicsLabel: UILabel!
     @IBOutlet weak var subservicesLabel: UILabel!
+    @IBOutlet weak var deleteLabel: UILabel!
     
+    @IBOutlet weak var deleteButton: UIButton!
+    
+    var indexPath: NSIndexPath?
+    var delegate: ServicesCVCDelegate?
+    
+    
+    @IBAction func deleteAction(sender: AnyObject) {
+        
+        if delegate != nil && indexPath != nil {
+            delegate!.deleteCellAt( indexPath! )
+        }
+    }
+
 }

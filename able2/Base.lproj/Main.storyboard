@@ -1478,6 +1478,16 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azw-n7-xGA">
+                                                    <rect key="frame" x="232" y="4" width="80" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="80" id="syz-US-19U"/>
+                                                        <constraint firstAttribute="height" constant="30" id="v77-Gu-WFv"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="12"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00000000-0000-0000-0000-000000000000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LD2-lQ-Lwh">
                                                     <rect key="frame" x="8" y="34" width="304" height="30"/>
                                                     <constraints>
@@ -1487,33 +1497,44 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 characteristic" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AIn-as-gVV">
-                                                    <rect key="frame" x="8" y="64" width="148" height="24"/>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No characteristics" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AIn-as-gVV">
+                                                    <rect key="frame" x="8" y="59" width="110" height="24"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="24" id="LmW-Et-JxV"/>
+                                                        <constraint firstAttribute="height" constant="24" id="UUE-A6-w0n"/>
+                                                        <constraint firstAttribute="width" constant="110" id="oQM-eq-4Hb"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No subservices" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NMZ-jd-xhp">
-                                                    <rect key="frame" x="164" y="64" width="148" height="24"/>
+                                                    <rect key="frame" x="117" y="59" width="100" height="24"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="24" id="g4r-sL-O2O"/>
+                                                        <constraint firstAttribute="height" constant="24" id="E7B-7o-Ygk"/>
+                                                        <constraint firstAttribute="width" constant="100" id="nKF-eu-8wn"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Primary" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Azw-n7-xGA">
-                                                    <rect key="frame" x="232" y="4" width="80" height="30"/>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delete" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wGq-1j-qsu">
+                                                    <rect key="frame" x="223" y="59" width="45" height="24"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="VlF-z6-z2D"/>
-                                                        <constraint firstAttribute="width" constant="80" id="syz-US-19U"/>
-                                                        <constraint firstAttribute="height" constant="30" id="v77-Gu-WFv"/>
+                                                        <constraint firstAttribute="width" constant="45" id="lW8-7p-aA2"/>
+                                                        <constraint firstAttribute="height" constant="24" id="n7a-U7-sXf"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="12"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9vl-ka-vUn" userLabel="DeleteServiceButton">
+                                                    <rect key="frame" x="286" y="60" width="22" height="22"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="22" id="5h7-us-sJB"/>
+                                                        <constraint firstAttribute="height" constant="22" id="Ssr-Xl-7Iw"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <action selector="deleteAction:" destination="dwL-lM-ur7" eventType="touchUpInside" id="Oga-69-6in"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -1522,16 +1543,18 @@
                                             <constraint firstItem="Azw-n7-xGA" firstAttribute="leading" secondItem="Vkh-DO-qwp" secondAttribute="trailing" id="0nr-VT-qzx"/>
                                             <constraint firstItem="LD2-lQ-Lwh" firstAttribute="top" secondItem="Vkh-DO-qwp" secondAttribute="bottom" id="12o-nr-VQq"/>
                                             <constraint firstAttribute="trailing" secondItem="LD2-lQ-Lwh" secondAttribute="trailing" constant="8" id="1JB-rc-10N"/>
-                                            <constraint firstAttribute="bottom" secondItem="AIn-as-gVV" secondAttribute="bottom" constant="2" id="4XH-cC-8me"/>
-                                            <constraint firstAttribute="trailing" secondItem="NMZ-jd-xhp" secondAttribute="trailing" constant="8" id="9VC-yZ-xXH"/>
+                                            <constraint firstAttribute="bottom" secondItem="9vl-ka-vUn" secondAttribute="bottom" constant="8" id="4Yr-fi-2e1"/>
+                                            <constraint firstAttribute="trailing" secondItem="9vl-ka-vUn" secondAttribute="trailing" constant="12" id="6YN-7Z-Bhh"/>
                                             <constraint firstItem="LD2-lQ-Lwh" firstAttribute="leading" secondItem="dwL-lM-ur7" secondAttribute="leading" constant="8" id="CoI-fq-c49"/>
-                                            <constraint firstItem="NMZ-jd-xhp" firstAttribute="width" secondItem="AIn-as-gVV" secondAttribute="width" id="IpU-Vw-DSc"/>
+                                            <constraint firstItem="NMZ-jd-xhp" firstAttribute="leading" secondItem="AIn-as-gVV" secondAttribute="trailing" constant="-1" id="Gnm-tR-Hsv"/>
+                                            <constraint firstAttribute="bottom" secondItem="AIn-as-gVV" secondAttribute="bottom" constant="7" id="I2x-HC-hq7"/>
+                                            <constraint firstItem="9vl-ka-vUn" firstAttribute="leading" secondItem="wGq-1j-qsu" secondAttribute="trailing" constant="18" id="QKK-Jf-ICd"/>
                                             <constraint firstItem="Vkh-DO-qwp" firstAttribute="top" secondItem="dwL-lM-ur7" secondAttribute="top" constant="4" id="Rl8-Zd-4Tg"/>
                                             <constraint firstItem="Vkh-DO-qwp" firstAttribute="leading" secondItem="dwL-lM-ur7" secondAttribute="leading" constant="8" id="YtU-OY-Sm6"/>
                                             <constraint firstAttribute="trailing" secondItem="Azw-n7-xGA" secondAttribute="trailing" constant="8" id="Z2I-yc-DFT"/>
-                                            <constraint firstAttribute="bottom" secondItem="NMZ-jd-xhp" secondAttribute="bottom" constant="2" id="fJC-oY-y3q"/>
-                                            <constraint firstItem="NMZ-jd-xhp" firstAttribute="leading" secondItem="AIn-as-gVV" secondAttribute="trailing" constant="8" id="ubC-6B-aP8"/>
-                                            <constraint firstItem="AIn-as-gVV" firstAttribute="leading" secondItem="dwL-lM-ur7" secondAttribute="leading" constant="8" id="x3p-kF-k0m"/>
+                                            <constraint firstAttribute="bottom" secondItem="wGq-1j-qsu" secondAttribute="bottom" constant="7" id="iCg-Fl-YNH"/>
+                                            <constraint firstItem="AIn-as-gVV" firstAttribute="leading" secondItem="dwL-lM-ur7" secondAttribute="leading" constant="8" id="rWW-Bk-JWf"/>
+                                            <constraint firstAttribute="bottom" secondItem="NMZ-jd-xhp" secondAttribute="bottom" constant="7" id="toF-aN-VaY"/>
                                             <constraint firstAttribute="trailing" secondItem="Vkh-DO-qwp" secondAttribute="trailing" constant="8" id="xDY-lV-YWI"/>
                                             <constraint firstItem="Azw-n7-xGA" firstAttribute="top" secondItem="dwL-lM-ur7" secondAttribute="top" constant="4" id="xsA-Xc-8xu"/>
                                         </constraints>
@@ -1542,6 +1565,8 @@
                                         </variation>
                                         <connections>
                                             <outlet property="characteristicsLabel" destination="AIn-as-gVV" id="0Bd-CT-yDi"/>
+                                            <outlet property="deleteButton" destination="9vl-ka-vUn" id="xwv-nd-uP2"/>
+                                            <outlet property="deleteLabel" destination="wGq-1j-qsu" id="z13-wb-y95"/>
                                             <outlet property="nameLabel" destination="Vkh-DO-qwp" id="KnL-ND-RfN"/>
                                             <outlet property="primaryLabel" destination="Azw-n7-xGA" id="FKd-3K-D0U"/>
                                             <outlet property="subservicesLabel" destination="NMZ-jd-xhp" id="UNm-ru-pyD"/>
