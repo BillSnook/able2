@@ -16,6 +16,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var advertiseButton: UIButton!
     @IBOutlet weak var newServiceButton: UIButton!
+    @IBOutlet weak var addServiceLabel: UILabel!
     
     var builder: Builder?
     var buildDevice: BuildDevice?
@@ -25,7 +26,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     @IBOutlet weak var nameField: UITextField!
-    @IBOutlet weak var primaryLabel: UILabel!
     @IBOutlet weak var uuidField: UITextField!
     @IBOutlet weak var uuidButton: UIButton!
     
@@ -60,6 +60,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         let deviceValid = ( buildDevice != nil )
         advertiseButton.enabled = deviceValid
         newServiceButton.enabled = deviceValid
+        addServiceLabel.enabled = deviceValid
         nameFieldValid = deviceValid
         uuidFieldValid = deviceValid
 
@@ -68,8 +69,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
             buildDevice = BuildDevice( fromDevice: nil )
         }
 
-        saveButton.enabled = false
-        checkAddServiceButton()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -85,6 +84,9 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         
         textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
+        
+        saveButton.enabled = false
+        checkAddServiceButton()
         
         collectionView.reloadData()
     }
@@ -312,10 +314,12 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     func checkAddServiceButton() {
         
-        if let count = buildDevice?.buildServices.count where count > 0 {   // Only one for now
+        if let count = buildDevice?.buildServices.count where count > 1 {   // Up to two for now
             newServiceButton.enabled = false
+            addServiceLabel.enabled = false
         } else {
             newServiceButton.enabled = !advertising
+            addServiceLabel.enabled = !advertising
         }
     }
 

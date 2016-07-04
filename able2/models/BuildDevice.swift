@@ -86,6 +86,17 @@ class BuildDevice {
 //        }
     }
     
+    func appendService( buildService: BuildService ) {
+        
+        for bService in buildServices {
+            if bService.service == buildService.service {
+                return
+            }
+        }
+        buildServices.append( buildService )
+    }
+    
+    
 //    func toBluetooth() -> CBMutableService {
 //        
 //        let mutableService = CBMutableService( type: CBUUID(string: uuid!), primary: primary! )

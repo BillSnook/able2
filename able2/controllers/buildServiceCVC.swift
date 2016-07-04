@@ -18,6 +18,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var newCharacteristicButton: UIButton!
+    @IBOutlet weak var addCharacteristicLabel: UILabel!
     
     var builder: Builder?
     var buildService: BuildService?
@@ -48,6 +49,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
 
         let serviceValid = ( buildService != nil )
         newCharacteristicButton.enabled = serviceValid
+        addCharacteristicLabel.enabled = serviceValid
         nameFieldValid = serviceValid
         uuidFieldValid = serviceValid
 
@@ -190,8 +192,10 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         if let count = buildService?.buildCharacteristics.count where count > 0 {   // Only one for now
             newCharacteristicButton.enabled = false
+            addCharacteristicLabel.enabled = false
         } else {
             newCharacteristicButton.enabled = true
+            addCharacteristicLabel.enabled = true
         }
     }
 

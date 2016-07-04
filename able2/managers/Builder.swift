@@ -79,7 +79,7 @@ class Builder {
         
         Log.debug("Builder saveService: \(buildService.name)")
         guard currentDevice != nil else { return }
-        currentDevice!.buildServices.append( buildService )
+        currentDevice!.appendService( buildService )
         currentDevice!.save( managedObjectContext )
         
     }
