@@ -26,7 +26,7 @@ class BuildService {
 			service = fromService
 			name = service!.name
 			uuid = service!.uuid
-            Log.debug("BuildService init from existing Service managed object: \(name)")
+            Log.debug("Existing Service managed object named: \(name)")
             if let storedPrimary = service!.primary?.boolValue {
                 primary = storedPrimary
             } else {
@@ -40,7 +40,7 @@ class BuildService {
             }
             // WFS char setup
         } else {
-            Log.debug("BuildService init from nil")
+            Log.debug("With nil Service managed object")
 			service = nil
 			name = ""
 			uuid = ""
@@ -51,7 +51,7 @@ class BuildService {
     
     func save( managedObjectContext: NSManagedObjectContext ) {
 
-        Log.debug("BuildService save method")
+        Log.debug("")
         if service != nil {
             service!.name = name
             service!.uuid = uuid
@@ -97,6 +97,8 @@ class BuildService {
             cell.characteristicsLabel.text = "\(buildCharacteristics.count) Characteristics"
         }
         cell.subservicesLabel.text = "No Sub-Services"
+        
+        cell.setupButton()
         
     }
     

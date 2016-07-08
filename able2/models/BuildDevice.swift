@@ -25,7 +25,7 @@ class BuildDevice {
 			device = fromDevice
 			name = device!.name
 			uuid = device!.uuid
-            Log.debug("BuildDevice init from existing Device managed object: \(name)")
+            Log.debug("Existing Device managed object named: \(name)")
             let services = device!.services
             buildServices = []
             for service in services! {
@@ -34,7 +34,7 @@ class BuildDevice {
             }
             // WFS char setup
         } else {
-            Log.debug("BuildDevice init from nil")
+            Log.debug("With nil Device managed object")
 			device = nil
 			name = ""
 			uuid = ""
@@ -44,7 +44,7 @@ class BuildDevice {
     
     func save( managedObjectContext: NSManagedObjectContext ) {
         
-        Log.debug("BuildDevice save method")
+        Log.debug("")
         if device == nil {
             if let deviceEntity = NSEntityDescription.entityForName("Device", inManagedObjectContext: managedObjectContext) {
                 if let newDevice = NSManagedObject(entity: deviceEntity, insertIntoManagedObjectContext: managedObjectContext) as? Device {

@@ -25,8 +25,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     
     var builder: Builder?
-    var buildDevice: BuildDevice?
-//    var buildCharacteristics: Array<BuildCharacteristic>?  //[BuildCharacteristic]?
+    var buildDevice: BuildDevice?           // Set by calling view controller
     
     var advertising = false
     var nameFieldValid = false
@@ -48,11 +47,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         super.viewDidLoad()
    
         Log.debug("")
-
-//        navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.Plain, target:nil, action:nil)
-//        navigationItem.hidesBackButton = true
-//        newBackButton = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedWarning))
-//        navigationItem.leftBarButtonItem = newBackButton
 
         advertiseButton.layer.borderColor = UIColor.blackColor().CGColor
         advertiseButton.layer.borderWidth = 1.0
@@ -145,7 +139,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     @IBAction func saveAction(sender: AnyObject) {
 
-        guard buildDevice != nil else { Log.info( "save failed" ); return }
+        guard buildDevice != nil else { Log.info( "save failed - no device" ); return }
         setSaveState( false )
         
         advertiseButton.enabled = true
@@ -212,18 +206,18 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         }
     }
     
-    func unsavedWarning() {
+    func unsavedCancelWarning() {
         
         if saveButton.enabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to your device. If you continue now you will lose those changes.", preferredStyle: .Alert)
             
             // Configure Alert Controller
-            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Lose Changes", style: .Cancel, handler: { (_) -> Void in
                 self.navigationController?.popViewControllerAnimated(true)
             }))
             
-            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Save Changes", style: .Default, handler: { (_) -> Void in
                 self.saveDetails()
                 self.navigationController?.popViewControllerAnimated(true)
             }))
@@ -232,6 +226,29 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
             presentViewController(alertController, animated: true, completion: nil)
         } else {
             self.navigationController?.popViewControllerAnimated(true)
+        }
+    }
+    
+    func unsavedEditServiceWarning() {
+        
+        if saveButton.enabled {
+            // Initialize Alert Controller
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. Save now?", preferredStyle: .Alert)
+            
+            // Configure Alert Controller
+            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+                self.performSegueWithIdentifier( "toEditService", sender: nil )
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+                self.saveDetails()
+                self.performSegueWithIdentifier( "toEditService", sender: nil )
+            }))
+            
+            // Present Alert Controller
+            presentViewController(alertController, animated: true, completion: nil)
+        } else {
+            self.performSegueWithIdentifier( "toEditService", sender: nil )
         }
     }
     
@@ -278,7 +295,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         saveButton.enabled = enabled
         if enabled {
             navigationItem.hidesBackButton = true
-            newBackButton = UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedWarning))
+            newBackButton = newBackButton != nil ? newBackButton : UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedCancelWarning))
             navigationItem.leftBarButtonItem = newBackButton
         } else {
             navigationItem.leftBarButtonItem = nil
@@ -498,6 +515,13 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         return cell
     }
     
+
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        unsavedEditServiceWarning()
+    }
+    
+
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
         
 		return CGSizeMake( collectionView.frame.size.width, 90 )

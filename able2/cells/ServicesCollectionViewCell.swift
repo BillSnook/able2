@@ -23,7 +23,6 @@ class ServicesCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 
     @IBOutlet weak var characteristicsLabel: UILabel!
     @IBOutlet weak var subservicesLabel: UILabel!
-    @IBOutlet weak var deleteLabel: UILabel!
     
     @IBOutlet weak var deleteButton: UIButton!
     
@@ -38,4 +37,11 @@ class ServicesCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
         }
     }
 
+    func setupButton() {
+        
+        deleteButton.layer.borderColor = UIColor.blackColor().CGColor
+        deleteButton.layer.borderWidth = 1.0
+        deleteButton.layer.cornerRadius = 6.0
+
+    }
 }

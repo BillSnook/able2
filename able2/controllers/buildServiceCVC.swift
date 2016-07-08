@@ -35,6 +35,8 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     
     var peripheralManager: CBPeripheralManager?
 
+    var newBackButton: UIBarButtonItem?
+    
     
 //--    ----    ----    ----
     
@@ -87,6 +89,8 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
 
+        setSaveState( false )
+
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(characteristicChanged( _: )), name: kServiceChangedKey, object: nil)
     }
     
@@ -119,7 +123,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     @IBAction func saveAction(sender: AnyObject) {
 
         guard buildService != nil else { Log.info( "save failed" ); return }
-        saveButton.enabled = false
+        setSaveState( false )
 
         checkAddCharacteristicButton()
         
@@ -162,6 +166,20 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         textFieldBorderSetup( uuidField )
 		serviceModified( nameFieldValid )
 		
+    }
+    
+    func setSaveState( enabled: Bool ) {
+        
+        saveButton.enabled = enabled
+        if enabled {
+            navigationItem.hidesBackButton = true
+            newBackButton = newBackButton != nil ? newBackButton : UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedCancelWarning))
+            navigationItem.leftBarButtonItem = newBackButton
+        } else {
+            navigationItem.leftBarButtonItem = nil
+            navigationItem.hidesBackButton = false
+        }
+        
     }
     
     // MARK: - State methods

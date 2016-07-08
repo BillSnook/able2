@@ -10,6 +10,14 @@ import UIKit
 import CoreData
 
 
+enum BuildState {
+    case Empty
+    case Unsaved
+    case Saved
+    case Advertising
+}
+
+
 class Builder {
     
     static let sharedBuilder = Builder()
@@ -17,8 +25,8 @@ class Builder {
     let managedObjectContext: NSManagedObjectContext
     
     var currentDevice: BuildDevice?
-    
-    var needsSaving = false
+
+    var buildState = BuildState.Empty
     
     
     
@@ -52,9 +60,10 @@ class Builder {
 
     private func save() {
         
+        guard buildState != .Saved else { return }
         do {
             try managedObjectContext.save()
-            needsSaving = false
+            buildState = .Saved
         } catch let error as NSError {
             Log.error("Could not fetch \(error), \(error.userInfo)")
         }
