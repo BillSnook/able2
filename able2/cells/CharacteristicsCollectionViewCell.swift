@@ -98,21 +98,6 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
         }
     }
     
-    func cellIsValid() -> Bool {
-
-        // Also verify switch combinations
-        let valid = textFieldNotEmpty( uuidField )
-        return valid
-    }
-    
-	func setStateEnabled( enabled: (Bool) ) {
-		
-		uuidField.enabled = enabled
-		uuidButton.enabled = enabled
-//		primarySwitch.enabled = enabled
-		
-	}
-	
     func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
         
         textField.layer.borderWidth = 0.5

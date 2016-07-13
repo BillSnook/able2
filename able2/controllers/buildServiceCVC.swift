@@ -377,7 +377,8 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
         buildCharacteristic.setupCell( cell )
         
-        cell.delegate = self
+        buildCharacteristic.delegate = self
+        cell.delegate = buildCharacteristic
         return cell
     }
     

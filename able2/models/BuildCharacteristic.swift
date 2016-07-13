@@ -40,7 +40,7 @@ public struct CBAttributePermissions : OptionSetType {
 */
 
 
-class BuildCharacteristic: NSObject, UITextViewDelegate {
+class BuildCharacteristic: NSObject, UITextViewDelegate, CellStateChangeProtocol {
 
     var characteristic: Characteristic?
     var value: NSData?
@@ -48,6 +48,8 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
     var properties: CBCharacteristicProperties?
     var permissions: CBAttributePermissions?
     var index = 0
+    
+    var delegate: CellStateChangeProtocol?
     
     weak var cell: CharacteristicsCollectionViewCell?
     
@@ -160,23 +162,24 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
         }
     }
     
-    func stateDidChange( forCell cell: CharacteristicsCollectionViewCell? ) {
+    func stateDidChange() {
 
         if cell != nil {
             uuid = cell!.uuidField.text
             let nsString = cell!.valueTextView.text as NSString
             value = nsString.dataUsingEncoding(NSUTF8StringEncoding)!
             // WFS Characteristic setup
-            if cell != nil {
-                permissions = CBAttributePermissions( rawValue: cellToPermissions()!.unsignedIntegerValue )
-                properties = CBCharacteristicProperties( rawValue: cellToProperties()!.unsignedIntegerValue )
-            } else {
-                Log.info( "cell is nil" )
+            permissions = CBAttributePermissions( rawValue: cellToPermissions()!.unsignedIntegerValue )
+            properties = CBCharacteristicProperties( rawValue: cellToProperties()!.unsignedIntegerValue )
+            if delegate != nil {
+                delegate!.stateDidChange()
             }
+        } else {
+            Log.info( "cell is nil" )
         }
 
     }
-    
+
     func setupCell( cell : CharacteristicsCollectionViewCell ) {
 
         cell.uuidField.text = uuid
@@ -250,9 +253,8 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
             }
         }
         setBorderOf( textView, toDisplayState: displayState )
-//        performSelector( #selector( stateDidChange(_:)), withObject: cell, afterDelay: 0.1 )
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
-            self.stateDidChange( forCell: self.cell )
+            self.stateDidChange()
         })
         return true
     }
@@ -262,7 +264,7 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
 //        textFieldBorderSetup( textField )
         let nsString = textView.text as NSString
         value = nsString.dataUsingEncoding(NSUTF8StringEncoding)!
-        stateDidChange( forCell: cell )
+        stateDidChange()
     }
     
     func isValid() -> Bool {        // Valid indicates ready to be saved
@@ -280,6 +282,7 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
 //        guard isValid() else { return true }
         guard characteristic != nil else { return true }
         guard characteristic!.uuid == uuid else { return true }
+        
         Log.info( "properties rawValue: \(properties?.rawValue), properties unsignedIntegerValue: \(characteristic!.properties!.unsignedIntegerValue)" )
         guard characteristic!.properties!.unsignedIntegerValue == properties!.rawValue else { Log.info("properties mismatch"); return true }
         guard characteristic!.permissions!.unsignedIntegerValue == permissions!.rawValue else { Log.info("permissions mismatch"); return true }
