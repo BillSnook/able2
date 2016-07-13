@@ -27,11 +27,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     var builder: Builder?
     var buildDevice: BuildDevice?           // Set by calling view controller
     
-    var advertising = false
-    var nameFieldValid = false
-    var uuidFieldValid = false
-    var deviceValid = false
-    
     var peripheralManager: CBPeripheralManager?
 
     var services: [BuildService]?
@@ -59,13 +54,12 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         advertiseButton.enabled = deviceValid
         newServiceButton.enabled = deviceValid
         addServiceLabel.enabled = deviceValid
-        nameFieldValid = deviceValid
-        uuidFieldValid = deviceValid
 
         builder = Builder.sharedBuilder
         if !deviceValid {
             buildDevice = BuildDevice( fromDevice: nil )
         }
+        builder!.currentDevice = buildDevice
 
     }
 
@@ -85,19 +79,18 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
    
-        setSaveState( false )
-        checkAddServiceButton()
+        // Setup controls - local and downstream
+        setControlState()
         
         collectionView.reloadData()
     }
     
     override func viewDidDisappear(animated: Bool) {
-        
-//        NSNotificationCenter.defaultCenter().removeObserver( self )
 
-        if advertising {
+        if builder!.buildState == .Advertising {
             stopAdvertising()
         }
+
         Log.debug("")
         super.viewDidDisappear( animated )
     }
@@ -121,16 +114,15 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
+        builder!.currentDevice = buildDevice
         navigationItem.title = "Device"
         if segue.identifier == "toNewService" {
             let dest = segue.destinationViewController as! buildServiceCVC
-            builder!.currentDevice = buildDevice
             dest.buildService = nil
             Log.debug("dest.buildService will be nil")
         } else if segue.identifier == "toEditService" {
             let dest = segue.destinationViewController as! buildServiceCVC
             if let indexPaths = collectionView.indexPathsForSelectedItems() where indexPaths.count > 0 {
-                builder!.currentDevice = buildDevice
                 dest.buildService = buildDevice!.buildServices[indexPaths.first!.item]
                 Log.debug("dest.buildService will be a BuildServices instance")
             }
@@ -140,10 +132,8 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     @IBAction func saveAction(sender: AnyObject) {
 
         guard buildDevice != nil else { Log.info( "save failed - no device" ); return }
-        setSaveState( false )
         
-        advertiseButton.enabled = true
-        checkAddServiceButton()
+        // state == saved, set controls (saved, advertise, back button)
         
         saveDetails()
     }
@@ -152,14 +142,16 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         // Gather and save data from fields and save device
         buildDevice!.name = nameField.text
         buildDevice!.uuid = uuidField.text
-        builder!.saveDevice( buildDevice! )
+        builder!.currentDevice = buildDevice
+        builder!.saveDevice()
+        setControlState()
     }
 
     @IBAction func advertiseAction(sender: AnyObject) {
         
-        guard validateDevice() else { return }
+        guard builder!.buildState == .Saved || builder!.buildState == .Advertising else { return }
         let adButton = sender as! UIButton
-        if !advertising {           // If we were not advertising, now we want to start
+        if builder!.buildState != .Advertising {        // If we were not advertising, now we want to start
             guard !saveButton.enabled else { return }   // But must be saved first - may need alert
             setControlsEnabled( false )
             adButton.setTitle( "Stop Advertising", forState: .Normal )
@@ -169,17 +161,16 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 			setControlsEnabled( true )
             stopAdvertising()
         }
-        checkAddServiceButton()
     }
     
     @IBAction func makeNewUUIDAction(sender: AnyObject) {
         
-        let uuid = NSUUID.init()
-        uuidField.text = uuid.UUIDString
+        let newuuid = NSUUID.init()
+        uuidField.text = newuuid.UUIDString
         uuidField.enabled = true    // Allows selection
-        uuidFieldValid = true
         textFieldBorderSetup( uuidField )
-		deviceModified( nameFieldValid )
+        buildDevice!.uuid = newuuid.UUIDString
+		setControlState()
 		
     }
 
@@ -271,7 +262,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     func removeCellAt( indexPath: NSIndexPath ) {
         
         buildDevice!.removeServiceAtIndex( indexPath.row )
-        builder!.saveDevice( buildDevice! )
+        builder!.saveDevice()
         collectionView.deleteItemsAtIndexPaths( [indexPath] )
     }
     
@@ -284,22 +275,47 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         uuidField.enabled = enabled
         uuidButton.enabled = enabled
 
-        // characteristics
-//        for buildCharacteristic in buildService!.buildCharacteristics {
-//            buildCharacteristic.enabled( enabled )
-//        }
     }
     
-    func setSaveState( enabled: Bool ) {
+    func textChanged() {
         
-        saveButton.enabled = enabled
-        if enabled {
+        buildDevice!.name = nameField.text
+        setControlState()
+    }
+    
+    func setControlState() {
+        
+        var needSave = false
+        
+        if builder!.currentDevice!.isValid() {
+            if builder!.currentDevice!.hasDeviceChanged() {
+                builder!.buildState = .Unsaved
+                needSave = true
+            } else {
+                builder!.buildState = .Saved
+            }
+        } else {
+            builder!.buildState = .Invalid
+        }
+        
+        if needSave {
             navigationItem.hidesBackButton = true
             newBackButton = newBackButton != nil ? newBackButton : UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedCancelWarning))
             navigationItem.leftBarButtonItem = newBackButton
         } else {
             navigationItem.leftBarButtonItem = nil
             navigationItem.hidesBackButton = false
+        }
+        
+        saveButton.enabled = needSave
+        advertiseButton.enabled = (builder!.buildState == .Saved) || (builder!.buildState == .Advertising)
+        
+        if let count = buildDevice?.buildServices.count where count > 1 {   // Up to two for now
+            newServiceButton.enabled = false
+            addServiceLabel.enabled = false
+        } else {
+            newServiceButton.enabled = !(builder!.buildState == .Advertising)
+            addServiceLabel.enabled = !(builder!.buildState == .Advertising)
         }
         
     }
@@ -360,8 +376,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     func startAdvertising() {
         
-        advertising = true
-        
+        builder!.buildState = .Advertising
         peripheralManager = CBPeripheralManager( delegate: self, queue: nil )
         
     }
@@ -373,7 +388,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         peripheralManager!.stopAdvertising()
         peripheralManager!.removeAllServices()
         
-        advertising = false
+        builder!.buildState = .Saved
     }
     
     func startPublish() {
@@ -387,33 +402,8 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
 
-    func deviceModified( nameValid: Bool = false ) {
-        
-//    Log.info( "buildPeripheralCVC deviceModified, nameValid: \(nameValid), nameFieldValid: \(nameFieldValid), uuidFieldValid: \(uuidFieldValid) " )
-		
-        let validToSave = uuidFieldValid && nameValid
-        setSaveState( validToSave )
-        advertiseButton.enabled = !validToSave && nameFieldValid
-    }
+    // MARK: - Control state support
     
-    func checkAddServiceButton() {
-        
-        if let count = buildDevice?.buildServices.count where count > 1 {   // Up to two for now
-            newServiceButton.enabled = false
-            addServiceLabel.enabled = false
-        } else {
-            newServiceButton.enabled = !advertising
-            addServiceLabel.enabled = !advertising
-        }
-    }
-
-    func validateDevice() -> Bool {    // All text fields have text in them
-        
-        guard nameFieldValid else { return false }
-        guard uuidFieldValid else { return false }
-        return true
-    }
-
     func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
 
         textField.layer.borderWidth = 0.5
@@ -465,7 +455,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
             return false	// false because uuidField should never allow changes to its text
         }
         
-        nameFieldValid = false       // Set if cell will be
         var displayState = DisplayState.Invalid // .Neutral
         if let text = textField.text {
 //            Log.info( "\ntext: \(text), length: \(text.characters.count)" )
@@ -474,14 +463,15 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
             let nonEmptyText = !text.isEmpty && ( range.length != text.characters.count )
             let nonEmptyReplacement = !string.isEmpty
             if nonEmptyReplacement || nonEmptyText {
-                nameFieldValid = true
                 displayState = .Valid
             } else {
                 displayState = .Invalid
             }
         }
         setBorderOf( textField, toDisplayState: displayState )
-        deviceModified( nameFieldValid )
+        dispatch_after( dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+            self.textChanged()
+        }
         return true
     }
     

@@ -17,7 +17,6 @@ class BuildService {
 	var name: String?
 	var uuid: String?
 	var primary = true
-//	var characteristics: Set<Characteristic>?
     var buildCharacteristics: Array<BuildCharacteristic>
 	
 	init( fromService: Service? ) {
@@ -71,13 +70,31 @@ class BuildService {
         if service != nil {
             let newSet = NSMutableOrderedSet( capacity: buildCharacteristics.count  )
             for buildCharacteristic in buildCharacteristics {
-                let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
-                if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
-                    Log.debug("  Made new Characteristic managed object")
-                    buildCharacteristic.save( newCharacteristic )
-                    // WFS Characteristic setup
-                    newSet.addObject( newCharacteristic )
+                if buildCharacteristic.characteristic != nil {
+                    Log.debug("  Found existing Characteristic managed object")
+                    buildCharacteristic.save( nil )
+                    newSet.addObject( buildCharacteristic.characteristic! )
+                } else {
+                    let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
+                    if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
+                        Log.debug("  Made new Characteristic managed object")
+                        buildCharacteristic.save( newCharacteristic )
+                        newSet.addObject( newCharacteristic )
+                    }
                 }
+
+                
+//                if buildCharacteristic.characteristic != nil {
+//                    buildCharacteristic.save( buildCharacteristic.characteristic! )
+//                } else {
+//                    let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
+//                    if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
+//                        Log.debug("  Made new Characteristic managed object")
+//                        buildCharacteristic.save( newCharacteristic )
+//                        // WFS Characteristic setup
+//                    }
+//                }
+//                newSet.addObject( buildCharacteristic )
             }
             service!.characteristics = newSet
         }
@@ -102,17 +119,42 @@ class BuildService {
         
     }
     
-    func toBluetooth() -> CBMutableService {
+//    func toBluetooth() -> CBMutableService {
+//        
+//        let mutableService = CBMutableService( type: CBUUID(string: uuid!), primary: primary )
+//        var mutableCharacteristics = [CBMutableCharacteristic]()
+//        for buildCharacteristic in buildCharacteristics {
+//
+//            let mutableCharacteristic = CBMutableCharacteristic( type: CBUUID(string: buildCharacteristic.uuid!), properties: buildCharacteristic.properties!, value: buildCharacteristic.value, permissions: buildCharacteristic.permissions! )
+//            mutableCharacteristics.append( mutableCharacteristic )
+//        }
+//        mutableService.characteristics = mutableCharacteristics
+//        return mutableService
+//    }
+    
+    func isValid() -> Bool {        // Valid indicates ready to be saved
         
-        let mutableService = CBMutableService( type: CBUUID(string: uuid!), primary: primary )
-        var mutableCharacteristics = [CBMutableCharacteristic]()
+        guard name != nil && !name!.isEmpty else { return false }
+        guard uuid != nil && !uuid!.isEmpty else { return false }
         for buildCharacteristic in buildCharacteristics {
-
-            let mutableCharacteristic = CBMutableCharacteristic( type: CBUUID(string: buildCharacteristic.uuid!), properties: buildCharacteristic.properties!, value: buildCharacteristic.value, permissions: buildCharacteristic.permissions! )
-            mutableCharacteristics.append( mutableCharacteristic )
+            if !buildCharacteristic.isValid() { return false }
         }
-        mutableService.characteristics = mutableCharacteristics
-        return mutableService
+        
+        return true
     }
-	
+    
+    func hasChanged() -> Bool {     // Changed means data does not match service
+        
+        guard service != nil else { return true }
+        guard service!.name == name else { return true }
+        guard service!.uuid == uuid else { return true }
+        guard service!.primary == primary else { return true }
+        guard service!.characteristics?.count == buildCharacteristics.count else { return true }
+        for buildCharacteristic in buildCharacteristics {
+            if buildCharacteristic.hasChanged() { return true }
+        }
+        
+        return false
+    }
+    
 }

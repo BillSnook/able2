@@ -11,10 +11,11 @@ import CoreData
 
 
 enum BuildState {
-    case Empty
-    case Unsaved
-    case Saved
-    case Advertising
+    case Unknown        // Not known, no device selected
+    case Invalid        // Device has been selected but not all data is present or valid
+    case Unsaved        // Data is valid and saveable but not saved
+    case Saved          // Data is currently saved and usable
+    case Advertising    // Data is curently being advertised
 }
 
 
@@ -26,7 +27,7 @@ class Builder {
     
     var currentDevice: BuildDevice?
 
-    var buildState = BuildState.Empty
+    var buildState = BuildState.Unknown
     
     
     
@@ -73,10 +74,11 @@ class Builder {
 
     }
     
-    func saveDevice( buildDevice: BuildDevice ) {
+    func saveDevice() {
         
-        Log.debug("Builder saveDevice: \(buildDevice.name)")
-        buildDevice.save( managedObjectContext )
+        guard currentDevice != nil else { return }
+        Log.debug("Builder saveDevice: \(currentDevice!.name)")
+        currentDevice!.save( managedObjectContext )
         save()
         
     }
@@ -86,8 +88,9 @@ class Builder {
         Log.debug("Builder saveService: \(buildService.name)")
         guard currentDevice != nil else { return }
         currentDevice!.appendService( buildService )
-        currentDevice!.save( managedObjectContext )
-        save()
+        saveDevice()
+//        currentDevice!.save( managedObjectContext )
+//        save()
         
     }
     

@@ -41,7 +41,10 @@ class makePeripheralsTVC : UITableViewController {
 
         navigationItem.title = "List Devices"
 
+        builder.buildState = .Unknown
+        builder.currentDevice = nil
         devices = builder.getDeviceList()
+        
         tableView.reloadData()
     }
     
@@ -50,10 +53,12 @@ class makePeripheralsTVC : UITableViewController {
         navigationItem.title = "List"   // Back button title for next page - buildPeripheral
         let dest = segue.destinationViewController as! buildPeripheralCVC
         if segue.identifier == "toNewPeripheral" {
+            builder.buildState = .Unsaved
             dest.buildDevice = nil
             Log.debug("dest.buildDevice = nil")
         } else if segue.identifier == "toShowPeripheral" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
+                builder.buildState = .Saved
                 dest.buildDevice = devices![indexPath.row]
                 Log.debug("dest.buildDevice is existing BuildDevice instance: \(dest.buildDevice?.name)")
             }

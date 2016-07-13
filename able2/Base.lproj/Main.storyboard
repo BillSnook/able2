@@ -455,7 +455,7 @@
                                             <constraint firstAttribute="width" constant="22" id="H5k-6B-HC5"/>
                                         </constraints>
                                         <connections>
-                                            <action selector="characteristicAction:" destination="nq1-EV-3qV" eventType="touchUpInside" id="F53-90-wBT"/>
+                                            <action selector="addCharacteristicAction:" destination="nq1-EV-3qV" eventType="touchUpInside" id="Jrc-MN-fGG"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add Characteristic" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Thv-Cc-88b">
@@ -1436,7 +1436,7 @@
                                             <constraint firstAttribute="height" constant="24" id="4FE-zf-QXM"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Myb-pU-nph" userLabel="AddCharacteristicButton">

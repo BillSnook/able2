@@ -40,37 +40,28 @@ public struct CBAttributePermissions : OptionSetType {
 */
 
 
-protocol CellStateChangeProtocol {
-    
-    func stateDidChange( forCell cell: CharacteristicsCollectionViewCell? )
-}
+class BuildCharacteristic: NSObject, UITextViewDelegate {
 
-
-class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate {
-
-//    var characteristic: Characteristic?
+    var characteristic: Characteristic?
     var value: NSData?
     var uuid: String?
-    var primary: Bool?
     var properties: CBCharacteristicProperties?
     var permissions: CBAttributePermissions?
     var index = 0
     
     weak var cell: CharacteristicsCollectionViewCell?
     
-//    var primary: Bool?
     
     init( fromCharacteristic: Characteristic? ) {
         
         if fromCharacteristic != nil {
-//            characteristic = fromCharacteristic
+            characteristic = fromCharacteristic
             uuid = fromCharacteristic!.uuid
             value = fromCharacteristic!.value
-//            primary = fromCharacteristic!.primary?.boolValue
             permissions = CBAttributePermissions( rawValue: fromCharacteristic!.permissions!.unsignedIntegerValue )
             properties = CBCharacteristicProperties( rawValue: fromCharacteristic!.properties!.unsignedIntegerValue )
         } else {
-//            characteristic = nil
+            characteristic = nil
             uuid = ""
             value = nil
             permissions = CBAttributePermissions()
@@ -78,16 +69,19 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
         }
     }
     
-    func save( toCharacteristic: Characteristic ) {
+    func save( toCharacteristic: Characteristic? ) {
         
-        toCharacteristic.uuid = uuid
-        toCharacteristic.value = value
-        toCharacteristic.permissions = cellToPermissions()
-        toCharacteristic.properties = cellToProperties()
+        if toCharacteristic != nil {
+            characteristic = toCharacteristic
+        }
+        characteristic!.uuid = uuid
+        characteristic!.value = value
+        characteristic!.permissions = NSNumber( unsignedInteger: permissions!.rawValue )
+        characteristic!.properties = NSNumber( unsignedInteger: properties!.rawValue )
 
     }
     
-    func cellToPermissions() -> NSNumber {
+    func cellToPermissions() -> NSNumber? {
         
         permissions = CBAttributePermissions()
         if let safeCell = cell {
@@ -103,12 +97,13 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
             if safeCell.permWriteWithEncryptionSwitch.on {
                 permissions!.insert( .WriteEncryptionRequired )
             }
+            return NSNumber( unsignedInteger: permissions!.rawValue )
+        } else {
+            return nil
         }
-
-        return NSNumber( unsignedInteger: permissions!.rawValue )
     }
 
-    func cellToProperties() -> NSNumber {
+    func cellToProperties() -> NSNumber? {
         
         properties = CBCharacteristicProperties()
         if let safeCell = cell {
@@ -136,8 +131,10 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
             if safeCell.propIndicateWithEncryptionSwitch.on {
                 properties!.insert( .IndicateEncryptionRequired )
             }
+            return NSNumber( unsignedInteger: properties!.rawValue )
+        } else {
+            return nil
         }
-        return NSNumber( unsignedInteger: properties!.rawValue )
     }
     
     func enabled( enabled: Bool ) {
@@ -170,9 +167,14 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
             let nsString = cell!.valueTextView.text as NSString
             value = nsString.dataUsingEncoding(NSUTF8StringEncoding)!
             // WFS Characteristic setup
+            if cell != nil {
+                permissions = CBAttributePermissions( rawValue: cellToPermissions()!.unsignedIntegerValue )
+                properties = CBCharacteristicProperties( rawValue: cellToProperties()!.unsignedIntegerValue )
+            } else {
+                Log.info( "cell is nil" )
+            }
         }
 
-//        NSNotificationCenter.defaultCenter().postNotificationName( kCharacteristicChangedKey, object: nil )
     }
     
     func setupCell( cell : CharacteristicsCollectionViewCell ) {
@@ -212,7 +214,7 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
         cell.valueTextView.delegate = self
         self.cell = cell
         
-        cell.delegate = self
+//        cell.delegate = self
     }
 
     // MARK: - Text Input support
@@ -261,6 +263,28 @@ class BuildCharacteristic: NSObject, CellStateChangeProtocol, UITextViewDelegate
         let nsString = textView.text as NSString
         value = nsString.dataUsingEncoding(NSUTF8StringEncoding)!
         stateDidChange( forCell: cell )
+    }
+    
+    func isValid() -> Bool {        // Valid indicates ready to be saved
+        
+        guard uuid != nil && !uuid!.isEmpty else { return false }
+//        guard value != nil && value!.length > 0 else { return false }
+        guard properties != nil else { return false }
+        guard permissions != nil else { return false }
+        
+        return true
+    }
+    
+    func hasChanged() -> Bool {     // Changed means data does not match characteristic
+        
+//        guard isValid() else { return true }
+        guard characteristic != nil else { return true }
+        guard characteristic!.uuid == uuid else { return true }
+        Log.info( "properties rawValue: \(properties?.rawValue), properties unsignedIntegerValue: \(characteristic!.properties!.unsignedIntegerValue)" )
+        guard characteristic!.properties!.unsignedIntegerValue == properties!.rawValue else { Log.info("properties mismatch"); return true }
+        guard characteristic!.permissions!.unsignedIntegerValue == permissions!.rawValue else { Log.info("permissions mismatch"); return true }
+       
+        return false
     }
     
 }

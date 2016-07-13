@@ -15,6 +15,12 @@ enum DisplayState {
     case Invalid
 }
 
+protocol CellStateChangeProtocol {
+    
+    func stateDidChange()
+}
+
+
 
 class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 	
@@ -88,7 +94,7 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
     func stateDidChange() {
         
         if delegate != nil {
-            delegate?.stateDidChange( forCell: self )
+            delegate?.stateDidChange()
         }
     }
     

@@ -17,7 +17,6 @@ class BuildDevice {
 	var name: String?
 	var uuid: String?
     var buildServices: Array<BuildService>
-//    var needsSaving = false
 	
 	init( fromDevice: Device? ) {
 		
@@ -59,18 +58,18 @@ class BuildDevice {
             device!.uuid = uuid
             let newSet = NSMutableOrderedSet( capacity: buildServices.count  )
             for buildService in buildServices {
-                if buildService.service != nil {
+//                if buildService.service != nil {
                     Log.debug("  Found existing Service managed object")
                     buildService.save( managedObjectContext )
                     newSet.addObject( buildService.service! )
-                } else {
-                    let serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
-                    if let newService = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service {
-                        Log.debug("  Made new Service managed object")
-                        buildService.save( managedObjectContext )
-                        newSet.addObject( newService )
-                    }
-                }
+//                } else {
+//                    let serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
+//                    if let newService = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service {
+//                        Log.debug("  Made new Service managed object")
+//                        buildService.save( managedObjectContext )
+//                        newSet.addObject( newService )
+//                    }
+//                }
             }
             device!.services = newSet
         }
@@ -106,4 +105,38 @@ class BuildDevice {
 //        return mutableService
 //    }
 	
+    func isValid() -> Bool {        // Valid indicates ready to be saved
+        
+        guard name != nil && !name!.isEmpty else { return false }
+        guard uuid != nil && !uuid!.isEmpty else { return false }
+        for buildService in buildServices {
+            if !buildService.isValid() { return false }
+        }
+        
+        return true
+    }
+    
+    func hasDeviceChanged() -> Bool {     // Changed means data does not match service
+        
+        guard device != nil else { return true }
+        guard device!.name == name else { return true }
+        guard device!.uuid == uuid else { return true }
+        guard device!.services?.count == buildServices.count else { return true }
+        
+        return false
+    }
+    
+    func hasChanged() -> Bool {     // Changed means data does not match service
+        
+        guard device != nil else { return true }
+        guard device!.name == name else { return true }
+        guard device!.uuid == uuid else { return true }
+        guard device!.services?.count == buildServices.count else { return true }
+        for buildService in buildServices {
+            if buildService.hasChanged() { return true }
+        }
+        
+        return false
+    }
+    
 }

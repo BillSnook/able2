@@ -42,7 +42,7 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
         prepareDescriptorDescription()
         prepareValueDescription()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(preferredContentSizeChanged(_:)), name: UIContentSizeCategoryDidChangeNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(preferredTextSizeChanged(_:)), name: UIContentSizeCategoryDidChangeNotification, object: nil)
 
         characterizer.characteristicDelegate = self
         if ( CBCharacteristicProperties.Read.rawValue & characteristic!.properties.rawValue ) != 0 {  // If characteristic is readable, start read operation
@@ -65,7 +65,7 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
         
     }
 
-    func preferredContentSizeChanged(notification: NSNotification) {
+    func preferredTextSizeChanged(notification: NSNotification) {
         textLabel.font = UIFont.preferredFontForTextStyle(fontStyle)
 //        Log.debug( "content size category changed" )
     }
