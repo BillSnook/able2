@@ -57,7 +57,7 @@ class BLEView: UIView {
     }
     
     func movePing() {
-//        NSLog("movePing")
+//        Log.debug("movePing")
         let step = CGFloat(3.0)
         if initialRadius < ( ( self.frame.size.width - 40.0 - step ) / 2 ) {
             initialRadius += step

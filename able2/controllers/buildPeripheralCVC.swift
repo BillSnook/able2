@@ -354,18 +354,18 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     func peripheralManagerDidStartAdvertising(peripheral: CBPeripheralManager, error: NSError?) {
         
         if ( error != nil ) {
-            print( "peripheralManagerDidStartAdvertising, error: \(error!.localizedDescription)" )
+            print( "  error: \(error!.localizedDescription)" )
         } else {
-            print( "peripheralManagerDidStartAdvertising, success!!" )
+            print( "  success!!" )
         }
     }
     
     func peripheralManager(peripheral: CBPeripheralManager, didAddService service: CBService, error: NSError?) {
         
         if ( error != nil ) {
-            print( "didAddService, error: \(error!.localizedDescription)" )
+            print( "  error: \(error!.localizedDescription)" )
         } else {
-            print( "didAddService, success!! Send: \(service.UUID.UUIDString)" )
+            print( "  success!! Send: \(service.UUID.UUIDString)" )
             let adverts = [CBAdvertisementDataLocalNameKey:buildDevice!.name!, CBAdvertisementDataServiceUUIDsKey:[CBUUID( string: buildDevice!.uuid! )]] as [String:AnyObject]
             peripheralManager?.startAdvertising( adverts )
         }

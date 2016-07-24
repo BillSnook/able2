@@ -17,6 +17,8 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     @IBOutlet weak var newCharacteristicButton: UIButton!
     @IBOutlet weak var addCharacteristicLabel: UILabel!
     
+    @IBOutlet weak var infoDetailButton: UIButton!
+    
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var uuidField: UITextField!
     @IBOutlet weak var primarySwitch: UISwitch!
@@ -30,6 +32,8 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     var newBackButton: UIBarButtonItem?
     
     var displayState = DisplayState.Neutral
+    
+    var basicInfoState = true
     
     
 //--    ----    ----    ----
@@ -74,6 +78,12 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         textFieldBorderSetup(uuidField)
 
         setControlState()
+
+        if basicInfoState == true {
+            infoDetailButton.setTitle( "Full Mode", forState: .Normal )
+        } else {
+            infoDetailButton.setTitle( "Basic Mode", forState: .Normal )
+        }
 
     }
     
@@ -147,7 +157,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     func characteristicAction() {
         
         Log.info( "" )
-        guard buildService != nil else { Log.info( "But buildService is nil" ); return }
+        guard buildService != nil else { Log.info( "buildService is nil" ); return }
         let buildCharacteristic = BuildCharacteristic( fromCharacteristic: nil )
         buildCharacteristic.index = buildService!.buildCharacteristics.count // Give it order
         buildService!.buildCharacteristics.append( buildCharacteristic )
@@ -171,6 +181,19 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         buildService!.uuid = newuuid.UUIDString
 		setControlState()
 		
+    }
+    
+    @IBAction func infoDetailAction(sender: AnyObject) {
+
+        Log.info( "" )
+        basicInfoState = !basicInfoState
+        if basicInfoState == true {
+            infoDetailButton.setTitle( "Full Mode", forState: .Normal )
+        } else {
+            infoDetailButton.setTitle( "Basic Mode", forState: .Normal )
+        }
+        
+        collectionView.reloadData()
     }
     
     func unsavedCancelWarning() {
@@ -372,19 +395,33 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     func collectionView( collectionView: UICollectionView,
                           cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
+//        if basicInfoState == true {
+//            let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacterView", forIndexPath: indexPath ) as! CharacterCollectionViewCell
+//            
+//            let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
+//            buildCharacteristic.setupBasicCell( cell )
+//
+//            buildCharacteristic.delegate = self
+//            cell.delegate = buildCharacteristic
+//            return cell
+//        } else {
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
         
-        let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
-        buildCharacteristic.setupCell( cell )
+            cell.setMode( basicInfoState )
         
-        buildCharacteristic.delegate = self
-        cell.delegate = buildCharacteristic
-        return cell
+            let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
+            buildCharacteristic.setupCell( cell )
+            
+            buildCharacteristic.delegate = self
+            cell.delegate = buildCharacteristic
+            return cell
+//        }
     }
     
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
         
-		return CGSizeMake( collectionView.frame.size.width, 425 )
+        let height: CGFloat = basicInfoState ? 260.0 : 426.0
+		return CGSizeMake( collectionView.frame.size.width - 2.0, height )
     }
 
 }

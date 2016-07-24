@@ -24,7 +24,7 @@ class BuildDevice {
 			device = fromDevice
 			name = device!.name
 			uuid = device!.uuid
-            Log.debug("Existing Device managed object named: \(name)")
+            Log.debug("Init with existing Device managed object named: \(name)")
             let services = device!.services
             buildServices = []
             for service in services! {
@@ -33,7 +33,7 @@ class BuildDevice {
             }
             // WFS char setup
         } else {
-            Log.debug("With nil Device managed object")
+            Log.debug("Init with nil Device managed object")
 			device = nil
 			name = ""
 			uuid = ""

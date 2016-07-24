@@ -164,11 +164,10 @@ class BuildCharacteristic: NSObject, UITextViewDelegate, CellStateChangeProtocol
     
     func stateDidChange() {
 
-        if cell != nil {
-            uuid = cell!.uuidField.text
-            let nsString = cell!.valueTextView.text as NSString
+        if let safeCell = cell {
+            uuid = safeCell.uuidField.text
+            let nsString = safeCell.valueTextView.text as NSString
             value = nsString.dataUsingEncoding(NSUTF8StringEncoding)!
-            // WFS Characteristic setup
             permissions = CBAttributePermissions( rawValue: cellToPermissions()!.unsignedIntegerValue )
             properties = CBCharacteristicProperties( rawValue: cellToProperties()!.unsignedIntegerValue )
             if delegate != nil {
@@ -282,8 +281,6 @@ class BuildCharacteristic: NSObject, UITextViewDelegate, CellStateChangeProtocol
 //        guard isValid() else { return true }
         guard characteristic != nil else { return true }
         guard characteristic!.uuid == uuid else { return true }
-        
-        Log.info( "properties rawValue: \(properties?.rawValue), properties unsignedIntegerValue: \(characteristic!.properties!.unsignedIntegerValue)" )
         guard characteristic!.properties!.unsignedIntegerValue == properties!.rawValue else { Log.info("properties mismatch"); return true }
         guard characteristic!.permissions!.unsignedIntegerValue == permissions!.rawValue else { Log.info("permissions mismatch"); return true }
        

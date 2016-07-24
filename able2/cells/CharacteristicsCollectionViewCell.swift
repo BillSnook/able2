@@ -76,7 +76,12 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
     
 	// isNotifying		Boolean		True if notifications/indications are enabled
 
+    @IBOutlet weak var permissionView: UIView!
+    @IBOutlet weak var propertyView: UIView!
 	
+    @IBOutlet weak var permissionHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var propertiesHeightConstraint: NSLayoutConstraint!
+    
     var delegate: CellStateChangeProtocol?
     
 	var displayState = DisplayState.Neutral
@@ -111,6 +116,17 @@ class CharacteristicsCollectionViewCell: UICollectionViewCell, UITextViewDelegat
             textField.layer.borderColor = UIColor.redColor().CGColor
         }
         
+    }
+    
+    func setMode( mode: Bool ) {
+        
+        if mode {
+            permissionHeightConstraint.constant = 64
+            propertiesHeightConstraint.constant = 64
+        } else {
+            permissionHeightConstraint.constant = 100
+            propertiesHeightConstraint.constant = 188
+        }
     }
     
     func textFieldNotEmpty( textField: (UITextField) ) -> Bool {

@@ -39,7 +39,7 @@ class Builder {
 
     func getDeviceList() -> [BuildDevice]? {
         
-        Log.debug("Builder getDeviceList")
+//        Log.debug("")
         let fetch = NSFetchRequest( entityName: "Device" )
         do {
             let results = try managedObjectContext.executeFetchRequest( fetch )
@@ -77,7 +77,7 @@ class Builder {
     func saveDevice() {
         
         guard currentDevice != nil else { return }
-        Log.debug("Builder saveDevice: \(currentDevice!.name)")
+        Log.debug("currentDevice name: \(currentDevice!.name)")
         currentDevice!.save( managedObjectContext )
         save()
         
@@ -85,7 +85,7 @@ class Builder {
     
     func saveService( buildService: BuildService ) {
         
-        Log.debug("Builder saveService: \(buildService.name)")
+        Log.debug("buildService name: \(buildService.name)")
         guard currentDevice != nil else { return }
         currentDevice!.appendService( buildService )
         saveDevice()
@@ -96,7 +96,7 @@ class Builder {
     
     func deleteDevice( buildDevice: BuildDevice ) {
         
-        Log.debug("Builder deleteDevice")
+        Log.debug("")
         guard buildDevice.device != nil else { return }
         managedObjectContext.deleteObject( buildDevice.device! )
         save()
@@ -105,7 +105,7 @@ class Builder {
     
     func deleteService( buildService: BuildService ) {
         
-        Log.debug("Builder deleteService")
+        Log.debug("")
         guard buildService.service != nil else { return }
         managedObjectContext.deleteObject( buildService.service! )
         save()

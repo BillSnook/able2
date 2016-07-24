@@ -86,13 +86,13 @@ class MasterViewController: UIViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showCentralDetail" {
-            NSLog( "showCentralDetail" )
+            Log.debug( "showCentralDetail" )
             let controller = (segue.destinationViewController as! UINavigationController).topViewController as! listPeripheralsTVC
             controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
             controller.navigationItem.leftItemsSupplementBackButton = true
         } else {
             if segue.identifier == "showPeripheralDetail" {
-                NSLog( "showPeripheralDetail" )
+                Log.debug( "showPeripheralDetail" )
                 let controller = (segue.destinationViewController as! UINavigationController).topViewController as! makePeripheralsTVC
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true

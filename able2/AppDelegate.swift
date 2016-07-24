@@ -11,7 +11,7 @@ import UIKit
 import CoreData
 import Log
 
-
+// For Log formatting
 extension Formatters {
     static let Constrained = Formatter("[%@] %@ | %@.%@:%@\t\t%@", [
         .Date("HH:mm:ss.SSS"),
@@ -24,7 +24,7 @@ extension Formatters {
 }
 
 extension Themes {
-    static let MobileForming = Theme(
+    static let Able = Theme(
         trace:   "#AAAAAA",
         debug:   "#44AAAA",
         info:    "#44CC44",
@@ -33,6 +33,7 @@ extension Themes {
     )
 }
 
+// Display useful names
 func bluetoothUUID( uuidString: String ) -> String {
     if let name = bluetoothNames[uuidString] {
         return name
@@ -58,7 +59,7 @@ func cleanName( name: String? ) -> String {
 }
 
 
-let Log = Logger( formatter: .Constrained, theme: .MobileForming )
+let Log = Logger( formatter: .Constrained, theme: .Able )
 
 var bluetoothNames = Dictionary<String, String>()
 
@@ -80,6 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         super.init()
         
         Log.trace( "Starting up" )
+        Log.minLevel = .Debug
         
     }
     
@@ -95,8 +97,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         bluetoothNames["2A28"] = "Software Revision String"
         bluetoothNames["2A29"] = "Manufacturer Name String"
         
-        bluetoothNames["8667556C-9A37-4C91-84ED-54EE27D90049"] = "Continuity"
-        bluetoothNames["D0611E78-BBB4-4591-A5F8-487910AE4366"] = "Continuity"
+        bluetoothNames["8667556C-9A37-4C91-84ED-54EE27D90049"] = "Continuity1"
+        bluetoothNames["D0611E78-BBB4-4591-A5F8-487910AE4366"] = "Continuity2"
 
         return true
     }
@@ -201,7 +203,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             } catch {
                 // Replace this implementation with code to handle the error appropriately.
                 let nserror = error as NSError
-                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                Log.debug("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }
