@@ -53,6 +53,12 @@ class BuildCharacteristic: NSObject, UITextViewDelegate, CellStateChangeProtocol
     
     weak var cell: CharacteristicsCollectionViewCell?
     
+    var valueString: String? {
+        guard value != nil else { return nil }
+        let vString = NSString(data: value!, encoding: NSUTF8StringEncoding )
+        return vString as? String
+    }
+    
     
     init( fromCharacteristic: Characteristic? ) {
         
@@ -179,6 +185,18 @@ class BuildCharacteristic: NSObject, UITextViewDelegate, CellStateChangeProtocol
 
     }
 
+    func setupCCell( cell : CharacteristicCollectionViewCell ) {
+
+        cell.uuidLabel.text = uuid
+        if let valueData = value {
+            let nsString = NSString(data: valueData, encoding: NSUTF8StringEncoding)!
+            cell.valueLabel.text = nsString as String
+        } else {
+            cell.valueLabel.text = ""
+        }
+
+    }
+
     func setupCell( cell : CharacteristicsCollectionViewCell ) {
 
         cell.uuidField.text = uuid
@@ -281,6 +299,7 @@ class BuildCharacteristic: NSObject, UITextViewDelegate, CellStateChangeProtocol
 //        guard isValid() else { return true }
         guard characteristic != nil else { return true }
         guard characteristic!.uuid == uuid else { return true }
+        guard characteristic!.value == value else { return true }
         guard characteristic!.properties!.unsignedIntegerValue == properties!.rawValue else { Log.info("properties mismatch"); return true }
         guard characteristic!.permissions!.unsignedIntegerValue == permissions!.rawValue else { Log.info("permissions mismatch"); return true }
        

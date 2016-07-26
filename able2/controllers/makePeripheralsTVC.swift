@@ -42,7 +42,7 @@ class makePeripheralsTVC : UITableViewController {
         navigationItem.title = "List Devices"
 
         builder.buildState = .Unknown
-        builder.currentDevice = nil
+//        builder.currentDevice = nil
         devices = builder.getDeviceList()
         
         tableView.reloadData()

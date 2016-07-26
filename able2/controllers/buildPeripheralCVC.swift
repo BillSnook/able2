@@ -50,7 +50,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         advertiseButton.setTitleColor( UIColor.blackColor(), forState: .Normal )
         advertiseButton.setTitleColor( UIColor.lightGrayColor(), forState: .Disabled )
         
-        let deviceValid = ( buildDevice != nil )
+        let deviceValid = ( buildDevice != nil )    // Set by caller, makePeripheralsTVC
         advertiseButton.enabled = deviceValid
         newServiceButton.enabled = deviceValid
         addServiceLabel.enabled = deviceValid
@@ -114,7 +114,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        builder!.currentDevice = buildDevice
+//        builder!.currentDevice = buildDevice
         navigationItem.title = "Device"
         if segue.identifier == "toNewService" {
             let dest = segue.destinationViewController as! buildServiceCVC
@@ -142,7 +142,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         // Gather and save data from fields and save device
         buildDevice!.name = nameField.text
         buildDevice!.uuid = uuidField.text
-        builder!.currentDevice = buildDevice
+//        builder!.currentDevice = buildDevice
         builder!.saveDevice()
         setControlState()
     }
@@ -220,7 +220,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         }
     }
     
-    func unsavedEditServiceWarning() {
+    func unsavedEditWarningThenService() {
         
         if saveButton.enabled {
             // Initialize Alert Controller
@@ -309,8 +309,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         
         saveButton.enabled = needSave
         advertiseButton.enabled = (builder!.buildState == .Saved) || (builder!.buildState == .Advertising)
-        
-        if let count = buildDevice?.buildServices.count where count > 1 {   // Up to two for now
+        if buildDevice!.buildServices.count > 1 {   // Up to two for now
             newServiceButton.enabled = false
             addServiceLabel.enabled = false
         } else {
@@ -393,7 +392,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     func startPublish() {
         
-        guard buildDevice != nil else { return }
+//        guard buildDevice != nil else { return }
         guard peripheralManager != nil else { return }
 
 //        let mutableService = buildService!.toBluetooth()
@@ -508,7 +507,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         
-        unsavedEditServiceWarning()
+        unsavedEditWarningThenService()
     }
     
 

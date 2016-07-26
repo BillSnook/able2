@@ -27,7 +27,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     var builder: Builder?
     var buildService: BuildService?
     
-    var peripheralManager: CBPeripheralManager?
+//    var peripheralManager: CBPeripheralManager?
 
     var newBackButton: UIBarButtonItem?
     
@@ -286,6 +286,49 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     
     // MARK: - State methods
     
+    func unsavedEditWarningThenCharacteristic() {
+        
+        if saveButton.enabled {
+            // Initialize Alert Controller
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your service. Save now?", preferredStyle: .Alert)
+            
+            // Configure Alert Controller
+            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+                self.performSegueWithIdentifier( "toEditCharacteristic", sender: nil )
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+                self.saveDetails()
+                self.performSegueWithIdentifier( "toEditCharacteristic", sender: nil )
+            }))
+            
+            // Present Alert Controller
+            presentViewController(alertController, animated: true, completion: nil)
+        } else {
+            self.performSegueWithIdentifier( "toEditCharacteristic", sender: nil )
+        }
+    }
+    
+
+    // MARK: - Control actions
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        builder!.currentService = buildService
+        navigationItem.title = "Device"
+        if segue.identifier == "toNewCharacteristic" {
+            let dest = segue.destinationViewController as! buildCharacteristicVC
+            dest.buildCharacteristic = nil
+            Log.debug("dest.buildCharacteristic will be nil")
+        } else if segue.identifier == "toEditCharacteristic" {
+            let dest = segue.destinationViewController as! buildCharacteristicVC
+            if let indexPaths = collectionView.indexPathsForSelectedItems() where indexPaths.count > 0 {
+                dest.buildCharacteristic = buildService!.buildCharacteristics[indexPaths.first!.item]
+                Log.debug("dest.buildCharacteristic will be a BuildCharacteristics instance")
+            }
+        }
+    }
+    
     func setControlsEnabled( enabled: Bool ) {
         
         nameField.enabled = enabled
@@ -405,23 +448,29 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
 //            cell.delegate = buildCharacteristic
 //            return cell
 //        } else {
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicView", forIndexPath: indexPath ) as! CharacteristicsCollectionViewCell
+            let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicSummary", forIndexPath: indexPath ) as! CharacteristicCollectionViewCell
         
-            cell.setMode( basicInfoState )
+//            cell.setMode( basicInfoState )
         
             let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
-            buildCharacteristic.setupCell( cell )
+            buildCharacteristic.setupCCell( cell )
             
             buildCharacteristic.delegate = self
-            cell.delegate = buildCharacteristic
+//            cell.delegate = buildCharacteristic
             return cell
 //        }
     }
     
-    func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         
-        let height: CGFloat = basicInfoState ? 260.0 : 426.0
-		return CGSizeMake( collectionView.frame.size.width - 2.0, height )
+        unsavedEditWarningThenCharacteristic()
     }
+    
+
+//    func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
+//        
+//        let height: CGFloat = basicInfoState ? 260.0 : 426.0
+//		return CGSizeMake( collectionView.frame.size.width - 2.0, 100 )
+//    }
 
 }

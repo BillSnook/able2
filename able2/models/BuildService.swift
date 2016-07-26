@@ -100,6 +100,17 @@ class BuildService {
         }
     }
     
+    func appendCharacteristic( buildCharacteristic: BuildCharacteristic ) {
+        
+        for bCharacteristic in buildCharacteristics {
+            if bCharacteristic.characteristic == buildCharacteristic.characteristic {
+                return
+            }
+        }
+        buildCharacteristics.append( buildCharacteristic )
+        
+    }
+
     func setupCell( cell: ServicesCollectionViewCell ) {
         
         cell.nameLabel.text = name

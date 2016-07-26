@@ -26,7 +26,9 @@ class Builder {
     let managedObjectContext: NSManagedObjectContext
     
     var currentDevice: BuildDevice?
-
+    
+    var currentService: BuildService?
+    
     var buildState = BuildState.Unknown
     
     
@@ -76,8 +78,8 @@ class Builder {
     
     func saveDevice() {
         
-        guard currentDevice != nil else { return }
         Log.debug("currentDevice name: \(currentDevice!.name)")
+        guard currentDevice != nil else { return }
         currentDevice!.save( managedObjectContext )
         save()
         
@@ -88,6 +90,17 @@ class Builder {
         Log.debug("buildService name: \(buildService.name)")
         guard currentDevice != nil else { return }
         currentDevice!.appendService( buildService )
+        saveDevice()
+//        currentDevice!.save( managedObjectContext )
+//        save()
+        
+    }
+    
+    func saveCharacteristic( buildCharacteristic: BuildCharacteristic ) {
+        
+        Log.debug("buildCharacteristic uuid: \(buildCharacteristic.uuid)")
+        guard currentDevice != nil else { return }
+        currentService!.appendCharacteristic( buildCharacteristic )
         saveDevice()
 //        currentDevice!.save( managedObjectContext )
 //        save()
