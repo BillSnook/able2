@@ -45,7 +45,6 @@
 		A9ABE1951CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */; };
 		A9ABE1961CAC500D004C1EF7 /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */; };
 		A9C329471CF6BE6F0074CFB5 /* buildPeripheralCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C329461CF6BE6F0074CFB5 /* buildPeripheralCVC.swift */; };
-		A9C3294B1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */; };
 		A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */; };
 		A9D44E781CB58D2A0065F9FA /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */; };
 		A9D44E821CB5D4C50065F9FA /* CBPeripheralMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D44E811CB5D4C50065F9FA /* CBPeripheralMock.swift */; };
@@ -130,7 +129,6 @@
 		A9ABE1911CAC500D004C1EF7 /* Peripheral+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Peripheral+CoreDataProperties.swift"; path = "managedClasses/Peripheral+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A9ABE1921CAC500D004C1EF7 /* Peripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Peripheral.swift; path = managedClasses/Peripheral.swift; sourceTree = "<group>"; };
 		A9C329461CF6BE6F0074CFB5 /* buildPeripheralCVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = buildPeripheralCVC.swift; path = controllers/buildPeripheralCVC.swift; sourceTree = "<group>"; };
-		A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CharacteristicsCollectionViewCell.swift; path = cells/CharacteristicsCollectionViewCell.swift; sourceTree = "<group>"; };
 		A9C53EBC1CAEDD7B008A6DAE /* listServicesTVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = listServicesTVC.swift; path = controllers/listServicesTVC.swift; sourceTree = "<group>"; };
 		A9D44E771CB58D2A0065F9FA /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		A9D44E811CB5D4C50065F9FA /* CBPeripheralMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBPeripheralMock.swift; sourceTree = "<group>"; };
@@ -202,7 +200,6 @@
 				A9688EC91CB093970036DA5E /* ServiceCell.swift */,
 				A91EC6A31CBD61BA00C8ABA3 /* CharacteristicCell.swift */,
 				A98DE5AA1D237EE3001125A7 /* ServicesCollectionViewCell.swift */,
-				A9C3294A1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift */,
 				A9F909411D46BF0800741470 /* CharacteristicCollectionViewCell.swift */,
 			);
 			name = cells;
@@ -745,7 +742,6 @@
 				A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */,
 				A95FC1011CBF4C2B001ACB0C /* showCharacteristics.swift in Sources */,
 				A9F679751D0CF44D00A6C8BC /* BuildCharacteristic.swift in Sources */,
-				A9C3294B1CFBDA7F0074CFB5 /* CharacteristicsCollectionViewCell.swift in Sources */,
 				A9F909421D46BF0800741470 /* CharacteristicCollectionViewCell.swift in Sources */,
 				A91EC6A41CBD61BA00C8ABA3 /* CharacteristicCell.swift in Sources */,
 				A9688ECA1CB093970036DA5E /* ServiceCell.swift in Sources */,

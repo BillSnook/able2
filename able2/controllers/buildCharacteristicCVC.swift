@@ -8,12 +8,12 @@
 
 //import Foundation
 import UIKit
-//import CoreBluetooth
+import CoreBluetooth
 
 
 class buildCharacteristicVC: UIViewController,
 //            UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,
-            UITextFieldDelegate, CellStateChangeProtocol {
+            UITextFieldDelegate {
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
@@ -79,12 +79,6 @@ class buildCharacteristicVC: UIViewController,
         
         setControlState()
         
-//        if basicInfoState == true {
-//            infoDetailButton.setTitle( "Full Mode", forState: .Normal )
-//        } else {
-//            infoDetailButton.setTitle( "Basic Mode", forState: .Normal )
-//        }
-        
     }
     
 //    override func viewDidDisappear(animated: Bool) {
@@ -120,8 +114,11 @@ class buildCharacteristicVC: UIViewController,
     
     func saveDetails() {
         
-        // Gather and save data from fields and create service
+        // Gather and save data from fields and create characteristic
         buildCharacteristic!.uuid = uuidField.text
+        buildCharacteristic!.valueString = valueView.text
+        buildCharacteristic!.permissions = controlsToPermissions()
+        buildCharacteristic!.properties = controlsToProperties()
         Log.debug("")
         builder!.saveCharacteristic( buildCharacteristic! )
         setControlState()
@@ -332,6 +329,57 @@ class buildCharacteristicVC: UIViewController,
     
     // MARK: - UITextFieldDelegate
     
+    
+    func controlsToPermissions() -> CBAttributePermissions {
+        
+        var permissions = CBAttributePermissions()
+        if permReadSwitch.on {
+            permissions.insert( .Readable )
+        }
+        if permWriteSwitch.on {
+            permissions.insert( .Writeable )
+        }
+        if permReadWithEncryptionSwitch.on {
+            permissions.insert( .ReadEncryptionRequired )
+        }
+        if permWriteWithEncryptionSwitch.on {
+            permissions.insert( .WriteEncryptionRequired )
+        }
+        return permissions
+    }
+    
+    func controlsToProperties() -> CBCharacteristicProperties {
+        
+        var properties = CBCharacteristicProperties()
+        if propReadSwitch.on {
+            properties.insert( .Read )
+        }
+        if propWriteSwitch.on {
+            properties.insert( .WriteWithoutResponse )
+        }
+        if propAuthenticateSwitch.on {
+            properties.insert( .AuthenticatedSignedWrites )
+        }
+        if propWriteWithResponseSwitch.on {
+            properties.insert( .Write )
+        }
+        if propNotifySwitch.on {
+            properties.insert( .Notify )
+        }
+        if propIndicateSwitch.on {
+            properties.insert( .Indicate )
+        }
+        if propNotifyWithEncryptionSwitch.on {
+            properties.insert( .NotifyEncryptionRequired )
+        }
+        if propIndicateWithEncryptionSwitch.on {
+            properties.insert( .IndicateEncryptionRequired )
+        }
+        return properties
+    }
+    
+    // MARK: - UITextFieldDelegate
+    
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         
         return false	// false because uuidField should never allow changes to its text
@@ -372,5 +420,16 @@ class buildCharacteristicVC: UIViewController,
         stateDidChange()
     }
     
-
+    // MARK: - Changing entitys
+    
+    @IBAction func permissionControl(sender: UISwitch) {
+        
+        stateDidChange()
+    }
+    
+    @IBAction func propertiesChanged(sender: UISwitch) {
+        
+        stateDidChange()
+    }
+    
 }

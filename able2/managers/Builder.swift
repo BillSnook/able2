@@ -68,10 +68,10 @@ class Builder {
             try managedObjectContext.save()
             buildState = .Saved
         } catch let error as NSError {
-            Log.error("Could not fetch \(error), \(error.userInfo)")
+            Log.error("Could not save \(error), \(error.userInfo)")
         }
         catch {
-            Log.error("Could not fetch \(error)")
+            Log.error("Could not save \(error)")
         }
 
     }
@@ -80,7 +80,7 @@ class Builder {
         
         Log.debug("currentDevice name: \(currentDevice!.name)")
         guard currentDevice != nil else { return }
-        currentDevice!.save( managedObjectContext )
+        currentDevice!.prepareToSave( managedObjectContext )
         save()
         
     }

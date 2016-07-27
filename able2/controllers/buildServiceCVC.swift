@@ -10,15 +10,13 @@ import UIKit
 import CoreBluetooth
 
 
-class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CellStateChangeProtocol {
+class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, DeleteButtonDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var newCharacteristicButton: UIButton!
     @IBOutlet weak var addCharacteristicLabel: UILabel!
-    
-    @IBOutlet weak var infoDetailButton: UIButton!
-    
+
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var uuidField: UITextField!
     @IBOutlet weak var primarySwitch: UISwitch!
@@ -61,7 +59,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         Log.debug("")
 
-        navigationItem.title = "Service"
+        navigationItem.title = "Current Service"
 
         nameField.text = buildService!.name
         
@@ -78,12 +76,6 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         textFieldBorderSetup(uuidField)
 
         setControlState()
-
-        if basicInfoState == true {
-            infoDetailButton.setTitle( "Full Mode", forState: .Normal )
-        } else {
-            infoDetailButton.setTitle( "Basic Mode", forState: .Normal )
-        }
 
     }
     
@@ -187,11 +179,6 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
 
         Log.info( "" )
         basicInfoState = !basicInfoState
-        if basicInfoState == true {
-            infoDetailButton.setTitle( "Full Mode", forState: .Normal )
-        } else {
-            infoDetailButton.setTitle( "Basic Mode", forState: .Normal )
-        }
         
         collectionView.reloadData()
     }
@@ -284,6 +271,31 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
     }
     
+    // MARK: - DeleteButtonDelegate
+    
+    func deleteCellAt( indexPath: NSIndexPath ) {
+        
+        let alertController = UIAlertController(title: "Warning", message: "You are about to remove a characteristic from your device. This operation cannot be undone. Continue?", preferredStyle: .Alert)
+        
+        // Configure Alert Controller
+        alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Delete Service", style: .Default, handler: { (_) -> Void in
+            self.removeCellAt( indexPath )
+        }))
+        
+        // Present Alert Controller
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func removeCellAt( indexPath: NSIndexPath ) {
+        
+        buildService!.removeCharacteristicAtIndex( indexPath.row )
+        builder!.saveService( buildService! )
+        collectionView.deleteItemsAtIndexPaths( [indexPath] )
+    }
+    
     // MARK: - State methods
     
     func unsavedEditWarningThenCharacteristic() {
@@ -336,10 +348,10 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         uuidButton.enabled = enabled
         primarySwitch.enabled = enabled
 
-        // characteristics
-        for buildCharacteristic in buildService!.buildCharacteristics {
-            buildCharacteristic.enabled( enabled )
-        }
+//        // characteristics
+//        for buildCharacteristic in buildService!.buildCharacteristics {
+//            buildCharacteristic.enabled( enabled )
+//        }
     }
     
     func stateDidChange() {
@@ -453,9 +465,9 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
 //            cell.setMode( basicInfoState )
         
             let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
-            buildCharacteristic.setupCCell( cell )
+            buildCharacteristic.setupCell( cell )
             
-            buildCharacteristic.delegate = self
+//            buildCharacteristic.delegate = self
 //            cell.delegate = buildCharacteristic
             return cell
 //        }
@@ -467,10 +479,10 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     }
     
 
-//    func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
-//        
+    func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
+        
 //        let height: CGFloat = basicInfoState ? 260.0 : 426.0
-//		return CGSizeMake( collectionView.frame.size.width - 2.0, 100 )
-//    }
+		return CGSizeMake( collectionView.frame.size.width - 2.0, 90.0 )
+    }
 
 }

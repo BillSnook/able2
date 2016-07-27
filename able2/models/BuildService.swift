@@ -48,40 +48,36 @@ class BuildService {
 		}
 	}
     
-    func save( managedObjectContext: NSManagedObjectContext ) {
+    func prepareToSave( managedObjectContext: NSManagedObjectContext ) {
 
         Log.debug("")
-        if service != nil {
-            service!.name = name
-            service!.uuid = uuid
-            service!.primary = primary
-        } else {
+        if service == nil {
             let serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
             if serviceEntity != nil {
                 if let newService = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service {
                     Log.debug("  Made new Service managed object")
                     service = newService
-                    newService.name = name
-                    newService.uuid = uuid
-                    newService.primary = primary
                 }
             }
         }
         if service != nil {
+            service!.name = name
+            service!.uuid = uuid
+            service!.primary = primary
             let newSet = NSMutableOrderedSet( capacity: buildCharacteristics.count  )
             for buildCharacteristic in buildCharacteristics {
-                if buildCharacteristic.characteristic != nil {
+//                if buildCharacteristic.characteristic != nil {
                     Log.debug("  Found existing Characteristic managed object")
-                    buildCharacteristic.save( nil )
+                    buildCharacteristic.prepareToSave( managedObjectContext )
                     newSet.addObject( buildCharacteristic.characteristic! )
-                } else {
-                    let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
-                    if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
-                        Log.debug("  Made new Characteristic managed object")
-                        buildCharacteristic.save( newCharacteristic )
-                        newSet.addObject( newCharacteristic )
-                    }
-                }
+//                } else {
+//                    let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
+//                    if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
+//                        Log.debug("  Made new Characteristic managed object")
+//                        buildCharacteristic.prepareToSave( newCharacteristic )
+//                        newSet.addObject( newCharacteristic )
+//                    }
+//                }
 
                 
 //                if buildCharacteristic.characteristic != nil {
@@ -142,6 +138,11 @@ class BuildService {
 //        mutableService.characteristics = mutableCharacteristics
 //        return mutableService
 //    }
+    
+    func removeCharacteristicAtIndex( row: Int ) {
+        
+        buildCharacteristics.removeAtIndex( row )
+    }
     
     func isValid() -> Bool {        // Valid indicates ready to be saved
         

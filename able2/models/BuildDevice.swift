@@ -41,7 +41,7 @@ class BuildDevice {
 		}
 	}
     
-    func save( managedObjectContext: NSManagedObjectContext ) {
+    func prepareToSave( managedObjectContext: NSManagedObjectContext ) {
         
         Log.debug("")
         if device == nil {
@@ -52,7 +52,6 @@ class BuildDevice {
                 }
             }
         }
-        
         if device != nil {
             device!.name = name
             device!.uuid = uuid
@@ -60,13 +59,13 @@ class BuildDevice {
             for buildService in buildServices {
 //                if buildService.service != nil {
                     Log.debug("  Found existing Service managed object")
-                    buildService.save( managedObjectContext )
+                    buildService.prepareToSave( managedObjectContext )
                     newSet.addObject( buildService.service! )
 //                } else {
 //                    let serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
 //                    if let newService = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service {
 //                        Log.debug("  Made new Service managed object")
-//                        buildService.save( managedObjectContext )
+//                        buildService.prepareToSave( managedObjectContext )
 //                        newSet.addObject( newService )
 //                    }
 //                }

@@ -10,7 +10,14 @@ import UIKit
 import CoreBluetooth
 
 
-class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate, ServicesCVCDelegate {
+protocol DeleteButtonDelegate {
+    
+    func deleteCellAt( indexPath: NSIndexPath )
+    
+}
+
+
+class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UITextFieldDelegate, CBPeripheralManagerDelegate, DeleteButtonDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var saveButton: UIBarButtonItem!
@@ -243,6 +250,8 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         }
     }
     
+    // MARK: - DeleteButtonDelegate
+
     func deleteCellAt( indexPath: NSIndexPath ) {
         
         let alertController = UIAlertController(title: "Warning", message: "You are about to remove a service from your device. This operation cannot be undone. Continue?", preferredStyle: .Alert)
