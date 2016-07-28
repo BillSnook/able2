@@ -74,34 +74,14 @@ class buildCharacteristicVC: UIViewController,
         uuidField.text = buildCharacteristic!.uuid
         uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
         valueView.text = buildCharacteristic!.valueString
+        permissionsToControls( buildCharacteristic!.permissions! )
+        propertiesToControls( buildCharacteristic!.properties! )
         
         textFieldBorderSetup(uuidField)
         
         setControlState()
         
     }
-    
-//    override func viewDidDisappear(animated: Bool) {
-//        
-//        Log.debug("")
-//        
-//        super.viewDidDisappear( animated )
-//    }
-//    
-//    override func viewWillTransitionToSize(size: CGSize,
-//                                           withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-//        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-//        // Code here will execute before the rotation begins.
-//        coordinator.animateAlongsideTransition({ (context) -> Void in
-//            // Place code here to perform animations during the rotation.
-//            // You can pass nil for this closure if not necessary.
-//            },
-//                                               completion: { (context) -> Void in
-//                                                // Code here will execute after the rotation has finished.
-//                                                self.collectionView.reloadData()
-//        })
-//    }
-    
     
     // MARK: - Control actions
     
@@ -136,19 +116,6 @@ class buildCharacteristicVC: UIViewController,
         
     }
     
-//    @IBAction func infoDetailAction(sender: AnyObject) {
-//        
-//        Log.info( "" )
-//        basicInfoState = !basicInfoState
-//        if basicInfoState == true {
-//            infoDetailButton.setTitle( "Full Mode", forState: .Normal )
-//        } else {
-//            infoDetailButton.setTitle( "Basic Mode", forState: .Normal )
-//        }
-//        
-//        collectionView.reloadData()
-//    }
-    
     func unsavedCancelWarning() {
         
         if saveButton.enabled {
@@ -172,32 +139,8 @@ class buildCharacteristicVC: UIViewController,
         }
     }
     
-//    func unsavedEditServiceWarning() {
-//        
-//        if saveButton.enabled {
-//            // Initialize Alert Controller
-//            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. Save now?", preferredStyle: .Alert)
-//            
-//            // Configure Alert Controller
-//            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
-//                self.performSegueWithIdentifier( "toEditService", sender: nil )
-//            }))
-//            
-//            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
-//                self.saveDetails()
-//                self.performSegueWithIdentifier( "toEditService", sender: nil )
-//            }))
-//            
-//            // Present Alert Controller
-//            presentViewController(alertController, animated: true, completion: nil)
-//        } else {
-//            self.performSegueWithIdentifier( "toEditService", sender: nil )
-//        }
-//    }
-    
     func textChanged() {
         
-//        buildCharacteristic!.name = nameField.text
         setControlState()
     }
     
@@ -327,8 +270,33 @@ class buildCharacteristicVC: UIViewController,
         
     }
     
-    // MARK: - UITextFieldDelegate
+    // MARK: - Set Switches
     
+    func permissionsToControls( permissions: CBAttributePermissions ) {
+        
+        permReadSwitch.on = permissions.contains( .Readable )
+        permWriteSwitch.on = permissions.contains( .Writeable )
+        permReadWithEncryptionSwitch.on = permissions.contains( .ReadEncryptionRequired )
+        permWriteWithEncryptionSwitch.on = permissions.contains( .WriteEncryptionRequired )
+
+    }
+    
+    func propertiesToControls( properties: CBCharacteristicProperties ) {
+        
+        propReadSwitch.on = properties.contains( .Read )
+        propWriteSwitch.on = properties.contains( .WriteWithoutResponse )
+        propAuthenticateSwitch.on = properties.contains( .AuthenticatedSignedWrites )
+        propWriteWithResponseSwitch.on = properties.contains( .Write )
+        
+        propNotifySwitch.on = properties.contains( .Notify )
+        propIndicateSwitch.on = properties.contains( .Indicate )
+        propNotifyWithEncryptionSwitch.on = properties.contains( .NotifyEncryptionRequired )
+        propIndicateWithEncryptionSwitch.on = properties.contains( .IndicateEncryptionRequired )
+        
+    }
+    
+    
+    // MARK: - Read Switches
     
     func controlsToPermissions() -> CBAttributePermissions {
         
@@ -396,9 +364,6 @@ class buildCharacteristicVC: UIViewController,
         
         var displayState = DisplayState.Neutral
         if let viewText = textView.text {
-//            Log.info( "\ntext: \(text), length: \(text.characters.count)" )
-//            Log.info( "range location: \(range.location), length: \(range.length)" )
-//            Log.info( "string: \(string), length: \(string.characters.count)" )
             let nonEmptyText = !viewText.isEmpty && ( range.length != viewText.characters.count )
             let nonEmptyReplacement = !text.isEmpty
             if nonEmptyReplacement || nonEmptyText {
@@ -424,11 +389,13 @@ class buildCharacteristicVC: UIViewController,
     
     @IBAction func permissionControl(sender: UISwitch) {
         
+        buildCharacteristic!.permissions = controlsToPermissions()
         stateDidChange()
     }
     
     @IBAction func propertiesChanged(sender: UISwitch) {
         
+        buildCharacteristic!.properties = controlsToProperties()
         stateDidChange()
     }
     

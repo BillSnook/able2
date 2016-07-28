@@ -16,12 +16,6 @@ enum DisplayState {
     case Invalid
 }
 
-//protocol CellStateChangeProtocol {
-//    
-//    func stateDidChange()
-//}
-//
-
 class CharacteristicCollectionViewCell: UICollectionViewCell { //, UITextViewDelegate {
 
     @IBOutlet weak var uuidLabel: UILabel!

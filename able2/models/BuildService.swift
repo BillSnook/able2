@@ -66,31 +66,9 @@ class BuildService {
             service!.primary = primary
             let newSet = NSMutableOrderedSet( capacity: buildCharacteristics.count  )
             for buildCharacteristic in buildCharacteristics {
-//                if buildCharacteristic.characteristic != nil {
-                    Log.debug("  Found existing Characteristic managed object")
-                    buildCharacteristic.prepareToSave( managedObjectContext )
-                    newSet.addObject( buildCharacteristic.characteristic! )
-//                } else {
-//                    let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
-//                    if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
-//                        Log.debug("  Made new Characteristic managed object")
-//                        buildCharacteristic.prepareToSave( newCharacteristic )
-//                        newSet.addObject( newCharacteristic )
-//                    }
-//                }
-
-                
-//                if buildCharacteristic.characteristic != nil {
-//                    buildCharacteristic.save( buildCharacteristic.characteristic! )
-//                } else {
-//                    let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
-//                    if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
-//                        Log.debug("  Made new Characteristic managed object")
-//                        buildCharacteristic.save( newCharacteristic )
-//                        // WFS Characteristic setup
-//                    }
-//                }
-//                newSet.addObject( buildCharacteristic )
+                Log.debug("  Found existing Characteristic managed object")
+                buildCharacteristic.prepareToSave( managedObjectContext )
+                newSet.addObject( buildCharacteristic.characteristic! )
             }
             service!.characteristics = newSet
         }

@@ -99,9 +99,9 @@ class Builder {
     func saveCharacteristic( buildCharacteristic: BuildCharacteristic ) {
         
         Log.debug("buildCharacteristic uuid: \(buildCharacteristic.uuid)")
-        guard currentDevice != nil else { return }
+        guard currentService != nil else { return }
         currentService!.appendCharacteristic( buildCharacteristic )
-        saveDevice()
+        saveService( currentService! )
 //        currentDevice!.save( managedObjectContext )
 //        save()
         

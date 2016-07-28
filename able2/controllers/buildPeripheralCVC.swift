@@ -36,8 +36,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     var peripheralManager: CBPeripheralManager?
 
-    var services: [BuildService]?
-
     var newBackButton: UIBarButtonItem?
     
     
@@ -149,7 +147,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         // Gather and save data from fields and save device
         buildDevice!.name = nameField.text
         buildDevice!.uuid = uuidField.text
-//        builder!.currentDevice = buildDevice
         builder!.saveDevice()
         setControlState()
     }
@@ -260,7 +257,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
         }))
         
-        alertController.addAction(UIAlertAction(title: "Delete Service", style: .Default, handler: { (_) -> Void in
+        alertController.addAction(UIAlertAction(title: "Delete", style: .Default, handler: { (_) -> Void in
             self.removeCellAt( indexPath )
         }))
         
@@ -273,6 +270,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         buildDevice!.removeServiceAtIndex( indexPath.row )
         builder!.saveDevice()
         collectionView.deleteItemsAtIndexPaths( [indexPath] )
+        saveDetails()
     }
     
     
@@ -465,9 +463,6 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         
         var displayState = DisplayState.Invalid // .Neutral
         if let text = textField.text {
-//            Log.info( "\ntext: \(text), length: \(text.characters.count)" )
-//            Log.info( "range location: \(range.location), length: \(range.length)" )
-//            Log.info( "string: \(string), length: \(string.characters.count)" )
             let nonEmptyText = !text.isEmpty && ( range.length != text.characters.count )
             let nonEmptyReplacement = !string.isEmpty
             if nonEmptyReplacement || nonEmptyText {
@@ -522,7 +517,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
         
-		return CGSizeMake( collectionView.frame.size.width, 90 )
+		return CGSizeMake( collectionView.frame.size.width, 90.0 )
     }
 
 }

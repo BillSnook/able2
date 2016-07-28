@@ -24,14 +24,11 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     
     var builder: Builder?
     var buildService: BuildService?
-    
-//    var peripheralManager: CBPeripheralManager?
 
     var newBackButton: UIBarButtonItem?
     
     var displayState = DisplayState.Neutral
     
-    var basicInfoState = true
     
     
 //--    ----    ----    ----
@@ -77,6 +74,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
 
         setControlState()
 
+        collectionView.reloadData()
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -126,38 +124,25 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         Log.info( "" )
         if saveButton.enabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. You need to do this before you can create new Characteristics. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your service. You need to do this before you can create new Characteristics. Save now?", preferredStyle: .Alert)
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
-//                self.navigationController?.popViewControllerAnimated(true)
             }))
             
             alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.characteristicAction()
+                self.performSegueWithIdentifier( "toNewCharacteristic", sender: nil )
             }))
             
             // Present Alert Controller
             presentViewController(alertController, animated: true, completion: nil)
         } else {
-            self.characteristicAction()
+            self.performSegueWithIdentifier( "toNewCharacteristic", sender: nil )
         }
   
     }
     
-    func characteristicAction() {
-        
-        Log.info( "" )
-        guard buildService != nil else { Log.info( "buildService is nil" ); return }
-        let buildCharacteristic = BuildCharacteristic( fromCharacteristic: nil )
-        buildCharacteristic.index = buildService!.buildCharacteristics.count // Give it order
-        buildService!.buildCharacteristics.append( buildCharacteristic )
-        setControlState()
-
-        collectionView.reloadData()
-    }
-
     @IBAction func primaryAction(sender: AnyObject) {
         
         buildService!.primary = primarySwitch.on
@@ -175,19 +160,11 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
 		
     }
     
-    @IBAction func infoDetailAction(sender: AnyObject) {
-
-        Log.info( "" )
-        basicInfoState = !basicInfoState
-        
-        collectionView.reloadData()
-    }
-    
     func unsavedCancelWarning() {
         
         if saveButton.enabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to your device. If you continue now you will lose those changes.", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to your service. If you continue now you will lose those changes.", preferredStyle: .Alert)
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "Lose Changes", style: .Cancel, handler: { (_) -> Void in
@@ -210,7 +187,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         if saveButton.enabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your service. Save now?", preferredStyle: .Alert)
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
@@ -275,13 +252,13 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     
     func deleteCellAt( indexPath: NSIndexPath ) {
         
-        let alertController = UIAlertController(title: "Warning", message: "You are about to remove a characteristic from your device. This operation cannot be undone. Continue?", preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Warning", message: "You are about to delete a characteristic from your service. This operation cannot be undone. Continue?", preferredStyle: .Alert)
         
         // Configure Alert Controller
         alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
         }))
         
-        alertController.addAction(UIAlertAction(title: "Delete Service", style: .Default, handler: { (_) -> Void in
+        alertController.addAction(UIAlertAction(title: "Delete", style: .Default, handler: { (_) -> Void in
             self.removeCellAt( indexPath )
         }))
         
@@ -294,6 +271,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         buildService!.removeCharacteristicAtIndex( indexPath.row )
         builder!.saveService( buildService! )
         collectionView.deleteItemsAtIndexPaths( [indexPath] )
+        saveDetails()
     }
     
     // MARK: - State methods
@@ -327,7 +305,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         builder!.currentService = buildService
-        navigationItem.title = "Device"
+        navigationItem.title = "Service"
         if segue.identifier == "toNewCharacteristic" {
             let dest = segue.destinationViewController as! buildCharacteristicVC
             dest.buildCharacteristic = nil
@@ -348,10 +326,6 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         uuidButton.enabled = enabled
         primarySwitch.enabled = enabled
 
-//        // characteristics
-//        for buildCharacteristic in buildService!.buildCharacteristics {
-//            buildCharacteristic.enabled( enabled )
-//        }
     }
     
     func stateDidChange() {
@@ -412,9 +386,6 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         var displayState = DisplayState.Invalid // .Neutral
         if let text = textField.text {
-//            Log.info( "\ntext: \(text), length: \(text.characters.count)" )
-//            Log.info( "range location: \(range.location), length: \(range.length)" )
-//            Log.info( "string: \(string), length: \(string.characters.count)" )
             let nonEmptyText = !text.isEmpty && ( range.length != text.characters.count )
             let nonEmptyReplacement = !string.isEmpty
             if nonEmptyReplacement || nonEmptyText {
@@ -450,27 +421,14 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     func collectionView( collectionView: UICollectionView,
                           cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 
-//        if basicInfoState == true {
-//            let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacterView", forIndexPath: indexPath ) as! CharacterCollectionViewCell
-//            
-//            let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
-//            buildCharacteristic.setupBasicCell( cell )
-//
-//            buildCharacteristic.delegate = self
-//            cell.delegate = buildCharacteristic
-//            return cell
-//        } else {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicSummary", forIndexPath: indexPath ) as! CharacteristicCollectionViewCell
-        
-//            cell.setMode( basicInfoState )
-        
+
             let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
             buildCharacteristic.setupCell( cell )
             
-//            buildCharacteristic.delegate = self
-//            cell.delegate = buildCharacteristic
+            cell.indexPath = indexPath
+            cell.delegate = self
             return cell
-//        }
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
@@ -481,8 +439,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
 
     func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
         
-//        let height: CGFloat = basicInfoState ? 260.0 : 426.0
-		return CGSizeMake( collectionView.frame.size.width - 2.0, 90.0 )
+		return CGSizeMake( collectionView.frame.size.width, 120.0 )
     }
 
 }
