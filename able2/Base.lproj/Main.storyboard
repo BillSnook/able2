@@ -190,7 +190,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <segue destination="Bve-dO-rzD" kind="relationship" relationship="masterViewController" id="BBg-L1-pBt"/>
-                        <segue destination="496-hM-mK5" kind="relationship" relationship="detailViewController" id="3IJ-I9-LcX"/>
+                        <segue destination="hbn-Yc-QQS" kind="relationship" relationship="detailViewController" id="MTM-V7-xo9"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cZU-Oi-B1e" sceneMemberID="firstResponder"/>
@@ -1780,8 +1780,8 @@
         <image name="button_round_red_small" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="e6N-bh-gkL"/>
         <segue reference="qfc-xZ-w4d"/>
+        <segue reference="MTM-V7-xo9"/>
         <segue reference="Kti-Mb-4la"/>
         <segue reference="sn1-cF-H6R"/>
     </inferredMetricsTieBreakers>

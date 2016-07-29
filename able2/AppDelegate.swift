@@ -100,6 +100,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         bluetoothNames["8667556C-9A37-4C91-84ED-54EE27D90049"] = "Continuity1"
         bluetoothNames["D0611E78-BBB4-4591-A5F8-487910AE4366"] = "Continuity2"
 
+        
+//        UISplitViewControllerDelegate
+  
+        splitViewController!.preferredDisplayMode = .PrimaryHidden
+        
         return true
     }
 
