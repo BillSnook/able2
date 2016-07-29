@@ -156,13 +156,15 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         guard builder!.buildState == .Saved || builder!.buildState == .Advertising else { return }
         let adButton = sender as! UIButton
         if builder!.buildState != .Advertising {        // If we were not advertising, now we want to start
-            guard !saveButton.enabled else { return }   // But must be saved first - may need alert
+            guard !saveButton.enabled else {
+                return
+            }
             setControlsEnabled( false )
             adButton.setTitle( "Stop Advertising", forState: .Normal )
             startAdvertising()
         } else {
-            adButton.setTitle( "Advertise", forState: .Normal )
 			setControlsEnabled( true )
+            adButton.setTitle( "Advertise", forState: .Normal )
             stopAdvertising()
         }
     }
@@ -281,7 +283,14 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         nameField.enabled = enabled
         uuidField.enabled = enabled
         uuidButton.enabled = enabled
-
+        if buildDevice!.buildServices.count > 1 {   // Up to two for now
+            newServiceButton.enabled = false
+            addServiceLabel.enabled = false
+        } else {
+            newServiceButton.enabled = enabled
+            addServiceLabel.enabled = enabled
+        }
+        collectionView.userInteractionEnabled = enabled
     }
     
     func textChanged() {
@@ -316,14 +325,8 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         
         saveButton.enabled = needSave
         advertiseButton.enabled = (builder!.buildState == .Saved) || (builder!.buildState == .Advertising)
-        if buildDevice!.buildServices.count > 1 {   // Up to two for now
-            newServiceButton.enabled = false
-            addServiceLabel.enabled = false
-        } else {
-            newServiceButton.enabled = !(builder!.buildState == .Advertising)
-            addServiceLabel.enabled = !(builder!.buildState == .Advertising)
-        }
         
+        setControlsEnabled( builder!.buildState != .Advertising )
     }
     
     // MARK: - CBPeripheralManagerDelegate support
@@ -390,11 +393,11 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     func stopAdvertising() {
         
         guard peripheralManager != nil else { return }
+        builder!.buildState = .Saved
         guard peripheralManager!.isAdvertising else { return }
         peripheralManager!.stopAdvertising()
         peripheralManager!.removeAllServices()
         
-        builder!.buildState = .Saved
     }
     
     func startPublish() {

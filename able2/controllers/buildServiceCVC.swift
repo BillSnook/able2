@@ -164,7 +164,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         if saveButton.enabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to your service. If you continue now you will lose those changes.", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to this service. If you return to the device page now you will lose those changes.", preferredStyle: .Alert)
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "Lose Changes", style: .Cancel, handler: { (_) -> Void in
@@ -187,7 +187,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         if saveButton.enabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your service. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to this service. Save now?", preferredStyle: .Alert)
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
@@ -242,8 +242,8 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
             newCharacteristicButton.enabled = false
             addCharacteristicLabel.enabled = false
         } else {
-            newCharacteristicButton.enabled = true
-            addCharacteristicLabel.enabled = true
+            newCharacteristicButton.enabled = !needSave
+            addCharacteristicLabel.enabled = !needSave
         }
         
     }
@@ -280,7 +280,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         if saveButton.enabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your service. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to this service. Save now?", preferredStyle: .Alert)
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
@@ -319,21 +319,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         }
     }
     
-    func setControlsEnabled( enabled: Bool ) {
-        
-        nameField.enabled = enabled
-        uuidField.enabled = enabled
-        uuidButton.enabled = enabled
-        primarySwitch.enabled = enabled
-
-    }
-    
-    func stateDidChange() {
-
-        setControlState()
-    }
-    
-   func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
+    func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
 
         textField.layer.borderWidth = 0.5
         textField.layer.cornerRadius = 6.0

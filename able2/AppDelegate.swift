@@ -153,6 +153,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         do {
             try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: URLPersistentStore, options: options)
         } catch {
+            Log.debug( "Throw in addPersistentStoreWithType: NSSQLiteStoreType" )
             let fm = NSFileManager.defaultManager()
             
             if fm.fileExistsAtPath(URLPersistentStore.path!) {
@@ -172,13 +173,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
                         
                     } catch {
                         let storeError = error as NSError
-                        print("\(storeError), \(storeError.userInfo)")
+                        Log.debug( "Throw #2 in addPersistentStoreWithType: NSSQLiteStoreType, \(storeError), \(storeError.userInfo)" )
                         // Update User Defaults
                         let userDefaults = NSUserDefaults.standardUserDefaults()
                         userDefaults.setBool(true, forKey: "didDetectIncompatibleStore")                    }
                 } catch {
                     let moveError = error as NSError
-                    print("\(moveError), \(moveError.userInfo)")
+                    Log.debug( "Throw in moveItemAtURL: \(moveError), \(moveError.userInfo)")
                 }
             }
         }

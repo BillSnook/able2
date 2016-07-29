@@ -120,7 +120,7 @@ class buildCharacteristicVC: UIViewController,
         
         if saveButton.enabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to your device. If you continue now you will lose those changes.", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to this characteristic. If you return to the service page now you will lose those changes.", preferredStyle: .Alert)
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "Lose Changes", style: .Cancel, handler: { (_) -> Void in
@@ -141,6 +141,7 @@ class buildCharacteristicVC: UIViewController,
     
     func textChanged() {
         
+        buildCharacteristic?.valueString = valueView.text
         setControlState()
     }
     
@@ -372,7 +373,7 @@ class buildCharacteristicVC: UIViewController,
         }
         setTVBorderOf( textView, toDisplayState: displayState )
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
-            self.stateDidChange()
+            self.textChanged()
         })
         return true
     }
