@@ -20,6 +20,7 @@ class CharacteristicCollectionViewCell: UICollectionViewCell { //, UITextViewDel
 
     @IBOutlet weak var uuidLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!
+    @IBOutlet weak var propertyLabel: UILabel!
 
     @IBOutlet weak var deleteButton: UIButton!
     

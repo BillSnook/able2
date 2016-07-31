@@ -319,6 +319,65 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         }
     }
     
+    func permissionsToString( permissions: CBAttributePermissions ) -> String {
+        
+        var pStr = ""
+        if permissions.contains( .Readable ) {
+            pStr += "Rd"
+        }
+        if permissions.contains( .Writeable ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "Wr"
+        }
+        if permissions.contains( .ReadEncryptionRequired ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "RdEn"
+        }
+        if permissions.contains( .WriteEncryptionRequired ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "WrEn"
+        }
+        
+        return pStr
+    }
+    
+    func propertiesToString( properties: CBCharacteristicProperties ) -> String {
+        
+        var pStr = ""
+        if properties.contains( .Read ) {
+            pStr += "Rd"
+        }
+        if properties.contains( .WriteWithoutResponse ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "WrWO"
+        }
+        if properties.contains( .AuthenticatedSignedWrites ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "WrAu"
+        }
+        if properties.contains( .Write ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "Wr"
+        }
+        if properties.contains( .Notify ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "No"
+        }
+        if properties.contains( .Indicate ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "In"
+        }
+        if properties.contains( .NotifyEncryptionRequired ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "NoEn"
+        }
+        if properties.contains( .IndicateEncryptionRequired ) {
+            if pStr != "" { pStr += ", " }
+            pStr += "InEn"
+        }
+        return pStr
+    }
+
     func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
 
         textField.layer.borderWidth = 0.5
@@ -407,14 +466,15 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     func collectionView( collectionView: UICollectionView,
                           cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
 
-            let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicSummary", forIndexPath: indexPath ) as! CharacteristicCollectionViewCell
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicSummary", forIndexPath: indexPath ) as! CharacteristicCollectionViewCell
 
-            let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
-            buildCharacteristic.setupCell( cell )
+        let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
+        buildCharacteristic.setupCell( cell )
+        cell.propertyLabel.text = permissionsToString( buildCharacteristic.permissions! ) + "    " + propertiesToString( buildCharacteristic.properties! )
             
-            cell.indexPath = indexPath
-            cell.delegate = self
-            return cell
+        cell.indexPath = indexPath
+        cell.delegate = self
+        return cell
     }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
