@@ -102,9 +102,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
         
 //        UISplitViewControllerDelegate
+        splitViewController = window?.rootViewController as? UISplitViewController
   
 		if splitViewController != nil {
-			splitViewController!.preferredDisplayMode = .PrimaryHidden
+			splitViewController!.preferredDisplayMode = .Automatic
+            splitViewController!.delegate = self
 		}
         return true
     }

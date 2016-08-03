@@ -85,24 +85,6 @@ class BuildService {
         
     }
 
-    func setupCell( cell: ServicesCollectionViewCell ) {
-        
-        cell.nameLabel.text = name
-        cell.uuidLabel.text = uuid
-        cell.primaryLabel.text = (primary ? "Primary" : "")
-        switch ( buildCharacteristics.count ) {
-        case 0:
-            cell.characteristicsLabel.text = "No Characteristics"
-        case 1:
-            cell.characteristicsLabel.text = "1 Characteristic"
-        default:
-            cell.characteristicsLabel.text = "\(buildCharacteristics.count) Characteristics"
-        }
-        cell.subservicesLabel.text = "No Sub-Services"
-        
-        cell.setupButton()
-        
-    }
     
 //    func toBluetooth() -> CBMutableService {
 //        

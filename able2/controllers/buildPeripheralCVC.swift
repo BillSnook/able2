@@ -504,7 +504,22 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "ServicesCollectionViewCell", forIndexPath: indexPath ) as! ServicesCollectionViewCell
         
         let buildService = buildDevice!.buildServices[ indexPath.row ]
-        buildService.setupCell( cell )
+
+        cell.nameLabel.text = buildService.name
+        cell.uuidLabel.text = buildService.uuid
+        cell.primaryLabel.text = (buildService.primary ? "Primary" : "")
+        switch ( buildService.buildCharacteristics.count ) {
+        case 0:
+            cell.characteristicsLabel.text = "No Characteristics"
+        case 1:
+            cell.characteristicsLabel.text = "1 Characteristic"
+        default:
+            cell.characteristicsLabel.text = "\(buildService.buildCharacteristics.count) Characteristics"
+        }
+        cell.subservicesLabel.text = "No Sub-Services"
+        
+        cell.setupButton()
+
         cell.indexPath = indexPath
         cell.delegate = self
 

@@ -349,7 +349,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         }
         if properties.contains( .WriteWithoutResponse ) {
             if pStr != "" { pStr += ", " }
-            pStr += "WrWO"
+            pStr += "Wr"
         }
         if properties.contains( .AuthenticatedSignedWrites ) {
             if pStr != "" { pStr += ", " }
@@ -357,7 +357,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         }
         if properties.contains( .Write ) {
             if pStr != "" { pStr += ", " }
-            pStr += "Wr"
+            pStr += "WrwR"
         }
         if properties.contains( .Notify ) {
             if pStr != "" { pStr += ", " }
@@ -469,8 +469,18 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicSummary", forIndexPath: indexPath ) as! CharacteristicCollectionViewCell
 
         let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
-        buildCharacteristic.setupCell( cell )
-        cell.propertyLabel.text = permissionsToString( buildCharacteristic.permissions! ) + "    " + propertiesToString( buildCharacteristic.properties! )
+
+        cell.uuidLabel.text = buildCharacteristic.uuid
+        if let valueData = buildCharacteristic.value {
+            let nsString = NSString(data: valueData, encoding: NSUTF8StringEncoding)!
+            cell.valueLabel.text = nsString as String
+        } else {
+            cell.valueLabel.text = ""
+        }
+        
+        cell.setupButton()
+
+        cell.propertyLabel.text = permissionsToString( buildCharacteristic.permissions! ) + "  -  " + propertiesToString( buildCharacteristic.properties! )
             
         cell.indexPath = indexPath
         cell.delegate = self

@@ -74,19 +74,6 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
         }
 
     }
-
-    func setupCell( cell : CharacteristicCollectionViewCell ) {
-
-        cell.uuidLabel.text = uuid
-        if let valueData = value {
-            let nsString = NSString(data: valueData, encoding: NSUTF8StringEncoding)!
-            cell.valueLabel.text = nsString as String
-        } else {
-            cell.valueLabel.text = ""
-        }
-        
-        cell.setupButton()
-    }
     
     func isValid() -> Bool {        // Valid indicates ready to be saved
         
