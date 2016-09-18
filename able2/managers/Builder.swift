@@ -11,11 +11,11 @@ import CoreData
 
 
 enum BuildState {
-    case Unknown        // Not known, no device selected
-    case Invalid        // Device has been selected but not all data is present or valid
-    case Unsaved        // Data is valid and saveable but not saved
-    case Saved          // Data is currently saved and usable
-    case Advertising    // Data is curently being advertised
+    case unknown        // Not known, no device selected
+    case invalid        // Device has been selected but not all data is present or valid
+    case unsaved        // Data is valid and saveable but not saved
+    case saved          // Data is currently saved and usable
+    case advertising    // Data is curently being advertised
 }
 
 
@@ -29,98 +29,94 @@ class Builder {
     
     var currentService: BuildService?
     
-    var buildState = BuildState.Unknown
+    var buildState = BuildState.unknown
     
     
     
     init() {
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         managedObjectContext = appDelegate.managedObjectContext
     }
 
     func getDeviceList() -> [BuildDevice]? {
         
-//        Log.debug("")
-        let fetch = NSFetchRequest( entityName: "Device" )
+//        DLog.debug("")
+        let fetch: NSFetchRequest<Device> = NSFetchRequest( entityName: "Device" )
         do {
-            let results = try managedObjectContext.executeFetchRequest( fetch )
+            let results = try managedObjectContext.fetch( fetch )
             var buildDevices = [BuildDevice]()
-            for device in results as! [Device] {
+            for device in results {
                 let buildDevice = BuildDevice( fromDevice: device )
                 buildDevices.append( buildDevice )
             }
             return buildDevices
             
         } catch let error as NSError {
-            Log.error("Could not fetch \(error), \(error.userInfo)")
+            DLog.error("Could not fetch \(error), \(error.userInfo)")
         }
         catch {
-            Log.error("Could not fetch \(error)")
+            DLog.error("Could not fetch \(error)")
         }
         return nil
     }
 
-    private func save() {
+    fileprivate func save() {
         
-        guard buildState != .Saved else { return }
+        guard buildState != .saved else { return }
         do {
             try managedObjectContext.save()
-            buildState = .Saved
+            buildState = .saved
         } catch let error as NSError {
-            Log.error("Could not save \(error), \(error.userInfo)")
+            DLog.error("Could not save \(error), \(error.userInfo)")
         }
         catch {
-            Log.error("Could not save \(error)")
+            DLog.error("Could not save \(error)")
         }
 
     }
     
     func saveDevice() {
         
-        Log.debug("currentDevice name: \(currentDevice!.name)")
+        DLog.debug("currentDevice name: \(currentDevice!.name)")
         guard currentDevice != nil else { return }
-        currentDevice!.prepareToSave( managedObjectContext )
+        currentDevice!.prepareToSave()
         save()
         
     }
     
-    func saveService( buildService: BuildService ) {
+    func saveService( _ buildService: BuildService ) {
         
-        Log.debug("buildService name: \(buildService.name)")
+        DLog.debug("buildService name: \(buildService.name)")
         guard currentDevice != nil else { return }
         currentDevice!.appendService( buildService )
         saveDevice()
-//        currentDevice!.save( managedObjectContext )
-//        save()
         
     }
     
-    func saveCharacteristic( buildCharacteristic: BuildCharacteristic ) {
+    func saveCharacteristic( _ buildCharacteristic: BuildCharacteristic ) {
         
-        Log.debug("buildCharacteristic uuid: \(buildCharacteristic.uuid)")
+        DLog.debug("buildCharacteristic uuid: \(buildCharacteristic.uuid)")
         guard currentService != nil else { return }
         currentService!.appendCharacteristic( buildCharacteristic )
         saveService( currentService! )
-//        currentDevice!.save( managedObjectContext )
-//        save()
         
     }
     
-    func deleteDevice( buildDevice: BuildDevice ) {
+    func deleteDevice( _ buildDevice: BuildDevice ) {
         
-        Log.debug("")
+        DLog.debug("")
         guard buildDevice.device != nil else { return }
-        managedObjectContext.deleteObject( buildDevice.device! )
+        managedObjectContext.delete( buildDevice.device! )
         save()
         buildDevice.device = nil
     }
     
-    func deleteService( buildService: BuildService ) {
+    func deleteService( _ buildService: BuildService ) {
         
-        Log.debug("")
+        DLog.debug("")
         guard buildService.service != nil else { return }
-        managedObjectContext.deleteObject( buildService.service! )
+        managedObjectContext.delete( buildService.service! )
         save()
         buildService.service = nil
     }

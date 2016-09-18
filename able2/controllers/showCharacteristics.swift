@@ -25,7 +25,7 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
     
     @IBOutlet weak var textLabel: UILabel!
     
-    let fontStyle = UIFontTextStyleHeadline
+    let fontStyle = UIFontTextStyle.headline
 
     
     //--	----	----	----	----	----	----	----
@@ -34,7 +34,7 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        textLabel.font = UIFont.preferredFontForTextStyle(fontStyle)
+        textLabel.font = UIFont.preferredFont(forTextStyle: fontStyle)
         textLabel.text = ""
 		outputString = ""
         
@@ -42,32 +42,32 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
         prepareDescriptorDescription()
         prepareValueDescription()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(preferredTextSizeChanged(_:)), name: UIContentSizeCategoryDidChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(preferredTextSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
 
         characterizer.characteristicDelegate = self
-        if ( CBCharacteristicProperties.Read.rawValue & characteristic!.properties.rawValue ) != 0 {  // If characteristic is readable, start read operation
+        if ( CBCharacteristicProperties.read.rawValue & characteristic!.properties.rawValue ) != 0 {  // If characteristic is readable, start read operation
             characterizer.startCharacteristicEvaluation( characteristic!, forPeripheral: peripheral! )
         }
 
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear( animated )
         
         textLabel.text = outputString
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         
         super.viewWillDisappear( animated )
 
-        NSNotificationCenter.defaultCenter().removeObserver( self )
+        NotificationCenter.default.removeObserver( self )
         
     }
 
-    func preferredTextSizeChanged(notification: NSNotification) {
-        textLabel.font = UIFont.preferredFontForTextStyle(fontStyle)
-//        Log.debug( "content size category changed" )
+    func preferredTextSizeChanged(_ notification: Notification) {
+        textLabel.font = UIFont.preferredFont(forTextStyle: fontStyle)
+//        DLog.debug( "content size category changed" )
     }
     
     func prepareCharacteristicsProperties() {
@@ -85,15 +85,15 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
         let properties = characteristic!.properties
         let rawProperties = properties.rawValue
 		var offset = 0
-        if ( CBCharacteristicProperties.Broadcast.rawValue & rawProperties ) != 0 {
+        if ( CBCharacteristicProperties.broadcast.rawValue & rawProperties ) != 0 {
             outputString += "  Broadcast"
 			offset += 1
         }
-		if ( CBCharacteristicProperties.Notify.rawValue & rawProperties ) != 0 {
+		if ( CBCharacteristicProperties.notify.rawValue & rawProperties ) != 0 {
 			outputString += "  Notify"
 			offset += 1
 		}
-		if ( CBCharacteristicProperties.Indicate.rawValue & rawProperties ) != 0 {
+		if ( CBCharacteristicProperties.indicate.rawValue & rawProperties ) != 0 {
 			outputString += "  Indicate"
 			offset += 1
 		}
@@ -102,15 +102,15 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
 			offset = 0
 		}
 
-		if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) != 0 {
+		if ( CBCharacteristicProperties.read.rawValue & rawProperties ) != 0 {
             outputString += "  Read"
 			offset += 1
         }
-		if ( CBCharacteristicProperties.Write.rawValue & rawProperties ) != 0 {
+		if ( CBCharacteristicProperties.write.rawValue & rawProperties ) != 0 {
 			outputString += "  Write"
 			offset += 1
 		}
-        if ( CBCharacteristicProperties.WriteWithoutResponse.rawValue & rawProperties ) != 0 {
+        if ( CBCharacteristicProperties.writeWithoutResponse.rawValue & rawProperties ) != 0 {
             outputString += "  WriteWithoutResponse"
 			offset += 1
         }
@@ -119,11 +119,11 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
 			offset = 0
 		}
 
-		if ( CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue & rawProperties ) != 0 {
+		if ( CBCharacteristicProperties.authenticatedSignedWrites.rawValue & rawProperties ) != 0 {
             outputString += "  AuthenticatedSignedWrites"
 			offset += 1
         }
-        if ( CBCharacteristicProperties.ExtendedProperties.rawValue & rawProperties ) != 0 {
+        if ( CBCharacteristicProperties.extendedProperties.rawValue & rawProperties ) != 0 {
             outputString += "  ExtendedProperties"
 			offset += 1
        }
@@ -131,7 +131,7 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
 			outputString += "\n"
 		}
 
-        if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) != 0 {  // If characteristic is readable, start read operation
+        if ( CBCharacteristicProperties.read.rawValue & rawProperties ) != 0 {  // If characteristic is readable, start read operation
             
             
         }
@@ -140,14 +140,14 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
     
     func prepareDescriptorDescription() {
 
-        guard characteristic != nil else { Log.debug( "characteristic is nil" ); return }
-        guard characteristic!.descriptors != nil else { Log.debug( "descriptors is nil" ); return }
+        guard characteristic != nil else { DLog.debug( "characteristic is nil" ); return }
+        guard characteristic!.descriptors != nil else { DLog.debug( "descriptors is nil" ); return }
         let descs = characteristic!.descriptors!
-        Log.debug( "descriptor count: \(descs.count)" )
+        DLog.debug( "descriptor count: \(descs.count)" )
         if descs.count > 0 {
             outputString += "\n\(descs.count) Descriptors:\n"
             for desc in descs {
-                Log.info( "  Descriptor: \(desc.description)" )
+                DLog.info( "  Descriptor: \(desc.description)" )
             }
             outputString += "\n"
         } else {
@@ -159,29 +159,29 @@ class ShowCharacteristics: UIViewController, CharacteristicProtocol {
     func prepareValueDescription() {
         
         
-        guard characteristic != nil else { Log.debug( "characteristic is nil" ); return }
-        guard characteristic!.value != nil else { Log.debug( "value is nil" ); return }
+        guard characteristic != nil else { DLog.debug( "characteristic is nil" ); return }
+        guard characteristic!.value != nil else { DLog.debug( "value is nil" ); return }
         outputString += "\nCharacteristic Values:\n"
-        if let dataString = String( data: characteristic!.value!, encoding: NSUTF8StringEncoding ) {
+        if let dataString = String( data: characteristic!.value!, encoding: String.Encoding.utf8 ) {
             outputString += dataString + "\n"
         } else {
             outputString += "Non-string data\n"
         }
         textLabel.text = outputString
-        Log.info( "characteristic value: \(characteristic!.value!.description)" )
+        DLog.info( "characteristic value: \(characteristic!.value!.description)" )
     }
     
     
     // MARK: - descriptor and characteristics protocol support
     
-    func descriptorsRead( characteristic: CBCharacteristic ) {
+    func descriptorsRead( _ characteristic: CBCharacteristic ) {
         
 //        outputString = textLabel.text!
         prepareDescriptorDescription()
         
     }
     
-    func characteristicRead( characteristic: CBCharacteristic ) {
+    func characteristicRead( _ characteristic: CBCharacteristic ) {
         
 //        outputString = textLabel.text!
         prepareValueDescription()

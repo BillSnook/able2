@@ -14,7 +14,7 @@ import CoreBluetooth
 class BuildCharacteristic: NSObject, UITextViewDelegate {
 
     var characteristic: Characteristic?
-    var value: NSData?
+    var value: Data?
     var uuid: String?
     var properties: CBCharacteristicProperties?
     var permissions: CBAttributePermissions?
@@ -23,7 +23,7 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
     var valueString: String? {
         get {
             guard value != nil else { return nil }
-            let vString = NSString(data: value!, encoding: NSUTF8StringEncoding )
+            let vString = NSString(data: value!, encoding: String.Encoding.utf8.rawValue )
             return vString as? String
         }
         set( newDataString ) {
@@ -32,7 +32,7 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
                 return
             }
             let valStr = newDataString!
-            value = valStr.dataUsingEncoding( NSUTF8StringEncoding )
+            value = valStr.data( using: String.Encoding.utf8 )
         }
     }
     
@@ -42,9 +42,9 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
         if fromCharacteristic != nil {
             characteristic = fromCharacteristic
             uuid = fromCharacteristic!.uuid
-            value = fromCharacteristic!.value
-            permissions = CBAttributePermissions( rawValue: fromCharacteristic!.permissions!.unsignedIntegerValue )
-            properties = CBCharacteristicProperties( rawValue: fromCharacteristic!.properties!.unsignedIntegerValue )
+            value = fromCharacteristic!.value as Data?
+            permissions = CBAttributePermissions( rawValue: fromCharacteristic!.permissions!.uintValue )
+            properties = CBCharacteristicProperties( rawValue: fromCharacteristic!.properties!.uintValue )
         } else {
             characteristic = nil
             uuid = ""
@@ -54,14 +54,17 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
         }
     }
     
-    func prepareToSave( managedObjectContext: NSManagedObjectContext ) {
+    func prepareToSave() {
         
-        Log.debug("")
+        DLog.debug("")
+
         if characteristic == nil {
-            let characteristicEntity = NSEntityDescription.entityForName("Characteristic", inManagedObjectContext: managedObjectContext)
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let managedObjectContext = appDelegate.managedObjectContext
+            let characteristicEntity = NSEntityDescription.entity(forEntityName: "Characteristic", in: managedObjectContext)
             if characteristicEntity != nil {
-                if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Characteristic {
-                    Log.debug("  Made new Characteristic managed object")
+                if let newCharacteristic = NSManagedObject(entity: characteristicEntity!, insertInto: managedObjectContext) as? Characteristic {
+                    DLog.debug("  Made new Characteristic managed object")
                     characteristic = newCharacteristic
                 }
             }
@@ -69,8 +72,8 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
         if characteristic != nil {
             characteristic!.uuid = uuid
             characteristic!.value = value
-            characteristic!.permissions = NSNumber( unsignedInteger: permissions!.rawValue )
-            characteristic!.properties = NSNumber( unsignedInteger: properties!.rawValue )
+            characteristic!.permissions = NSNumber(value: permissions!.rawValue as UInt)
+            characteristic!.properties = NSNumber(value: properties!.rawValue as UInt)
         }
 
     }
@@ -91,8 +94,8 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
         guard characteristic != nil else { return true }
         guard characteristic!.uuid == uuid else { return true }
         guard characteristic!.value == value else { return true }
-        guard characteristic!.properties!.unsignedIntegerValue == properties!.rawValue else { Log.info("properties mismatch"); return true }
-        guard characteristic!.permissions!.unsignedIntegerValue == permissions!.rawValue else { Log.info("permissions mismatch"); return true }
+        guard characteristic!.properties!.uintValue == properties!.rawValue else { DLog.info("properties mismatch"); return true }
+        guard characteristic!.permissions!.uintValue == permissions!.rawValue else { DLog.info("permissions mismatch"); return true }
        
         return false
     }

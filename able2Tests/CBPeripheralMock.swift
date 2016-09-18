@@ -14,8 +14,8 @@ import CoreBluetooth
 
 class CBPeripheralMock: CBPeripheralProtocol {
     
-    private var n: String?
-    private var i: NSUUID
+    fileprivate var n: String?
+    fileprivate var i: UUID
     
     var name: String? {
         get {
@@ -26,7 +26,7 @@ class CBPeripheralMock: CBPeripheralProtocol {
         }
     }
     
-    var identifier: NSUUID {
+    var identifier: UUID {
         get {
             return self.i
         }
@@ -35,7 +35,7 @@ class CBPeripheralMock: CBPeripheralProtocol {
         }
     }
     
-    init( name: String, identifier: NSUUID ) {
+    init( name: String, identifier: UUID ) {
 //        super.init()
         self.n = name
         self.i = identifier

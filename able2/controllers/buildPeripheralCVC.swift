@@ -12,7 +12,7 @@ import CoreBluetooth
 
 protocol DeleteButtonDelegate {
     
-    func deleteCellAt( indexPath: NSIndexPath )
+    func deleteCellAt( _ indexPath: IndexPath )
     
 }
 
@@ -46,19 +46,19 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     override func viewDidLoad() {
         super.viewDidLoad()
    
-        Log.debug("")
+        DLog.debug("")
 
-        advertiseButton.layer.borderColor = UIColor.blackColor().CGColor
+        advertiseButton.layer.borderColor = UIColor.black.cgColor
         advertiseButton.layer.borderWidth = 1.0
         advertiseButton.layer.cornerRadius = 6.0
-        advertiseButton.setTitle( "Advertise", forState: .Normal )
-        advertiseButton.setTitleColor( UIColor.blackColor(), forState: .Normal )
-        advertiseButton.setTitleColor( UIColor.lightGrayColor(), forState: .Disabled )
+        advertiseButton.setTitle( "Advertise", for: UIControlState() )
+        advertiseButton.setTitleColor( UIColor.black, for: UIControlState() )
+        advertiseButton.setTitleColor( UIColor.lightGray, for: .disabled )
         
         let deviceValid = ( buildDevice != nil )    // Set by caller, makePeripheralsTVC
-        advertiseButton.enabled = deviceValid
-        newServiceButton.enabled = deviceValid
-        addServiceLabel.enabled = deviceValid
+        advertiseButton.isEnabled = deviceValid
+        newServiceButton.isEnabled = deviceValid
+        addServiceLabel.isEnabled = deviceValid
 
         builder = Builder.sharedBuilder
         if !deviceValid {
@@ -68,43 +68,43 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear( animated )
    
-        Log.debug("")
+        DLog.debug("")
 
         navigationItem.title = "Current Device"
 
         nameField.text = buildDevice!.name
         
         uuidField.text = buildDevice!.uuid
-        uuidField.inputView = UIView.init( frame: CGRectZero )    // No keyboard
+        uuidField.inputView = UIView.init( frame: CGRect.zero )    // No keyboard
         
         textFieldBorderSetup(nameField)
         textFieldBorderSetup(uuidField)
    
-        // Setup controls - local and downstream
+        // Setup local controls
         setControlState()
         
         collectionView.reloadData()
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
 
-        if builder!.buildState == .Advertising {
+        if builder!.buildState == .advertising {
             stopAdvertising()
         }
 
-        Log.debug("")
+        DLog.debug("")
         super.viewDidDisappear( animated )
     }
     
-    override func viewWillTransitionToSize(size: CGSize,
-                                           withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    override func viewWillTransition(to size: CGSize,
+                                           with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         // Code here will execute before the rotation begins.
-        coordinator.animateAlongsideTransition({ (context) -> Void in
+        coordinator.animate(alongsideTransition: { (context) -> Void in
             // Place code here to perform animations during the rotation.
             // You can pass nil for this closure if not necessary.
             },
@@ -117,26 +117,26 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     // MARK: - Control actions
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
 //        builder!.currentDevice = buildDevice
         navigationItem.title = "Device"
         if segue.identifier == "toNewService" {
-            let dest = segue.destinationViewController as! buildServiceCVC
+            let dest = segue.destination as! buildServiceCVC
             dest.buildService = nil
-            Log.debug("dest.buildService will be nil")
+            DLog.debug("dest.buildService will be nil")
         } else if segue.identifier == "toEditService" {
-            let dest = segue.destinationViewController as! buildServiceCVC
-            if let indexPaths = collectionView.indexPathsForSelectedItems() where indexPaths.count > 0 {
-                dest.buildService = buildDevice!.buildServices[indexPaths.first!.item]
-                Log.debug("dest.buildService will be a BuildServices instance")
+            let dest = segue.destination as! buildServiceCVC
+            if let indexPaths = collectionView.indexPathsForSelectedItems , indexPaths.count > 0 {
+                dest.buildService = buildDevice!.buildServices[(indexPaths.first! as NSIndexPath).item]
+                DLog.debug("dest.buildService will be a BuildServices instance")
             }
         }
     }
 
-    @IBAction func saveAction(sender: AnyObject) {
+    @IBAction func saveAction(_ sender: AnyObject) {
 
-        guard buildDevice != nil else { Log.info( "save failed - no device" ); return }
+        guard buildDevice != nil else { DLog.info( "save failed - no device" ); return }
         
         // state == saved, set controls (saved, advertise, back button)
         
@@ -151,146 +151,146 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         setControlState()
     }
 
-    @IBAction func advertiseAction(sender: AnyObject) {
+    @IBAction func advertiseAction(_ sender: AnyObject) {
         
-        guard builder!.buildState == .Saved || builder!.buildState == .Advertising else { return }
+        guard builder!.buildState == .saved || builder!.buildState == .advertising else { return }
         let adButton = sender as! UIButton
-        if builder!.buildState != .Advertising {        // If we were not advertising, now we want to start
-            guard !saveButton.enabled else {
+        if builder!.buildState != .advertising {        // If we were not advertising, now we want to start
+            guard !saveButton.isEnabled else {
                 return
             }
-            setControlsEnabled( false )
-            adButton.setTitle( "Stop Advertising", forState: .Normal )
+            setControlsEnabled( notAdvertising: false )
+            adButton.setTitle( "Stop Advertising", for: UIControlState() )
             startAdvertising()
         } else {
-			setControlsEnabled( true )
-            adButton.setTitle( "Advertise", forState: .Normal )
+            setControlsEnabled( notAdvertising: true )
+            adButton.setTitle( "Advertise", for: UIControlState() )
             stopAdvertising()
         }
     }
     
-    @IBAction func makeNewUUIDAction(sender: AnyObject) {
+    @IBAction func makeNewUUIDAction(_ sender: AnyObject) {
         
-        let newuuid = NSUUID.init()
-        uuidField.text = newuuid.UUIDString
-        uuidField.enabled = true    // Allows selection
+        let newuuid = UUID.init()
+        uuidField.text = newuuid.uuidString
+        uuidField.isEnabled = true    // Allows selection
         textFieldBorderSetup( uuidField )
-        buildDevice!.uuid = newuuid.UUIDString
+        buildDevice!.uuid = newuuid.uuidString
 		setControlState()
 		
     }
 
-    @IBAction func addServiceAction(sender: AnyObject) {
+    @IBAction func addServiceAction(_ sender: AnyObject) {
         
-        if saveButton.enabled {
+        if saveButton.isEnabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. You need to do this before you can create new Services. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. You need to do this before you can create new Services. Save now?", preferredStyle: .alert)
             
             // Configure Alert Controller
-            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (_) -> Void in
 //                self.navigationController?.popViewControllerAnimated(true)
             }))
             
-            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Save", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.performSegueWithIdentifier( "toNewService", sender: nil )
+                self.performSegue( withIdentifier: "toNewService", sender: nil )
             }))
             
             // Present Alert Controller
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         } else {
-            self.performSegueWithIdentifier( "toNewService", sender: nil )
+            self.performSegue( withIdentifier: "toNewService", sender: nil )
         }
     }
     
     func unsavedCancelWarning() {
         
-        if saveButton.enabled {
+        if saveButton.isEnabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to your device. If you continue now you will lose those changes.", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to your device. If you continue now you will lose those changes.", preferredStyle: .alert)
             
             // Configure Alert Controller
-            alertController.addAction(UIAlertAction(title: "Lose Changes", style: .Cancel, handler: { (_) -> Void in
-                self.navigationController?.popViewControllerAnimated(true)
+            alertController.addAction(UIAlertAction(title: "Lose Changes", style: .cancel, handler: { (_) -> Void in
+                self.navigationController?.popViewController(animated: true)
             }))
             
-            alertController.addAction(UIAlertAction(title: "Save Changes", style: .Default, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Save Changes", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.navigationController?.popViewControllerAnimated(true)
+                self.navigationController?.popViewController(animated: true)
             }))
             
             // Present Alert Controller
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         } else {
-            self.navigationController?.popViewControllerAnimated(true)
+            self.navigationController?.popViewController(animated: true)
         }
     }
     
     func unsavedEditWarningThenService() {
         
-        if saveButton.enabled {
+        if saveButton.isEnabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your device. Save now?", preferredStyle: .alert)
             
             // Configure Alert Controller
-            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
-                self.performSegueWithIdentifier( "toEditService", sender: nil )
+            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (_) -> Void in
+                self.performSegue( withIdentifier: "toEditService", sender: nil )
             }))
             
-            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Save", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.performSegueWithIdentifier( "toEditService", sender: nil )
+                self.performSegue( withIdentifier: "toEditService", sender: nil )
             }))
             
             // Present Alert Controller
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         } else {
-            self.performSegueWithIdentifier( "toEditService", sender: nil )
+            self.performSegue( withIdentifier: "toEditService", sender: nil )
         }
     }
     
     // MARK: - DeleteButtonDelegate
 
-    func deleteCellAt( indexPath: NSIndexPath ) {
+    func deleteCellAt( _ indexPath: IndexPath ) {
         
-        let alertController = UIAlertController(title: "Warning", message: "You are about to remove a service from your device. This operation cannot be undone. Continue?", preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Warning", message: "You are about to remove a service from your device. This operation cannot be undone. Continue?", preferredStyle: .alert)
         
         // Configure Alert Controller
-        alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+        alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (_) -> Void in
         }))
         
-        alertController.addAction(UIAlertAction(title: "Delete", style: .Default, handler: { (_) -> Void in
+        alertController.addAction(UIAlertAction(title: "Delete", style: .default, handler: { (_) -> Void in
             self.removeCellAt( indexPath )
         }))
         
         // Present Alert Controller
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
-    func removeCellAt( indexPath: NSIndexPath ) {
+    func removeCellAt( _ indexPath: IndexPath ) {
         
-        buildDevice!.removeServiceAtIndex( indexPath.row )
+        buildDevice!.removeServiceAtIndex( (indexPath as NSIndexPath).row )
         builder!.saveDevice()
-        collectionView.deleteItemsAtIndexPaths( [indexPath] )
+        collectionView.deleteItems( at: [indexPath] )
         saveDetails()
     }
     
     
     // MARK: - State methods
     
-    func setControlsEnabled( enabled: Bool ) {
+    func setControlsEnabled( notAdvertising enabled: Bool ) {
         
-        nameField.enabled = enabled
-        uuidField.enabled = enabled
-        uuidButton.enabled = enabled
+        nameField.isEnabled = enabled
+        uuidField.isEnabled = enabled
+        uuidButton.isEnabled = enabled
         if buildDevice!.buildServices.count > 1 {   // Up to two for now
-            newServiceButton.enabled = false
-            addServiceLabel.enabled = false
+            newServiceButton.isEnabled = false
+            addServiceLabel.isEnabled = false
         } else {
-            newServiceButton.enabled = enabled
-            addServiceLabel.enabled = enabled
+            newServiceButton.isEnabled = builder!.buildState == .saved
+            addServiceLabel.isEnabled = builder!.buildState == .saved
         }
-        collectionView.userInteractionEnabled = enabled
+        collectionView.isUserInteractionEnabled = builder!.buildState == .saved
     }
     
     func textChanged() {
@@ -305,52 +305,52 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         
         if builder!.currentDevice!.isValid() {
             if builder!.currentDevice!.hasDeviceChanged() {
-                builder!.buildState = .Unsaved
+                builder!.buildState = .unsaved
                 needSave = true
             } else {
-                builder!.buildState = .Saved
+                builder!.buildState = .saved
             }
         } else {
-            builder!.buildState = .Invalid
+            builder!.buildState = .invalid
         }
         
         if needSave {
             navigationItem.hidesBackButton = true
-            newBackButton = newBackButton != nil ? newBackButton : UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedCancelWarning))
+            newBackButton = newBackButton != nil ? newBackButton : UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.unsavedCancelWarning))
             navigationItem.leftBarButtonItem = newBackButton
         } else {
             navigationItem.leftBarButtonItem = nil
             navigationItem.hidesBackButton = false
         }
         
-        saveButton.enabled = needSave
-        advertiseButton.enabled = (builder!.buildState == .Saved) || (builder!.buildState == .Advertising)
+        saveButton.isEnabled = needSave
+        advertiseButton.isEnabled = (builder!.buildState == .saved) || (builder!.buildState == .advertising)
         
-        setControlsEnabled( builder!.buildState != .Advertising )
+        setControlsEnabled( notAdvertising: builder!.buildState != .advertising )
     }
     
     // MARK: - CBPeripheralManagerDelegate support
     
-    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager) {
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         
         var state = ""
         switch ( peripheral.state ) {
-        case .Unknown:
+        case .unknown:
             state = "Currently in an unknown state."
-        case .Resetting:
+        case .resetting:
             state = "Peripheral Manager is resetting."
-        case .Unsupported:
+        case .unsupported:
             state = "No support for Bluetooth Low Energy."
-        case .Unauthorized:
+        case .unauthorized:
             state = "Not authorized to use Bluetooth Low Energy."
-        case .PoweredOff:
+        case .poweredOff:
             state = "Currently powered off."
-        case .PoweredOn:
+        case .poweredOn:
             state = "Currently powered on."
         }
-        Log.info( "Bluetooth peripheral manager state: \(state)" )
+        DLog.info( "Bluetooth peripheral manager state: \(state)" )
         
-        if (peripheral.state != .PoweredOn) {		// In a real app, you'd deal with all the states correctly
+        if (peripheral.state != .poweredOn) {		// In a real app, you'd deal with all the states correctly
 //            resetScanList()
             return
         }
@@ -360,7 +360,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 
     }
     
-    func peripheralManagerDidStartAdvertising(peripheral: CBPeripheralManager, error: NSError?) {
+    func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: Error?) {
         
         if ( error != nil ) {
             print( "  error: \(error!.localizedDescription)" )
@@ -369,13 +369,13 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         }
     }
     
-    func peripheralManager(peripheral: CBPeripheralManager, didAddService service: CBService, error: NSError?) {
+    func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: Error?) {
         
         if ( error != nil ) {
             print( "  error: \(error!.localizedDescription)" )
         } else {
-            print( "  success!! Send: \(service.UUID.UUIDString)" )
-            let adverts = [CBAdvertisementDataLocalNameKey:buildDevice!.name!, CBAdvertisementDataServiceUUIDsKey:[CBUUID( string: buildDevice!.uuid! )]] as [String:AnyObject]
+            print( "  success!! Send: \(service.uuid.uuidString)" )
+            let adverts = [CBAdvertisementDataLocalNameKey:buildDevice!.name! as AnyObject, CBAdvertisementDataServiceUUIDsKey:[CBUUID( string: buildDevice!.uuid! )]] as [String:Any]
             peripheralManager?.startAdvertising( adverts )
         }
     }
@@ -385,7 +385,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     
     func startAdvertising() {
         
-        builder!.buildState = .Advertising
+        builder!.buildState = .advertising
         peripheralManager = CBPeripheralManager( delegate: self, queue: nil )
         
     }
@@ -393,7 +393,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     func stopAdvertising() {
         
         guard peripheralManager != nil else { return }
-        builder!.buildState = .Saved
+        builder!.buildState = .saved
         guard peripheralManager!.isAdvertising else { return }
         peripheralManager!.stopAdvertising()
         peripheralManager!.removeAllServices()
@@ -405,31 +405,32 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
 //        guard buildDevice != nil else { return }
         guard peripheralManager != nil else { return }
 
-//        let mutableService = buildService!.toBluetooth()
-//        peripheralManager!.addService( mutableService )
+        if let mutableService = buildDevice!.toBluetooth() {
+            peripheralManager!.add( mutableService )
+        }
         
     }
     
 
     // MARK: - Control state support
     
-    func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
+    func setBorderOf( _ textField: (UITextField), toDisplayState: (DisplayState) ) {
 
         textField.layer.borderWidth = 0.5
         textField.layer.cornerRadius = 6.0
         switch toDisplayState {
-        case .Neutral:
-            textField.layer.borderColor = UIColor.lightGrayColor().CGColor
-        case .Valid:
-            textField.layer.borderColor = UIColor.greenColor().CGColor
-        case .Invalid:
-            textField.layer.borderColor = UIColor.redColor().CGColor
+        case .neutral:
+            textField.layer.borderColor = UIColor.lightGray.cgColor
+        case .valid:
+            textField.layer.borderColor = UIColor.green.cgColor
+        case .invalid:
+            textField.layer.borderColor = UIColor.red.cgColor
         }
         
     }
     
     // Verify data is valid for advertising
-    func textFieldNotEmpty( textField: (UITextField) ) -> Bool {
+    func textFieldNotEmpty( _ textField: (UITextField) ) -> Bool {
         
         if let text = textField.text {
             if text.isEmpty {
@@ -442,68 +443,68 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         }
     }
     
-    func textFieldBorderSetup( textField: (UITextField) ) {
+    func textFieldBorderSetup( _ textField: (UITextField) ) {
         
         if let text = textField.text {
             if text.isEmpty {
-                setBorderOf( textField, toDisplayState: .Invalid )
+                setBorderOf( textField, toDisplayState: .invalid )
             } else {
-                setBorderOf( textField, toDisplayState: .Valid )
+                setBorderOf( textField, toDisplayState: .valid )
             }
         } else {
-            setBorderOf( textField, toDisplayState: .Neutral )
+            setBorderOf( textField, toDisplayState: .neutral )
         }
     }
     
 
     // MARK: - UITextFieldDelegate
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         if textField == uuidField {
             return false	// false because uuidField should never allow changes to its text
         }
         
-        var displayState = DisplayState.Invalid // .Neutral
+        var displayState = DisplayState.invalid // .Neutral
         if let text = textField.text {
             let nonEmptyText = !text.isEmpty && ( range.length != text.characters.count )
             let nonEmptyReplacement = !string.isEmpty
             if nonEmptyReplacement || nonEmptyText {
-                displayState = .Valid
+                displayState = .valid
             } else {
-                displayState = .Invalid
+                displayState = .invalid
             }
         }
         setBorderOf( textField, toDisplayState: displayState )
-        dispatch_after( dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+        DispatchQueue.main.asyncAfter( deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
             self.textChanged()
         }
         return true
     }
     
-    func textFieldDidEndEditing(textField: (UITextField)) {
+    func textFieldDidEndEditing(_ textField: (UITextField)) {
         
         textFieldBorderSetup( textField )
     }
     
     // MARK: - Collection View
 
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         
         return 1
     }
     
-    func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
+    func collectionView( _ collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
     
         return buildDevice!.buildServices.count
     }
     
-    func collectionView( collectionView: UICollectionView,
-                          cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView( _ collectionView: UICollectionView,
+                          cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "ServicesCollectionViewCell", forIndexPath: indexPath ) as! ServicesCollectionViewCell
+        let cell = collectionView.dequeueReusableCell( withReuseIdentifier: "ServicesCollectionViewCell", for: indexPath ) as! ServicesCollectionViewCell
         
-        let buildService = buildDevice!.buildServices[ indexPath.row ]
+        let buildService = buildDevice!.buildServices[ (indexPath as NSIndexPath).row ]
 
         cell.nameLabel.text = buildService.name
         cell.uuidLabel.text = buildService.uuid
@@ -516,7 +517,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         default:
             cell.characteristicsLabel.text = "\(buildService.buildCharacteristics.count) Characteristics"
         }
-        cell.subservicesLabel.text = "No Sub-Services"
+        cell.subservicesLabel.text = ""  //  "No Sub-Services"
         
         cell.setupButton()
 
@@ -527,15 +528,15 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
 
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         unsavedEditWarningThenService()
     }
     
 
-    func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAt sizeForItemAtIndexPath: IndexPath) -> CGSize {
         
-		return CGSizeMake( collectionView.frame.size.width, 90.0 )
+		return CGSize( width: collectionView.frame.size.width, height: 90.0 )
     }
 
 }

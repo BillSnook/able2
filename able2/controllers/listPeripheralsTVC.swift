@@ -16,13 +16,15 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
     
     var managedObjectContext: NSManagedObjectContext? = nil
     
-    lazy var fetchedResultsController: NSFetchedResultsController = {
-        let fetchRequest = NSFetchRequest( entityName: "Peripheral" )
+    lazy var fetchedResultsController: NSFetchedResultsController = { () -> NSFetchedResultsController<Peripheral> in
+        let fetchRequest: NSFetchRequest<Peripheral> = NSFetchRequest( entityName: "Peripheral" )
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
 
-        let fetchedResultsController = NSFetchedResultsController( fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: nil, cacheName: nil )
-        fetchedResultsController.delegate = self
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let managedObjectContext = appDelegate!.managedObjectContext
+        let fetchedResultsController = NSFetchedResultsController( fetchRequest: fetchRequest, managedObjectContext: managedObjectContext, sectionNameKeyPath: nil, cacheName: nil )
+//        fetchedResultsController.delegate = self
         
         return fetchedResultsController
     }()
@@ -33,30 +35,30 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        let didDetectIncompatibleStore = userDefaults.boolForKey("didDetectIncompatibleStore")
+        let userDefaults = UserDefaults.standard
+        let didDetectIncompatibleStore = userDefaults.bool(forKey: "didDetectIncompatibleStore")
         if didDetectIncompatibleStore {
             // Show Alert
-            let applicationName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleDisplayName")
+            let applicationName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName")
             let message = "A serious application error occurred while \(applicationName) tried to read your data. Please contact support for help."
             self.showAlertWithTitle("Warning", message: message, cancelButtonTitle: "OK")
         }
     
-		let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+		let appDelegate = UIApplication.shared.delegate as? AppDelegate
 		managedObjectContext = appDelegate!.managedObjectContext
-//        Log.trace( "viewDidLoad, listPeripheralsTVC, managedObjectContext: \(managedObjectContext)")
+//        DLog.trace( "viewDidLoad, listPeripheralsTVC, managedObjectContext: \(managedObjectContext)")
         do {
             try self.fetchedResultsController.performFetch()
         } catch let error as NSError {
-            Log.error("Could not fetch \(error), \(error.userInfo)")
+            DLog.error("Could not fetch \(error), \(error.userInfo)")
         }
 
-        self.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+        self.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
         self.navigationItem.leftItemsSupplementBackButton = true
 
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear( animated )
 		
         scanner.managedObjectContext = managedObjectContext
@@ -66,7 +68,7 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
     }
     
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
 
 		scanner.stopScan()
 
@@ -79,71 +81,71 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
     
 // MARK: - Helper Methods
     
-    private func showAlertWithTitle(title: String, message: String, cancelButtonTitle: String) {
+    fileprivate func showAlertWithTitle(_ title: String, message: String, cancelButtonTitle: String) {
         // Initialize Alert Controller
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Configure Alert Controller
-        alertController.addAction(UIAlertAction(title: cancelButtonTitle, style: .Default, handler: { (_) -> Void in
-            let userDefaults = NSUserDefaults.standardUserDefaults()
-            userDefaults.removeObjectForKey("didDetectIncompatibleStore")
+        alertController.addAction(UIAlertAction(title: cancelButtonTitle, style: .default, handler: { (_) -> Void in
+            let userDefaults = UserDefaults.standard
+            userDefaults.removeObject(forKey: "didDetectIncompatibleStore")
         }))
         
         // Present Alert Controller
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
     
-    private func showDeleteAlertWithTitle(title: String, message: String, cancelButtonTitle: String) {
+    fileprivate func showDeleteAlertWithTitle(_ title: String, message: String, cancelButtonTitle: String) {
         // Initialize Alert Controller
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         // Configure Alert Controller
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
-        alertController.addAction(UIAlertAction(title: "OK", style: .Destructive, handler: { (_) -> Void in
+        alertController.addAction(UIAlertAction(title: "OK", style: .destructive, handler: { (_) -> Void in
             self.doDeleteOperation()
         }))
         
         // Present Alert Controller
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
     
     // MARK: - Fetched Results Controller delegate methods
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()
     }
     
-    func controller( controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath? ) {
+    func controller( _ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath? ) {
         
         switch (type) {
-        case .Insert:
+        case .insert:
             if let indexPath = newIndexPath {
-                tableView.insertRowsAtIndexPaths( [indexPath], withRowAnimation: .Fade )
+                tableView.insertRows( at: [indexPath], with: .fade )
             }
-        case .Delete:
+        case .delete:
             if let indexPath = indexPath {
-                tableView.deleteRowsAtIndexPaths( [indexPath], withRowAnimation: .Fade )
+                tableView.deleteRows( at: [indexPath], with: .fade )
             }
-        case .Update:
+        case .update:
             if let indexPath = indexPath {
-//                Log.trace( "didChangeObject, Update at indexPath section: \(indexPath.section), row: \(indexPath.row)" )
-                if let cell = tableView.dequeueReusableCellWithIdentifier( "peripheralCell", forIndexPath: indexPath ) as? PeripheralCell {
+//                DLog.trace( "didChangeObject, Update at indexPath section: \(indexPath.section), row: \(indexPath.row)" )
+                if let cell = tableView.dequeueReusableCell( withIdentifier: "peripheralCell", for: indexPath ) as? PeripheralCell {
                     configureCell( cell, atIndexPath: indexPath )
                 }
             }
-        case .Move:
+        case .move:
             if let indexPath = indexPath {
-                tableView.deleteRowsAtIndexPaths( [indexPath], withRowAnimation: .Fade )
+                tableView.deleteRows( at: [indexPath], with: .fade )
             }
             if let newIndexPath = newIndexPath {
-                tableView.insertRowsAtIndexPaths( [newIndexPath], withRowAnimation: .Fade )
+                tableView.insertRows( at: [newIndexPath], with: .fade )
             }
 
         }
@@ -153,18 +155,18 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
     
 // MARK: - TableView support
     
-    func configureCell( cell: PeripheralCell, atIndexPath indexPath: NSIndexPath ) {
-        let peripheralEntity = fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral
+    func configureCell( _ cell: PeripheralCell, atIndexPath indexPath: IndexPath ) {
+        let peripheralEntity = fetchedResultsController.object(at: indexPath)
         cell.peripheralName.text = cleanName( peripheralEntity.name! )
         cell.peripheralIdentifier.text = peripheralEntity.mainUUID
         
         let sightings = peripheralEntity.sightings as! Set<Sighting>?
-        var timeStamp: NSTimeInterval = 0
+        var timeStamp: TimeInterval = 0
         var recentSighting: Sighting?
-//        Log.trace("set count: \(sightings!.count)" )
+//        DLog.trace("set count: \(sightings!.count)" )
         for sighting in sightings! {
             let timeValue = sighting.date!.timeIntervalSince1970
-//            Log.trace("timeValue: \(timeValue)" )
+//            DLog.trace("timeValue: \(timeValue)" )
             if timeValue > timeStamp {
                 timeStamp = timeValue
                 recentSighting = sighting
@@ -172,9 +174,9 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
         }
         var rssi: Int16 = 0
         if let foundSighting = recentSighting {
-            rssi = foundSighting.rssi!.shortValue
+            rssi = foundSighting.rssi!.int16Value
             
-            let now = NSDate().timeIntervalSince1970
+            let now = Date().timeIntervalSince1970
             let minute = 60.0
             let tenMinute = minute * 10
             let hour = minute * 60.0
@@ -184,22 +186,22 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
                 if timeStamp + hour > now {
                     if timeStamp + tenMinute > now {
                         if timeStamp + minute > now {
-                            cell.peripheralRSSI.textColor = UIColor.greenColor()    // Last minute
+                            cell.peripheralRSSI.textColor = UIColor.green    // Last minute
                         } else {
-                            cell.peripheralRSSI.textColor = UIColor.cyanColor()     // Last 10 minutes
+                            cell.peripheralRSSI.textColor = UIColor.cyan     // Last 10 minutes
                         }
                     } else {
-                        cell.peripheralRSSI.textColor = UIColor.orangeColor()       // Last hour
+                        cell.peripheralRSSI.textColor = UIColor.orange       // Last hour
                     }
                 } else {
-                    cell.peripheralRSSI.textColor = UIColor.magentaColor()          // Last day
+                    cell.peripheralRSSI.textColor = UIColor.magenta          // Last day
                 }
             } else {
-                cell.peripheralRSSI.textColor = UIColor.redColor()                  // Over a day
+                cell.peripheralRSSI.textColor = UIColor.red                  // Over a day
             }
         } else {
-            rssi = peripheralEntity.rssi!.shortValue
-            cell.peripheralRSSI.textColor = UIColor.blackColor()                    // Unknown
+            rssi = peripheralEntity.rssi!.int16Value
+            cell.peripheralRSSI.textColor = UIColor.black                    // Unknown
         }
         
         if ( rssi == 127 ) {
@@ -208,47 +210,47 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
             cell.peripheralRSSI.text = String( rssi )
         }
         
-        cell.accessoryType = .None;
+        cell.accessoryType = .none;
         if peripheralEntity.connectable != nil {
             if peripheralEntity.connectable!.boolValue {
-                cell.accessoryType = .DisclosureIndicator
+                cell.accessoryType = .disclosureIndicator
             }
         }
     }
     
 // MARK: - Segues
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toServices" {
-//            Log.info( "Segue toServices" )
+//            DLog.info( "Segue toServices" )
             scanner.stopScan()
             if let indexPath = self.tableView.indexPathForSelectedRow {
-                let peripheral = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral
-                let controller = segue.destinationViewController as! ListServicesTVC
+                let peripheral = self.fetchedResultsController.object(at: indexPath)
+                let controller = segue.destination as! ListServicesTVC
                 controller.perp = peripheral
             }
         }
     }
     
-    @IBAction func clearData(sender: UIBarButtonItem) {
+    @IBAction func clearData(_ sender: UIBarButtonItem) {
         
         let message = "You are about to delete all your stored info on Bluetooth devices that you have seen. Are you sure?"
         self.showDeleteAlertWithTitle("Warning", message: message, cancelButtonTitle: "OK")
     }
     
-    private func doDeleteOperation() {
-//        Log.trace( "doDeleteOperation" )
+    fileprivate func doDeleteOperation() {
+//        DLog.trace( "doDeleteOperation" )
         scanner.stopScan()
         fetchedResultsController.delegate = nil
 
-        let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
         appDelegate?.deleteAllPeripherals()
 
         fetchedResultsController.delegate = self
         do {
             try self.fetchedResultsController.performFetch()
         } catch let error as NSError {
-            Log.error("Could not fetch \(error), \(error.userInfo)")
+            DLog.error("Could not fetch \(error), \(error.userInfo)")
         }
 
         tableView.reloadData()
@@ -257,7 +259,7 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
     
 // MARK: - Table view data source
     
-    override func numberOfSectionsInTableView( tableView: UITableView ) -> Int {
+    override func numberOfSections( in tableView: UITableView ) -> Int {
         // Return the number of rows in the section.
         if let sections = fetchedResultsController.sections {
             return sections.count
@@ -265,7 +267,7 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
         return 0
     }
     
-    override func tableView( tableView: UITableView, numberOfRowsInSection section: NSInteger ) -> NSInteger {
+    override func tableView( _ tableView: UITableView, numberOfRowsInSection section: NSInteger ) -> NSInteger {
         // Return the number of rows in the section.
         if let sections = fetchedResultsController.sections {
             let sectionInfo = sections[section]
@@ -274,27 +276,27 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
         return 0
     }
     
-    override func tableView( tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath ) -> CGFloat {
+    override func tableView( _ tableView: UITableView, heightForRowAt indexPath: IndexPath ) -> CGFloat {
         return 66.0
     }
     
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath ) -> UITableViewCell {
-        let peripheralCell = tableView.dequeueReusableCellWithIdentifier( "peripheralCell", forIndexPath: indexPath ) as! PeripheralCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath ) -> UITableViewCell {
+        let peripheralCell = tableView.dequeueReusableCell( withIdentifier: "peripheralCell", for: indexPath ) as! PeripheralCell
         
         configureCell( peripheralCell, atIndexPath: indexPath )
         
         return peripheralCell;
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            let peripheralEntity = fetchedResultsController.objectAtIndexPath(indexPath) as! Peripheral
-            managedObjectContext?.deleteObject(peripheralEntity)
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let peripheralEntity = fetchedResultsController.object(at: indexPath) 
+            managedObjectContext?.delete(peripheralEntity)
         }
     }
     

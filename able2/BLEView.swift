@@ -8,6 +8,26 @@
 
 import Foundation
 import UIKit
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 
 @IBDesignable
@@ -22,22 +42,18 @@ class BLEView: UIView {
     
     var initialRadius: CGFloat = 0.0
     
-    private var timerRunning = false
+    fileprivate var timerRunning = false
     
-    func delay(delay: Double, closure: ()->()) {
-        dispatch_after(
-            dispatch_time(
-                DISPATCH_TIME_NOW,
-                Int64(delay * Double(NSEC_PER_SEC))
-            ),
-            dispatch_get_main_queue(),
-            closure
+    func delay(_ delay: Double, closure: @escaping ()->()) {
+        DispatchQueue.main.asyncAfter(
+            deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC),
+            execute: closure
         )
     }
 
-    static func randomNumber(range: Range<Int> = -8...8) -> Int {
-        let min = range.startIndex
-        let max = range.endIndex
+    static func randomNumber(_ range: Range<Int> = Range(uncheckedBounds: (-8, 8)) ) -> Int {
+        let min = range.lowerBound
+        let max = range.upperBound
         return Int(arc4random_uniform(UInt32(max - min))) + min
     }
 
@@ -87,7 +103,7 @@ class BLEView: UIView {
         setNeedsDisplay()
     }
  
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         let startAngle: Float = Float(2 * M_PI)
         let endAngle: Float = 0.0
         
@@ -100,22 +116,22 @@ class BLEView: UIView {
         let context = UIGraphicsGetCurrentContext()
         
         // Find the middle of the circle
-        let center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2)
+        let center = CGPoint(x: self.frame.size.width / 2, y: self.frame.size.height / 2)
         // Set the stroke color
         if let strokeColor = initialColor {
-            CGContextSetStrokeColorWithColor(context, strokeColor.CGColor)
+            context?.setStrokeColor(strokeColor.cgColor)
         }
         // Set the line width
-        CGContextSetLineWidth(context, strokeWidth)
+        context?.setLineWidth(strokeWidth)
         // Set the fill color (if you are filling the circle)
-        CGContextSetFillColorWithColor(context, UIColor.clearColor().CGColor)
+        context?.setFillColor(UIColor.clear.cgColor)
         
         // Draw the arc around the circle
         var tempRadius = CGFloat( initialRadius - 2 * strokeStep )
         if tempRadius <= 0.0 { tempRadius = 1.0 }
         while tempRadius <= initialRadius {
-            CGContextAddArc(context, center.x, center.y, tempRadius, CGFloat(startAngle), CGFloat(endAngle), 1)
-            CGContextDrawPath(context, .FillStroke) // or kCGPathFillStroke to fill and stroke the circle
+            context?.addArc(center: center, radius: tempRadius, startAngle: CGFloat(startAngle), endAngle: CGFloat(endAngle), clockwise: true)
+            context?.drawPath(using: .fillStroke) // or kCGPathFillStroke to fill and stroke the circle
             tempRadius += strokeStep
         }
 

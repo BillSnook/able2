@@ -12,9 +12,9 @@ import CoreBluetooth
 
 protocol CharacteristicProtocol {
     
-    func characteristicRead( characteristic: CBCharacteristic )
+    func characteristicRead( _ characteristic: CBCharacteristic )
     
-    func descriptorsRead( characteristic: CBCharacteristic )
+    func descriptorsRead( _ characteristic: CBCharacteristic )
 }
 
 
@@ -33,45 +33,45 @@ class Characterizer: Interrogator {
         
         super.init()
 
-        Log.trace( "Characterizer init" )
+        DLog.trace( "Characterizer init" )
         
     }
     
-    func startCharacteristicEvaluation( characteristic: CBCharacteristic, forPeripheral peripheral: CBPeripheral ) {
-        Log.trace( "Characterizer startCharacteristicEvaluation" )
+    func startCharacteristicEvaluation( _ characteristic: CBCharacteristic, forPeripheral peripheral: CBPeripheral ) {
+        DLog.trace( "Characterizer startCharacteristicEvaluation" )
         
         peripheral.delegate = self
-        if ( .PoweredOn == cbManager.state ) {
-            peripheral.discoverDescriptorsForCharacteristic( characteristic )
+        if ( .poweredOn == cbManager.state ) {
+            peripheral.discoverDescriptors( for: characteristic )
 //            peripheral.readValueForCharacteristic( characteristic )
-            Log.info( "characteristic methods called" )
+            DLog.info( "characteristic methods called" )
         } else {
             connectedPeripheral = peripheral
             connectedCharacteristic = characteristic
-            Log.info( "characteristic methods deferred" )
+            DLog.info( "characteristic methods deferred" )
         }
     }
     
 
-    override func centralManagerDidUpdateState(central: CBCentralManager) {
+    override func centralManagerDidUpdateState(_ central: CBCentralManager) {
         var state = ""
         switch ( central.state ) {
-        case .Unknown:
+        case .unknown:
             state = "Currently in an unknown state."
-        case .Resetting:
+        case .resetting:
             state = "Central Manager is resetting."
-        case .Unsupported:
+        case .unsupported:
             state = "No support for Bluetooth Low Energy."
-        case .Unauthorized:
+        case .unauthorized:
             state = "Not authorized to use Bluetooth Low Energy."
-        case .PoweredOff:
+        case .poweredOff:
             state = "Currently powered off."
-        case .PoweredOn:
+        case .poweredOn:
             state = "Currently powered on."
         }
-        Log.info( "Characterizer Bluetooth central state: \(state)" )
+        DLog.info( "Characterizer Bluetooth central state: \(state)" )
         
-        if (central.state != .PoweredOn) {		// In a real app, you'd deal with all the states correctly
+        if (central.state != .poweredOn) {		// In a real app, you'd deal with all the states correctly
             //            resetScanList()
             return
         }
@@ -79,22 +79,22 @@ class Characterizer: Interrogator {
         // ... so start scanning
 //        self.startScan( forDevices: deviceUUIDs! )
         if let characteristic = connectedCharacteristic {
-            connectedPeripheral?.discoverDescriptorsForCharacteristic( characteristic )
-            Log.info( "readCharacteristic called finally" )
+            connectedPeripheral?.discoverDescriptors( for: characteristic )
+            DLog.info( "readCharacteristic called finally" )
         }
         
     }
     
-    func peripheral(peripheral: CBPeripheral, didDiscoverDescriptorsForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         
-        Log.info( "didDiscoverDescriptorsForCharacteristic" )
+        DLog.info( "didDiscoverDescriptorsForCharacteristic" )
         characteristicDelegate?.descriptorsRead( characteristic )
-        peripheral.readValueForCharacteristic( characteristic )
+        peripheral.readValue( for: characteristic )
     }
     
-    func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
         
-        Log.info( "didUpdateValueForCharacteristic" )
+        DLog.info( "didUpdateValueForCharacteristic" )
         characteristicDelegate?.characteristicRead( characteristic )
 //        connectedCharacteristic = nil
 //        connectedPeripheral = nil

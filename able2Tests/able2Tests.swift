@@ -61,20 +61,20 @@ class able2Tests: XCTestCase {
         
 //        deleteAllPeripherals(managedContext!)
     }
-    
+/*
     func test1CoreDataSetupData1() {
 
-        if let peripheralEntity =  NSEntityDescription.entityForName("Peripheral", inManagedObjectContext: managedContext!) {
-            if let entry = NSManagedObject(entity: peripheralEntity, insertIntoManagedObjectContext: managedContext) as? Peripheral {
-                entry.mainUUID = NSUUID().UUIDString
+        if let peripheralEntity =  NSEntityDescription.entity(forEntityName: "Peripheral", in: managedContext!) {
+            if let entry = NSManagedObject(entity: peripheralEntity, insertInto: managedContext) as? Peripheral {
+                entry.mainUUID = UUID().uuidString
                 entry.name = "Test name"
                 entry.connectable = false
-                entry.rssi = NSNumber( float: -45 )
+                entry.rssi = NSNumber(value: -45 as Float)
                 
-                let sightingEntity = NSEntityDescription.entityForName("Sighting", inManagedObjectContext: managedContext!)
-                if let newSighting = NSManagedObject(entity: sightingEntity!, insertIntoManagedObjectContext: managedContext) as? Sighting {
-                    newSighting.date = NSDate()
-                    newSighting.rssi = NSNumber( float: -50 )
+                let sightingEntity = NSEntityDescription.entity(forEntityName: "Sighting", in: managedContext!)
+                if let newSighting = NSManagedObject(entity: sightingEntity!, insertInto: managedContext) as? Sighting {
+                    newSighting.date = Date()
+                    newSighting.rssi = NSNumber(value: -50 as Float)
                     entry.sightings = NSSet( object: newSighting )
                 }
 
@@ -90,7 +90,7 @@ class able2Tests: XCTestCase {
 //                fetch.predicate = predicate
 //
                 do {
-                    let results = try managedContext!.executeFetchRequest( fetch ) as! [Peripheral]
+                    let results = try managedContext!.fetch( fetch ) as! [Peripheral]
                     XCTAssertTrue( results.count == 1, "Count of read data results(\(results.count)) does not match count of data records written (1)" )
                     
                     let peripheral = results[0]
@@ -109,10 +109,10 @@ class able2Tests: XCTestCase {
         }
         
     }
-    
+
     func test2CoreDataCheckData1() {
         
-        let uuid = NSUUID()
+        let uuid = UUID()
         let peripheral = CBPeripheralMock(name: "Test", identifier: uuid)
 //        peripheral.name = "Test"
 //        peripheral.identifier = uuid
@@ -120,14 +120,14 @@ class able2Tests: XCTestCase {
         let scanner: Scanner = Scanner.sharedScanner
         scanner.stopScan()
         XCTAssertFalse( scanner.scanRunning, "Scanner is still scanning" )
-        scanner.storeEntry( peripheral, advertisementData: ["kCBAdvDataIsConnectable": NSNumber.init(bool: true)], RSSI: NSNumber(float: Float(-45)), managedContext: managedContext! )
+        scanner.storeEntry( peripheral, advertisementData: ["kCBAdvDataIsConnectable": NSNumber.init(value: true as Bool)], RSSI: NSNumber(value: Float(-45) as Float), managedContext: managedContext! )
         
         let fetch = NSFetchRequest( entityName: "Peripheral" )
 //        let predicate = NSPredicate( format: "mainUUID == '\(peripheral.identifier.UUIDString)'" )
 //        fetch.predicate = predicate
 //
         do {
-            let results = try managedContext!.executeFetchRequest( fetch ) as! [Peripheral]
+            let results = try managedContext!.fetch( fetch ) as! [Peripheral]
             XCTAssertTrue( results.count == 1, "Count of read data results(\(results.count)) does not match count of data records written (1)" )
             if !results.isEmpty {
                 let peripheral = results[0]
@@ -139,7 +139,7 @@ class able2Tests: XCTestCase {
         }
 
     }
-    
+*/    
     
     
 //    func testPerformanceExample() {

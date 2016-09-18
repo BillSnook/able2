@@ -12,15 +12,15 @@ import CoreBluetooth
 
 protocol peripheralConnectionProtocol {
     
-    func foundPeripheral( peripheral: CBPeripheral, isConnectable connectable: Bool )
+    func foundPeripheral( _ peripheral: CBPeripheral, isConnectable connectable: Bool )
     
-    func connectionStatus( connected: Bool, forPeripheral peripheral: CBPeripheral )
+    func connectionStatus( _ connected: Bool, forPeripheral peripheral: CBPeripheral )
     
-    func servicesDiscovered( peripheral: CBPeripheral )
+    func servicesDiscovered( _ peripheral: CBPeripheral )
 
-    func includedServicesDiscovered( peripheral: CBPeripheral, forService service: CBService )
+    func includedServicesDiscovered( _ peripheral: CBPeripheral, forService service: CBService )
     
-    func characteristicsDiscovered( peripheral: CBPeripheral, forService service: CBService )
+    func characteristicsDiscovered( _ peripheral: CBPeripheral, forService service: CBService )
 
 }
 
@@ -49,7 +49,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		
 		cbManager.delegate = self
 		
-		Log.trace( "Interrogator init" )
+		DLog.trace( "Interrogator init" )
 		
 	}
 	
@@ -57,11 +57,11 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 
     func startScan( forDevices deviceList: [CBUUID]? ) {
 		
-        Log.trace( "Interrogator startScan for \(deviceList!)" )
+        DLog.trace( "Interrogator startScan for \(deviceList!)" )
 		// We may want to get duplicates
 		//	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool: NO], CBCentralManagerScanOptionAllowDuplicatesKey, nil]
         deviceUUIDs = deviceList
-		if ( .PoweredOn == cbManager.state ) {
+		if ( .poweredOn == cbManager.state ) {
             if scanRunning {
                 if #available(iOS 9.0, *) {
                     if cbManager.isScanning {
@@ -73,39 +73,39 @@ class Interrogator: Scanner, CBPeripheralDelegate {
                     resetScanList()
                 }
             }
-            Log.trace( "Interrogator starting scanning" )
+            DLog.trace( "Interrogator starting scanning" )
 			scanRunning = true
 //            scanUUID = deviceList![0]
-			cbManager.scanForPeripheralsWithServices( nil, options: nil )	// Search for specific services
+			cbManager.scanForPeripherals( withServices: nil, options: nil )	// Search for specific services
 		} else {
-            Log.warning( "Interrogator scan requested but state wrong: \(cbManager.state.rawValue)" )
+            DLog.warning( "Interrogator scan requested but state wrong: \(cbManager.state.rawValue)" )
 		}
 	}
 	
 	
 	func startInterrogation( forDevice device: CBPeripheral ) {
-        Log.trace( "Interrogator startInterrogation for \(device.identifier.UUIDString)" )
+        DLog.trace( "Interrogator startInterrogation for \(device.identifier.uuidString)" )
 
-        if ( .PoweredOn == cbManager.state ) {
+        if ( .poweredOn == cbManager.state ) {
             stopScan()
             connectingPerp = device
             connecting = true
-            cbManager.connectPeripheral( device, options: nil )
+            cbManager.connect( device, options: nil )
         }
 	}
 	
 	
 	func stopInterrogation() {
-        Log.trace( "Interrogator stopInterrogation" )
+        DLog.trace( "Interrogator stopInterrogation" )
 		
-		if ( .PoweredOn == cbManager.state ) {
+		if ( .poweredOn == cbManager.state ) {
             if connecting || connected {
                 if connectingPerp != nil {
-                    Log.info( "Stopping trying to connect" )
+                    DLog.info( "Stopping trying to connect" )
                     cbManager.cancelPeripheralConnection( connectingPerp! )
                     connectingPerp = nil
                 } else if connectedPerp != nil {
-                    Log.info( "Cancel connection" )
+                    DLog.info( "Cancel connection" )
                     cbManager.cancelPeripheralConnection( connectedPerp! )
                     connectedPerp = nil
                 }
@@ -116,8 +116,8 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		}
 	}
     
-    func startServiceDiscovery( peripheral: CBPeripheral ) {
-        Log.trace( "Interrogator startServiceDiscovery" )
+    func startServiceDiscovery( _ peripheral: CBPeripheral ) {
+        DLog.trace( "Interrogator startServiceDiscovery" )
 
         peripheral.delegate = self
         peripheral.discoverServices( nil )	// Search for all
@@ -127,25 +127,25 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	
     //  MARK: - CBCentralManagerDelegate methods
 
-    override func centralManagerDidUpdateState(central: CBCentralManager) {
+    override func centralManagerDidUpdateState(_ central: CBCentralManager) {
         var state = ""
         switch ( central.state ) {
-        case .Unknown:
+        case .unknown:
             state = "Currently in an unknown state."
-        case .Resetting:
+        case .resetting:
             state = "Central Manager is resetting."
-        case .Unsupported:
+        case .unsupported:
             state = "No support for Bluetooth Low Energy."
-        case .Unauthorized:
+        case .unauthorized:
             state = "Not authorized to use Bluetooth Low Energy."
-        case .PoweredOff:
+        case .poweredOff:
             state = "Currently powered off."
-        case .PoweredOn:
+        case .poweredOn:
             state = "Currently powered on."
         }
-        Log.info( "Interrogator Bluetooth central state: \(state)" )
+        DLog.info( "Interrogator Bluetooth central state: \(state)" )
         
-        if (central.state != .PoweredOn) {		// In a real app, you'd deal with all the states correctly
+        if (central.state != .poweredOn) {		// In a real app, you'd deal with all the states correctly
 //            resetScanList()
             return
         }
@@ -156,19 +156,19 @@ class Interrogator: Scanner, CBPeripheralDelegate {
     }
 	
     
-	override func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
+	func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : AnyObject], rssi RSSI: NSNumber) {
     
-//		Log.trace("\n\nInterrogator didDiscoverPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
+//		DLog.trace("\n\nInterrogator didDiscoverPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
 		
         var found = false
         for uuid in deviceUUIDs! {
-//            Log.info("Checking for: \(uuid), got: \(peripheral.identifier.UUIDString)" )
-            if uuid.UUIDString == peripheral.identifier.UUIDString {
+//            DLog.info("Checking for: \(uuid), got: \(peripheral.identifier.UUIDString)" )
+            if uuid.uuidString == peripheral.identifier.uuidString {
                 found = true
             }
         }
         if found {
-            Log.trace("didDiscoverPeripheral, found UUID: \(peripheral.identifier.UUIDString)" )
+            DLog.trace("didDiscoverPeripheral, found UUID: \(peripheral.identifier.uuidString)" )
             if let isConnectable = advertisementData[ "kCBAdvDataIsConnectable" ] as? NSNumber {
                 connectable = isConnectable.boolValue
             } else {
@@ -178,13 +178,13 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 			stopScan()		// Just find the one then stop
             delegate?.foundPeripheral( peripheral, isConnectable: connectable )
 //        } else {
-//            Log.info("Not the Peripheral we were looking for: \(scanUUID!.UUIDString), got: \(peripheral.identifier.UUIDString)" )
+//            DLog.info("Not the Peripheral we were looking for: \(scanUUID!.UUIDString), got: \(peripheral.identifier.UUIDString)" )
         }
 	}
 	
-	override func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+	override func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
 		
-		Log.trace("\n\nInterrogator didDisconnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
+		DLog.trace("\n\nInterrogator didDisconnectPeripheral, UUID: \(peripheral.identifier.uuidString)\n" )
         if connectedPerp == peripheral {
             connectedPerp = nil
             connected = false
@@ -193,9 +193,9 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         }
 	}
     
-   func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
+   func centralManager(_ central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
         
-        Log.trace("\n\nInterrogator didConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
+        DLog.trace("\n\nInterrogator didConnectPeripheral, UUID: \(peripheral.identifier.uuidString)\n" )
         connecting = false
         connected = true
         connectingPerp = nil
@@ -203,9 +203,9 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 		delegate?.connectionStatus( true, forPeripheral: peripheral )
     }
 	
-    func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+    func centralManager(_ central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
         
-        Log.trace("\n\nInterrogator didFailToConnectPeripheral, UUID: \(peripheral.identifier.UUIDString)\n" )
+        DLog.trace("\n\nInterrogator didFailToConnectPeripheral, UUID: \(peripheral.identifier.uuidString)\n" )
         connecting = false
         connected = false
         connectingPerp = nil
@@ -216,8 +216,8 @@ class Interrogator: Scanner, CBPeripheralDelegate {
 	//  MARK: - CBPeripheralDelegate methods
 	
 	// Services were discovered
-	func peripheral( peripheral: CBPeripheral, didDiscoverServices error: NSError? ) {
-        Log.trace("Interrogator didDiscoverServices" )
+	func peripheral( _ peripheral: CBPeripheral, didDiscoverServices error: Error? ) {
+        DLog.trace("Interrogator didDiscoverServices" )
 		
 		if error != nil {
 			print( "Error discovering services: \(error!.localizedDescription)" )
@@ -230,49 +230,49 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         delegate?.servicesDiscovered( peripheral )
         
         for service in peripheral.services! {
-//            Log.info( "Peripheral service discovered: \(service)" )
-            peripheral.discoverIncludedServices( nil, forService: service )
-            peripheral.discoverCharacteristics( nil, forService: service )
+//            DLog.info( "Peripheral service discovered: \(service)" )
+            peripheral.discoverIncludedServices( nil, for: service )
+            peripheral.discoverCharacteristics( nil, for: service )
         }
         
 	}
 	
 	
-	func peripheral(peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-		Log.trace( "Interrogator didModifyServices" )
+	func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
+		DLog.trace( "Interrogator didModifyServices" )
 		
 		for serv in invalidatedServices {
-			Log.trace( "Invalidated service: \(serv)" )
+			DLog.trace( "Invalidated service: \(serv)" )
 		}
 	}
 	
 	
-	func peripheral(peripheral: CBPeripheral, didDiscoverIncludedServicesForService service: CBService, error: NSError?) {
-//      Log.trace("Interrogator didDiscoverIncludedServicesForService")
+	func peripheral(_ peripheral: CBPeripheral, didDiscoverIncludedServicesFor service: CBService, error: Error?) {
+//      DLog.trace("Interrogator didDiscoverIncludedServicesForService")
 		
 		if (error != nil) {
-			Log.error( "Error discovering included services: \(error!.localizedDescription)" )
+			DLog.error( "Error discovering included services: \(error!.localizedDescription)" )
 //			[self cleanup]
 			return
 		}
 		
-//		Log.info("Included Services discovered: \(service.includedServices)" )
+//		DLog.info("Included Services discovered: \(service.includedServices)" )
 
         delegate?.includedServicesDiscovered( peripheral, forService: service )
         
 	}
 	
 	
-	func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
-//		Log.trace("Interrogator didDiscoverCharacteristicsForService")
+	func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+//		DLog.trace("Interrogator didDiscoverCharacteristicsForService")
 		
 		if error != nil {
-			Log.error( "Error discovering characteristics: \(error!.localizedDescription)" )
+			DLog.error( "Error discovering characteristics: \(error!.localizedDescription)" )
 //			[self cleanup]
 			return
 		}
 		
-//		Log.info( "Characteristics discovered: \(service.characteristics)" )
+//		DLog.info( "Characteristics discovered: \(service.characteristics)" )
 
         delegate?.characteristicsDiscovered( peripheral, forService: service )
 
