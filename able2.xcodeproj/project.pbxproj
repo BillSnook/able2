@@ -60,6 +60,7 @@
 		A9F679751D0CF44D00A6C8BC /* BuildCharacteristic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F679741D0CF44D00A6C8BC /* BuildCharacteristic.swift */; };
 		A9F909401D458E6F00741470 /* buildCharacteristicCVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F9093F1D458E6F00741470 /* buildCharacteristicCVC.swift */; };
 		A9F909421D46BF0800741470 /* CharacteristicCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F909411D46BF0800741470 /* CharacteristicCollectionViewCell.swift */; };
+		A9FE40201DA044B800D987DE /* BLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FE401F1DA044B800D987DE /* BLog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,6 +138,7 @@
 		A9F679741D0CF44D00A6C8BC /* BuildCharacteristic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BuildCharacteristic.swift; path = models/BuildCharacteristic.swift; sourceTree = "<group>"; };
 		A9F9093F1D458E6F00741470 /* buildCharacteristicCVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = buildCharacteristicCVC.swift; path = controllers/buildCharacteristicCVC.swift; sourceTree = "<group>"; };
 		A9F909411D46BF0800741470 /* CharacteristicCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CharacteristicCollectionViewCell.swift; path = cells/CharacteristicCollectionViewCell.swift; sourceTree = "<group>"; };
+		A9FE401F1DA044B800D987DE /* BLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLog.swift; sourceTree = "<group>"; };
 		E6F15527E819A4CD85A6D197 /* Pods-able2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-able2.debug.xcconfig"; path = "Pods/Target Support Files/Pods-able2/Pods-able2.debug.xcconfig"; sourceTree = "<group>"; };
 		F32629C9F661323B4744F8C3 /* Pods-able2UITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-able2UITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-able2UITests/Pods-able2UITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -240,6 +242,7 @@
 				A9F679731D0CEF3A00A6C8BC /* models */,
 				A925C67F1CAB4A1C00FAE766 /* cells */,
 				A93B1ABC1CA5E588004F9B4F /* BLEView.swift */,
+				A9FE401F1DA044B800D987DE /* BLog.swift */,
 				A93B1A921CA5AD46004F9B4F /* Main.storyboard */,
 				A93B1A951CA5AD46004F9B4F /* Assets.xcassets */,
 				A93B1A971CA5AD46004F9B4F /* LaunchScreen.storyboard */,
@@ -744,6 +747,7 @@
 				A98165961CA99F7A00D0E65E /* listPeripheralsTVC.swift in Sources */,
 				A9C53EBD1CAEDD7B008A6DAE /* listServicesTVC.swift in Sources */,
 				A95FC1011CBF4C2B001ACB0C /* showCharacteristics.swift in Sources */,
+				A9FE40201DA044B800D987DE /* BLog.swift in Sources */,
 				A9F679751D0CF44D00A6C8BC /* BuildCharacteristic.swift in Sources */,
 				A9F909421D46BF0800741470 /* CharacteristicCollectionViewCell.swift in Sources */,
 				A91EC6A41CBD61BA00C8ABA3 /* CharacteristicCell.swift in Sources */,
@@ -849,7 +853,7 @@
 					"$(inherited)",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -891,7 +895,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;

@@ -124,18 +124,18 @@ class buildCharacteristicVC: UIViewController,
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "Lose Changes", style: .cancel, handler: { (_) -> Void in
-                self.navigationController?.popViewController(animated: true)
+                let _ = self.navigationController?.popViewController(animated: true)
             }))
             
             alertController.addAction(UIAlertAction(title: "Save Changes", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.navigationController?.popViewController(animated: true)
+                let _ = self.navigationController?.popViewController(animated: true)
             }))
             
             // Present Alert Controller
             present(alertController, animated: true, completion: nil)
         } else {
-            self.navigationController?.popViewController(animated: true)
+            let _ = self.navigationController?.popViewController(animated: true)
         }
     }
     

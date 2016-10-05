@@ -93,7 +93,7 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
     override func viewDidDisappear(_ animated: Bool) {
 
         if builder!.buildState == .advertising {
-            stopAdvertising()
+            endAdvertising( withButton: advertiseButton )
         }
 
         DLog.debug("")
@@ -156,16 +156,9 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         guard builder!.buildState == .saved || builder!.buildState == .advertising else { return }
         let adButton = sender as! UIButton
         if builder!.buildState != .advertising {        // If we were not advertising, now we want to start
-            guard !saveButton.isEnabled else {
-                return
-            }
-            setControlsEnabled( notAdvertising: false )
-            adButton.setTitle( "Stop Advertising", for: UIControlState() )
-            startAdvertising()
+            beginAdvertising( withButton: adButton )
         } else {
-            setControlsEnabled( notAdvertising: true )
-            adButton.setTitle( "Advertise", for: UIControlState() )
-            stopAdvertising()
+            endAdvertising( withButton: adButton )
         }
     }
     
@@ -203,6 +196,25 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
         }
     }
     
+    func beginAdvertising( withButton: UIButton ) {
+        
+        guard !saveButton.isEnabled else {
+            return
+        }
+        setControlsEnabled( notAdvertising: false )
+        collectionView.isUserInteractionEnabled = false
+        withButton.setTitle( "Stop Advertising", for: UIControlState() )
+        startAdvertising()
+    }
+    
+    func endAdvertising( withButton: UIButton ) {
+        
+        setControlsEnabled( notAdvertising: true )
+        collectionView.isUserInteractionEnabled = true
+        withButton.setTitle( "Advertise", for: UIControlState() )
+        stopAdvertising()
+    }
+    
     func unsavedCancelWarning() {
         
         if saveButton.isEnabled {
@@ -211,18 +223,18 @@ class buildPeripheralCVC: UIViewController, UICollectionViewDelegate, UICollecti
             
             // Configure Alert Controller
             alertController.addAction(UIAlertAction(title: "Lose Changes", style: .cancel, handler: { (_) -> Void in
-                self.navigationController?.popViewController(animated: true)
+                let _ = self.navigationController?.popViewController(animated: true)
             }))
             
             alertController.addAction(UIAlertAction(title: "Save Changes", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.navigationController?.popViewController(animated: true)
+                let _ = self.navigationController?.popViewController(animated: true)
             }))
             
             // Present Alert Controller
             present(alertController, animated: true, completion: nil)
         } else {
-            self.navigationController?.popViewController(animated: true)
+            let _ = self.navigationController?.popViewController(animated: true)
         }
     }
     

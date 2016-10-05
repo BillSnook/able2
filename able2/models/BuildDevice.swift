@@ -110,7 +110,7 @@ class BuildDevice {
         return true
     }
     
-    func hasDeviceChanged() -> Bool {     // Changed means data does not match service
+    func hasDeviceChanged() -> Bool {     // Changed means device data does not match original
         
         guard device != nil else { return true }
         guard device!.name == name else { return true }
@@ -120,7 +120,7 @@ class BuildDevice {
         return false
     }
     
-    func hasChanged() -> Bool {     // Changed means data does not match service
+    func hasChanged() -> Bool {         // Changed means data does not match in device and subservices
         
         guard device != nil else { return true }
         guard device!.name == name else { return true }
