@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15G31" minimumToolsVersion="Automatic">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="16B2555" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Characteristic" representedClassName=".Characteristic" syncable="YES">
-        <attribute name="permissions" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="properties" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="permissions" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="properties" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="Binary" syncable="YES"/>
         <relationship name="service" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Service" inverseName="characteristics" inverseEntity="Service" syncable="YES"/>
@@ -12,25 +12,25 @@
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="services" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Service" inverseName="device" inverseEntity="Service" syncable="YES"/>
     </entity>
-    <entity name="Peripheral" representedClassName="Peripheral" syncable="YES">
-        <attribute name="connectable" attributeType="Boolean" syncable="YES"/>
+    <entity name="Peripheral" representedClassName=".Peripheral" syncable="YES">
+        <attribute name="connectable" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="mainUUID" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
-        <attribute name="rssi" optional="YES" attributeType="Integer 16" minValueString="-128" maxValueString="127" defaultValueString="0" syncable="YES"/>
+        <attribute name="rssi" optional="YES" attributeType="Integer 16" minValueString="-128" maxValueString="127" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="sightings" toMany="YES" deletionRule="Cascade" destinationEntity="Sighting" inverseName="peripheral" inverseEntity="Sighting" syncable="YES"/>
     </entity>
     <entity name="Service" representedClassName=".Service" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="primary" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="primary" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="characteristics" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Characteristic" inverseName="service" inverseEntity="Characteristic" syncable="YES"/>
         <relationship name="device" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Device" inverseName="services" inverseEntity="Device" syncable="YES"/>
     </entity>
     <entity name="Sighting" representedClassName=".Sighting" syncable="YES">
-        <attribute name="date" attributeType="Date" syncable="YES"/>
-        <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="rssi" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="rssi" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="peripheral" maxCount="1" deletionRule="Nullify" destinationEntity="Peripheral" inverseName="sightings" inverseEntity="Peripheral" syncable="YES"/>
     </entity>
     <elements>

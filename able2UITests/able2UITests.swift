@@ -35,9 +35,9 @@ class able2UITests: XCTestCase {
         // With the SplitView controller, we now start with the Peripherals page displaying a list of peripherals
         // Chaining the following commands fails for an unknown reason, so we have seperated them for now
         let navbar = app.navigationBars["Peripherals"]
-        let buttons = navbar.childrenMatchingType(.Button)
-        let match = buttons.matchingIdentifier("Mode")
-        let element = match.elementBoundByIndex(0)
+        let buttons = navbar.children(matching: .button)
+        let match = buttons.matching(identifier: "Mode")
+        let element = match.element(boundBy: 0)
         element.tap()
         
 //        print( buttons.debugDescription )
@@ -47,7 +47,7 @@ class able2UITests: XCTestCase {
         
         centralButton.tap()
         
-        app.navigationBars["Peripherals"].childrenMatchingType(.Button).matchingIdentifier("Mode").elementBoundByIndex(0).tap()
+        app.navigationBars["Peripherals"].children(matching: .button).matching(identifier: "Mode").element(boundBy: 0).tap()
 
         let peripheralButton = app.buttons["becomePeripheral"]
         XCTAssertEqual( peripheralButton.exists, true )
@@ -55,7 +55,7 @@ class able2UITests: XCTestCase {
         peripheralButton.tap()
         
         // Needs fix in the app
-        app.navigationBars["Create Peripheral"].childrenMatchingType(.Button).matchingIdentifier("Mode").elementBoundByIndex(0).tap()
+        app.navigationBars["Create Peripheral"].children(matching: .button).matching(identifier: "Mode").element(boundBy: 0).tap()
         
         let newCentralButton = app.buttons["becomeCentral"]
         XCTAssertEqual( newCentralButton.exists, true )
@@ -67,9 +67,9 @@ class able2UITests: XCTestCase {
         // With the SplitView controller, we now start with the Peripherals page displaying a list of peripherals
         // Chaining the following commands fails for an unknown reason, so we have seperated them for now
         let navbar = app.navigationBars["Peripherals"]
-        let buttons = navbar.childrenMatchingType(.Button)
-        let match = buttons.matchingIdentifier("Mode")
-        let element = match.elementBoundByIndex(0)
+        let buttons = navbar.children(matching: .button)
+        let match = buttons.matching(identifier: "Mode")
+        let element = match.element(boundBy: 0)
         element.tap()
         
         let centralButton = app.buttons["becomeCentral"]
@@ -77,16 +77,16 @@ class able2UITests: XCTestCase {
         
         centralButton.tap()
         
-        app.navigationBars["Peripherals"].childrenMatchingType(.Button).matchingIdentifier("Mode").elementBoundByIndex(0).tap()
+        app.navigationBars["Peripherals"].children(matching: .button).matching(identifier: "Mode").element(boundBy: 0).tap()
     
     }
     
     func test3CentralSceneDeleteCancelButton() {
         
         let navbar = app.navigationBars["Peripherals"]
-        let buttons = navbar.childrenMatchingType(.Button)
-        let match = buttons.matchingIdentifier("---")
-        let element = match.elementBoundByIndex(0)
+        let buttons = navbar.children(matching: .button)
+        let match = buttons.matching(identifier: "---")
+        let element = match.element(boundBy: 0)
         element.tap()
         
         let alerts = app.alerts
@@ -105,9 +105,9 @@ class able2UITests: XCTestCase {
     func test4CentralSceneDeleteOKButton() {
         
         let navbar = app.navigationBars["Peripherals"]
-        let buttons = navbar.childrenMatchingType(.Button)
-        let match = buttons.matchingIdentifier("---")
-        let element = match.elementBoundByIndex(0)
+        let buttons = navbar.children(matching: .button)
+        let match = buttons.matching(identifier: "---")
+        let element = match.element(boundBy: 0)
         element.tap()
         
         let alerts = app.alerts
@@ -126,9 +126,9 @@ class able2UITests: XCTestCase {
     func test5CentralSceneSelection() {
 //        let table = app.tables
         
-        let table = app.descendantsMatchingType(.Table).element
+        let table = app.descendants(matching: .table).element
         XCTAssertNotNil( table )
-        let cells = table.descendantsMatchingType(.Cell)
+        let cells = table.descendants(matching: .cell)
         XCTAssertNotNil( cells )
         if cells.count < 1 {
             print( "No data was found in the peripherals table so we cannot test further" )
@@ -136,22 +136,22 @@ class able2UITests: XCTestCase {
         }
         XCTAssertTrue( cells.count > 0 )
 
-        let cell = cells.elementBoundByIndex(0)
+        let cell = cells.element(boundBy: 0)
         XCTAssertNotNil( cell )
-        let labelText = cell.staticTexts.elementBoundByIndex(0)
+        let labelText = cell.staticTexts.element(boundBy: 0)
         XCTAssertNotNil( labelText )
         let itemName = labelText.label
         XCTAssertNotNil( itemName )
-        XCTAssertTrue( itemName.lengthOfBytesUsingEncoding( NSUTF8StringEncoding ) > 0 )
+        XCTAssertTrue( itemName.lengthOfBytes( using: String.Encoding.utf8 ) > 0 )
         cell.tap()
         
         let navbar = app.navigationBars[ itemName ]
         XCTAssertNotNil( navbar )
-        let buttons = navbar.childrenMatchingType(.Button)
+        let buttons = navbar.children(matching: .button)
         XCTAssertNotNil( buttons )
-        let match = buttons.matchingIdentifier("Peripherals")
+        let match = buttons.matching(identifier: "Peripherals")
         XCTAssertNotNil( match )
-        let element = match.elementBoundByIndex(0)
+        let element = match.element(boundBy: 0)
         XCTAssertNotNil( element )
         element.tap()
 

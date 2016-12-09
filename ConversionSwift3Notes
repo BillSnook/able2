@@ -1,0 +1,75 @@
+Done automagically
+
+
+This:
+
+if let peripheralEntity =  NSEntityDescription.entityForName("Peripheral", inManagedObjectContext: managedContext!) {
+if let entry = NSManagedObject(entity: peripheralEntity, insertIntoManagedObjectContext: managedContext) as? Peripheral {
+
+
+became this:
+
+if let peripheralEntity =  NSEntityDescription.entity(forEntityName: "Peripheral", in: managedContext!) {
+if let entry = NSManagedObject(entity: peripheralEntity, insertInto: managedContext) as? Peripheral {
+entry.mainUUID = UUID().uuidString
+
+
+
+This:
+
+let results = try managedContext!.executeFetchRequest( fetch ) as! [Peripheral]
+
+
+became this:
+
+let results = try managedContext!.fetch( fetch ) as! [Peripheral]
+
+
+This:
+
+managedObjectContext.deleteObject( buildService.service! )
+
+
+became this:
+
+managedObjectContext.delete( buildService.service! )
+
+
+
+This:
+
+if let entry = NSManagedObject(entity: peripheralEntity!, insertIntoManagedObjectContext: managedContext) as? Peripheral {
+
+
+became this:
+
+if let entry = NSManagedObject(entity: peripheralEntity!, insertInto: managedContext) as? Peripheral {
+
+
+
+Not done automagically
+
+This:
+
+lazy var fetchedResultsController: NSFetchedResultsController = {
+
+
+became this:
+
+lazy var fetchedResultsController: NSFetchedResultsController = { () -> NSFetchedResultsController<Peripheral> in
+
+
+
+This:
+
+let fetch = NSFetchRequest( entityName: "Peripheral" )
+
+
+became this:
+
+let fetch: NSFetchRequest<Peripheral> = NSFetchRequest( entityName: "Peripheral" )
+
+
+
+This:
+

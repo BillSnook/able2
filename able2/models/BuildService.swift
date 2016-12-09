@@ -48,13 +48,13 @@ class BuildService {
 		}
 	}
     
-    func prepareToSave( managedObjectContext: NSManagedObjectContext ) {
+    func prepareToSave( _ managedObjectContext: NSManagedObjectContext ) {
 
         Log.debug("")
         if service == nil {
-            let serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
+            let serviceEntity = NSEntityDescription.entity(forEntityName: "Service", in: managedObjectContext)
             if serviceEntity != nil {
-                if let newService = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service {
+                if let newService = NSManagedObject(entity: serviceEntity!, insertInto: managedObjectContext) as? Service {
                     Log.debug("  Made new Service managed object")
                     service = newService
                 }
@@ -63,18 +63,18 @@ class BuildService {
         if service != nil {
             service!.name = name
             service!.uuid = uuid
-            service!.primary = primary
+            service!.primary = primary as NSNumber?
             let newSet = NSMutableOrderedSet( capacity: buildCharacteristics.count  )
             for buildCharacteristic in buildCharacteristics {
                 Log.debug("  Found existing Characteristic managed object")
                 buildCharacteristic.prepareToSave( managedObjectContext )
-                newSet.addObject( buildCharacteristic.characteristic! )
+                newSet.add( buildCharacteristic.characteristic! )
             }
             service!.characteristics = newSet
         }
     }
     
-    func appendCharacteristic( buildCharacteristic: BuildCharacteristic ) {
+    func appendCharacteristic( _ buildCharacteristic: BuildCharacteristic ) {
         
         for bCharacteristic in buildCharacteristics {
             if bCharacteristic.characteristic == buildCharacteristic.characteristic {
@@ -99,9 +99,9 @@ class BuildService {
 //        return mutableService
 //    }
     
-    func removeCharacteristicAtIndex( row: Int ) {
+    func removeCharacteristicAtIndex( _ row: Int ) {
         
-        buildCharacteristics.removeAtIndex( row )
+        buildCharacteristics.remove( at: row )
     }
     
     func isValid() -> Bool {        // Valid indicates ready to be saved
@@ -120,7 +120,7 @@ class BuildService {
         guard service != nil else { return true }
         guard service!.name == name else { return true }
         guard service!.uuid == uuid else { return true }
-        guard service!.primary == primary else { return true }
+        guard service!.primary?.boolValue == primary else { return true }
         guard service!.characteristics?.count == buildCharacteristics.count else { return true }
         for buildCharacteristic in buildCharacteristics {
             if buildCharacteristic.hasChanged() { return true }

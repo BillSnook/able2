@@ -27,7 +27,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
 
     var newBackButton: UIBarButtonItem?
     
-    var displayState = DisplayState.Neutral
+    var displayState = DisplayState.neutral
     
     
     
@@ -41,8 +41,8 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         Log.debug("")
 
         let serviceValid = ( buildService != nil )
-        newCharacteristicButton.enabled = serviceValid
-        addCharacteristicLabel.enabled = serviceValid
+        newCharacteristicButton.isEnabled = serviceValid
+        addCharacteristicLabel.isEnabled = serviceValid
 
         builder = Builder.sharedBuilder
         if !serviceValid {
@@ -50,7 +50,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         }
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear( animated )
         
@@ -61,12 +61,12 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         nameField.text = buildService!.name
         
         uuidField.text = buildService!.uuid
-        uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
+        uuidField.inputView = UIView.init( frame: CGRect.zero );    // No keyboard
         
         if buildService!.primary {
-            primarySwitch.on = buildService!.primary.boolValue
+            primarySwitch.isOn = buildService!.primary
         } else {
-            primarySwitch.on = false
+            primarySwitch.isOn = false
         }
         
         textFieldBorderSetup(nameField)
@@ -77,18 +77,18 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         collectionView.reloadData()
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
 
         Log.debug("")
 
         super.viewDidDisappear( animated )
     }
     
-    override func viewWillTransitionToSize(size: CGSize,
-                                           withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    override func viewWillTransition(to size: CGSize,
+                                           with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         // Code here will execute before the rotation begins.
-        coordinator.animateAlongsideTransition({ (context) -> Void in
+        coordinator.animate(alongsideTransition: { (context) -> Void in
             // Place code here to perform animations during the rotation.
             // You can pass nil for this closure if not necessary.
             },
@@ -101,7 +101,7 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     
     // MARK: - Control actions
 
-    @IBAction func saveAction(sender: AnyObject) {
+    @IBAction func saveAction(_ sender: AnyObject) {
 
 //        guard buildService != nil else { Log.info( "save failed" ); return }
         
@@ -113,96 +113,96 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         // Gather and save data from fields and create service
         buildService!.name = nameField.text
         buildService!.uuid = uuidField.text
-        buildService!.primary = primarySwitch.on
+        buildService!.primary = primarySwitch.isOn
         Log.debug("")
         builder!.saveService( buildService! )
         setControlState()
     }
 
-    @IBAction func addCharacteristicAction(sender: UIButton) {
+    @IBAction func addCharacteristicAction(_ sender: UIButton) {
         
         Log.info( "" )
-        if saveButton.enabled {
+        if saveButton.isEnabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your service. You need to do this before you can create new Characteristics. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to your service. You need to do this before you can create new Characteristics. Save now?", preferredStyle: .alert)
             
             // Configure Alert Controller
-            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (_) -> Void in
             }))
             
-            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Save", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.performSegueWithIdentifier( "toNewCharacteristic", sender: nil )
+                self.performSegue( withIdentifier: "toNewCharacteristic", sender: nil )
             }))
             
             // Present Alert Controller
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         } else {
-            self.performSegueWithIdentifier( "toNewCharacteristic", sender: nil )
+            self.performSegue( withIdentifier: "toNewCharacteristic", sender: nil )
         }
   
     }
     
-    @IBAction func primaryAction(sender: AnyObject) {
+    @IBAction func primaryAction(_ sender: AnyObject) {
         
-        buildService!.primary = primarySwitch.on
+        buildService!.primary = primarySwitch.isOn
 		setControlState()
     }
     
-    @IBAction func makeNewUUIDAction(sender: AnyObject) {
+    @IBAction func makeNewUUIDAction(_ sender: AnyObject) {
         
-        let newuuid = NSUUID.init()
-        uuidField.text = newuuid.UUIDString
-        uuidField.enabled = true    // Allows selection
+        let newuuid = UUID.init()
+        uuidField.text = newuuid.uuidString
+        uuidField.isEnabled = true    // Allows selection
         textFieldBorderSetup( uuidField )
-        buildService!.uuid = newuuid.UUIDString
+        buildService!.uuid = newuuid.uuidString
 		setControlState()
 		
     }
     
     func unsavedCancelWarning() {
         
-        if saveButton.enabled {
+        if saveButton.isEnabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to this service. If you return to the device page now you will lose those changes.", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to this service. If you return to the device page now you will lose those changes.", preferredStyle: .alert)
             
             // Configure Alert Controller
-            alertController.addAction(UIAlertAction(title: "Lose Changes", style: .Cancel, handler: { (_) -> Void in
-                self.navigationController?.popViewControllerAnimated(true)
+            alertController.addAction(UIAlertAction(title: "Lose Changes", style: .cancel, handler: { (_) -> Void in
+                let _ = self.navigationController?.popViewController(animated: true)
             }))
             
-            alertController.addAction(UIAlertAction(title: "Save Changes", style: .Default, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Save Changes", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.navigationController?.popViewControllerAnimated(true)
+                let _ = self.navigationController?.popViewController(animated: true)
             }))
             
             // Present Alert Controller
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         } else {
-            self.navigationController?.popViewControllerAnimated(true)
+            let _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
     func unsavedEditServiceWarning() {
         
-        if saveButton.enabled {
+        if saveButton.isEnabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to this service. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to this service. Save now?", preferredStyle: .alert)
             
             // Configure Alert Controller
-            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
-                self.performSegueWithIdentifier( "toEditService", sender: nil )
+            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (_) -> Void in
+                self.performSegue( withIdentifier: "toEditService", sender: nil )
             }))
             
-            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Save", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.performSegueWithIdentifier( "toEditService", sender: nil )
+                self.performSegue( withIdentifier: "toEditService", sender: nil )
             }))
             
             // Present Alert Controller
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         } else {
-            self.performSegueWithIdentifier( "toEditService", sender: nil )
+            self.performSegue( withIdentifier: "toEditService", sender: nil )
         }
     }
     
@@ -218,59 +218,59 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         
         if buildService!.isValid() {
             if buildService!.hasChanged() {
-                builder!.buildState = .Unsaved
+                builder!.buildState = .unsaved
                 needSave = true
             } else {
-                builder!.buildState = .Saved
+                builder!.buildState = .saved
             }
         } else {
-            builder!.buildState = .Invalid
+            builder!.buildState = .invalid
         }
         
         if needSave {
             navigationItem.hidesBackButton = true
-            newBackButton = newBackButton != nil ? newBackButton : UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedCancelWarning))
+            newBackButton = newBackButton != nil ? newBackButton : UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.unsavedCancelWarning))
             navigationItem.leftBarButtonItem = newBackButton
         } else {
             navigationItem.leftBarButtonItem = nil
             navigationItem.hidesBackButton = false
         }
         
-        saveButton.enabled = needSave
+        saveButton.isEnabled = needSave
         
-        if let count = buildService?.buildCharacteristics.count where count > 1 {   // Up to one for now
-            newCharacteristicButton.enabled = false
-            addCharacteristicLabel.enabled = false
+        if let count = buildService?.buildCharacteristics.count , count > 1 {   // Up to one for now
+            newCharacteristicButton.isEnabled = false
+            addCharacteristicLabel.isEnabled = false
         } else {
-            newCharacteristicButton.enabled = !needSave
-            addCharacteristicLabel.enabled = !needSave
+            newCharacteristicButton.isEnabled = !needSave
+            addCharacteristicLabel.isEnabled = !needSave
         }
         
     }
     
     // MARK: - DeleteButtonDelegate
     
-    func deleteCellAt( indexPath: NSIndexPath ) {
+    func deleteCellAt( _ indexPath: IndexPath ) {
         
-        let alertController = UIAlertController(title: "Warning", message: "You are about to delete a characteristic from your service. This operation cannot be undone. Continue?", preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Warning", message: "You are about to delete a characteristic from your service. This operation cannot be undone. Continue?", preferredStyle: .alert)
         
         // Configure Alert Controller
-        alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
+        alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (_) -> Void in
         }))
         
-        alertController.addAction(UIAlertAction(title: "Delete", style: .Default, handler: { (_) -> Void in
+        alertController.addAction(UIAlertAction(title: "Delete", style: .default, handler: { (_) -> Void in
             self.removeCellAt( indexPath )
         }))
         
         // Present Alert Controller
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
-    func removeCellAt( indexPath: NSIndexPath ) {
+    func removeCellAt( _ indexPath: IndexPath ) {
         
-        buildService!.removeCharacteristicAtIndex( indexPath.row )
+        buildService!.removeCharacteristicAtIndex( (indexPath as NSIndexPath).row )
         builder!.saveService( buildService! )
-        collectionView.deleteItemsAtIndexPaths( [indexPath] )
+        collectionView.deleteItems( at: [indexPath] )
         saveDetails()
     }
     
@@ -278,62 +278,62 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
     
     func unsavedEditWarningThenCharacteristic() {
         
-        if saveButton.enabled {
+        if saveButton.isEnabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to this service. Save now?", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "You have not saved changes to this service. Save now?", preferredStyle: .alert)
             
             // Configure Alert Controller
-            alertController.addAction(UIAlertAction(title: "No", style: .Cancel, handler: { (_) -> Void in
-                self.performSegueWithIdentifier( "toEditCharacteristic", sender: nil )
+            alertController.addAction(UIAlertAction(title: "No", style: .cancel, handler: { (_) -> Void in
+                self.performSegue( withIdentifier: "toEditCharacteristic", sender: nil )
             }))
             
-            alertController.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Save", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.performSegueWithIdentifier( "toEditCharacteristic", sender: nil )
+                self.performSegue( withIdentifier: "toEditCharacteristic", sender: nil )
             }))
             
             // Present Alert Controller
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         } else {
-            self.performSegueWithIdentifier( "toEditCharacteristic", sender: nil )
+            self.performSegue( withIdentifier: "toEditCharacteristic", sender: nil )
         }
     }
     
 
     // MARK: - Control actions
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         builder!.currentService = buildService
         navigationItem.title = "Service"
         if segue.identifier == "toNewCharacteristic" {
-            let dest = segue.destinationViewController as! buildCharacteristicVC
+            let dest = segue.destination as! buildCharacteristicVC
             dest.buildCharacteristic = nil
             Log.debug("dest.buildCharacteristic will be nil")
         } else if segue.identifier == "toEditCharacteristic" {
-            let dest = segue.destinationViewController as! buildCharacteristicVC
-            if let indexPaths = collectionView.indexPathsForSelectedItems() where indexPaths.count > 0 {
-                dest.buildCharacteristic = buildService!.buildCharacteristics[indexPaths.first!.item]
+            let dest = segue.destination as! buildCharacteristicVC
+            if let indexPaths = collectionView.indexPathsForSelectedItems , indexPaths.count > 0 {
+                dest.buildCharacteristic = buildService!.buildCharacteristics[(indexPaths.first! as NSIndexPath).item]
                 Log.debug("dest.buildCharacteristic will be a BuildCharacteristics instance")
             }
         }
     }
     
-    func permissionsToString( permissions: CBAttributePermissions ) -> String {
+    func permissionsToString( _ permissions: CBAttributePermissions ) -> String {
         
         var pStr = ""
-        if permissions.contains( .Readable ) {
+        if permissions.contains( .readable ) {
             pStr += "Rd"
         }
-        if permissions.contains( .Writeable ) {
+        if permissions.contains( .writeable ) {
             if pStr != "" { pStr += ", " }
             pStr += "Wr"
         }
-        if permissions.contains( .ReadEncryptionRequired ) {
+        if permissions.contains( .readEncryptionRequired ) {
             if pStr != "" { pStr += ", " }
             pStr += "RdEn"
         }
-        if permissions.contains( .WriteEncryptionRequired ) {
+        if permissions.contains( .writeEncryptionRequired ) {
             if pStr != "" { pStr += ", " }
             pStr += "WrEn"
         }
@@ -341,60 +341,60 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         return pStr
     }
     
-    func propertiesToString( properties: CBCharacteristicProperties ) -> String {
+    func propertiesToString( _ properties: CBCharacteristicProperties ) -> String {
         
         var pStr = ""
-        if properties.contains( .Read ) {
+        if properties.contains( .read ) {
             pStr += "Rd"
         }
-        if properties.contains( .WriteWithoutResponse ) {
+        if properties.contains( .writeWithoutResponse ) {
             if pStr != "" { pStr += ", " }
             pStr += "Wr"
         }
-        if properties.contains( .AuthenticatedSignedWrites ) {
+        if properties.contains( .authenticatedSignedWrites ) {
             if pStr != "" { pStr += ", " }
             pStr += "WrAu"
         }
-        if properties.contains( .Write ) {
+        if properties.contains( .write ) {
             if pStr != "" { pStr += ", " }
             pStr += "WrwR"
         }
-        if properties.contains( .Notify ) {
+        if properties.contains( .notify ) {
             if pStr != "" { pStr += ", " }
             pStr += "No"
         }
-        if properties.contains( .Indicate ) {
+        if properties.contains( .indicate ) {
             if pStr != "" { pStr += ", " }
             pStr += "In"
         }
-        if properties.contains( .NotifyEncryptionRequired ) {
+        if properties.contains( .notifyEncryptionRequired ) {
             if pStr != "" { pStr += ", " }
             pStr += "NoEn"
         }
-        if properties.contains( .IndicateEncryptionRequired ) {
+        if properties.contains( .indicateEncryptionRequired ) {
             if pStr != "" { pStr += ", " }
             pStr += "InEn"
         }
         return pStr
     }
 
-    func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
+    func setBorderOf( _ textField: (UITextField), toDisplayState: (DisplayState) ) {
 
         textField.layer.borderWidth = 0.5
         textField.layer.cornerRadius = 6.0
         switch toDisplayState {
-        case .Neutral:
-            textField.layer.borderColor = UIColor.lightGrayColor().CGColor
-        case .Valid:
-            textField.layer.borderColor = UIColor.greenColor().CGColor
-        case .Invalid:
-            textField.layer.borderColor = UIColor.redColor().CGColor
+        case .neutral:
+            textField.layer.borderColor = UIColor.lightGray.cgColor
+        case .valid:
+            textField.layer.borderColor = UIColor.green.cgColor
+        case .invalid:
+            textField.layer.borderColor = UIColor.red.cgColor
         }
         
     }
     
     // Verify data is valid for advertising
-    func textFieldNotEmpty( textField: (UITextField) ) -> Bool {
+    func textFieldNotEmpty( _ textField: (UITextField) ) -> Bool {
         
         if let text = textField.text {
             if text.isEmpty {
@@ -407,72 +407,72 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         }
     }
     
-    func textFieldBorderSetup( textField: (UITextField) ) {
+    func textFieldBorderSetup( _ textField: (UITextField) ) {
         
         if let text = textField.text {
             if text.isEmpty {
-                setBorderOf( textField, toDisplayState: .Invalid )
+                setBorderOf( textField, toDisplayState: .invalid )
             } else {
-                setBorderOf( textField, toDisplayState: .Valid )
+                setBorderOf( textField, toDisplayState: .valid )
             }
         } else {
-            setBorderOf( textField, toDisplayState: .Neutral )
+            setBorderOf( textField, toDisplayState: .neutral )
         }
     }
     
 
     // MARK: - UITextFieldDelegate
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         if textField == uuidField {
             return false	// false because uuidField should never allow changes to its text
         }
         
-        var displayState = DisplayState.Invalid // .Neutral
+        var displayState = DisplayState.invalid // .Neutral
         if let text = textField.text {
             let nonEmptyText = !text.isEmpty && ( range.length != text.characters.count )
             let nonEmptyReplacement = !string.isEmpty
             if nonEmptyReplacement || nonEmptyText {
-                displayState = .Valid
+                displayState = .valid
             } else {
-                displayState = .Invalid
+                displayState = .invalid
             }
         }
         setBorderOf( textField, toDisplayState: displayState )
-        dispatch_after( dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+        DispatchQueue.main.asyncAfter( deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { () -> Void in
             self.textChanged()
         }
         return true
     }
     
-    func textFieldDidEndEditing(textField: (UITextField)) {
+    func textFieldDidEndEditing(_ textField: (UITextField)) {
         
         textFieldBorderSetup( textField )
     }
     
     // MARK: - Collection View
 
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         
         return 1
     }
     
-    func collectionView( collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
+    func collectionView( _ collectionView: UICollectionView, numberOfItemsInSection: NSInteger ) -> NSInteger {
     
         return buildService!.buildCharacteristics.count
     }
     
-    func collectionView( collectionView: UICollectionView,
-                          cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView( _ collectionView: UICollectionView,
+                          cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier( "CharacteristicSummary", forIndexPath: indexPath ) as! CharacteristicCollectionViewCell
+        let cell = collectionView.dequeueReusableCell( withReuseIdentifier: "CharacteristicSummary", for: indexPath ) as! CharacteristicCollectionViewCell
 
-        let buildCharacteristic = buildService!.buildCharacteristics[ indexPath.row ]
+        let buildCharacteristic = buildService!.buildCharacteristics[ (indexPath as NSIndexPath).row ]
 
         cell.uuidLabel.text = buildCharacteristic.uuid
         if let valueData = buildCharacteristic.value {
-            let nsString = NSString(data: valueData, encoding: NSUTF8StringEncoding)!
+            let nsString = NSString(data: valueData as Data, encoding: String.Encoding.utf8.rawValue)!
             cell.valueLabel.text = nsString as String
         } else {
             cell.valueLabel.text = ""
@@ -487,15 +487,15 @@ class buildServiceCVC: UIViewController, UICollectionViewDelegate, UICollectionV
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         unsavedEditWarningThenCharacteristic()
     }
     
 
-    func collectionView(collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAtIndexPath: NSIndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout: UICollectionViewLayout, sizeForItemAt sizeForItemAtIndexPath: IndexPath) -> CGSize {
         
-		return CGSizeMake( collectionView.frame.size.width, 120.0 )
+		return CGSize( width: collectionView.frame.size.width, height: 120.0 )
     }
 
 }

@@ -41,12 +41,12 @@ class BuildDevice {
 		}
 	}
     
-    func prepareToSave( managedObjectContext: NSManagedObjectContext ) {
+    func prepareToSave( _ managedObjectContext: NSManagedObjectContext ) {
         
         Log.debug("")
         if device == nil {
-            if let deviceEntity = NSEntityDescription.entityForName("Device", inManagedObjectContext: managedObjectContext) {
-                if let newDevice = NSManagedObject(entity: deviceEntity, insertIntoManagedObjectContext: managedObjectContext) as? Device {
+            if let deviceEntity = NSEntityDescription.entity(forEntityName: "Device", in: managedObjectContext) {
+                if let newDevice = NSManagedObject(entity: deviceEntity, insertInto: managedObjectContext) as? Device {
                     Log.debug("  Made new Device managed object")
                     device = newDevice
                 }
@@ -60,7 +60,7 @@ class BuildDevice {
 //                if buildService.service != nil {
                     Log.debug("  Found existing Service managed object")
                     buildService.prepareToSave( managedObjectContext )
-                    newSet.addObject( buildService.service! )
+                    newSet.add( buildService.service! )
 //                } else {
 //                    let serviceEntity = NSEntityDescription.entityForName("Service", inManagedObjectContext: managedObjectContext)
 //                    if let newService = NSManagedObject(entity: serviceEntity!, insertIntoManagedObjectContext: managedObjectContext) as? Service {
@@ -74,7 +74,7 @@ class BuildDevice {
         }
     }
     
-    func appendService( buildService: BuildService ) {
+    func appendService( _ buildService: BuildService ) {
         
         for bService in buildServices {
             if bService.service == buildService.service {
@@ -85,9 +85,9 @@ class BuildDevice {
         
     }
     
-    func removeServiceAtIndex( row: Int ) {
+    func removeServiceAtIndex( _ row: Int ) {
         
-        buildServices.removeAtIndex( row )
+        buildServices.remove( at: row )
     }
     
     

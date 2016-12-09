@@ -11,6 +11,27 @@ import UIKit
 import CoreBluetooth
 import CoreData
 
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
+
 
 enum Indicator: String {
     case green = "button_round_green_small.jpg"
@@ -68,12 +89,12 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         }
         connectionUUID.text = perp?.mainUUID
 
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         interrogator.managedObjectContext = appDelegate.managedObjectContext
 
 }
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear( animated )
 		
 //        selectedService = -1
@@ -94,7 +115,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         
     }
 	
-	override func viewWillDisappear(animated: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear( animated )
 		
         activityIndicator!.stopAnimating()
@@ -108,34 +129,34 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     }
 	
     
-    func setIndicator( isConnectable: Bool?, isConnecting: Bool ) {
+    func setIndicator( _ isConnectable: Bool?, isConnecting: Bool ) {
 		if let connectable = isConnectable {
 			if connectable {
 				if connected {
 					connectionIndicator!.image = Indicator.green.image()
-                    connectButton.enabled = false
+                    connectButton.isEnabled = false
 				} else {
 					connectionIndicator!.image = Indicator.yellow.image()
 //                    Log.error( "Enabling connectButton" )
                     if isConnecting {
-                        connectButton.enabled = false
+                        connectButton.isEnabled = false
                     } else {
-                        connectButton.enabled = true
+                        connectButton.isEnabled = true
                     }
 				}
 			} else {
 				connectionIndicator!.image = Indicator.red.image()
-                connectButton.enabled = false
+                connectButton.isEnabled = false
 			}
 		} else {
 			connectionIndicator!.image = Indicator.red.image()
-            connectButton.enabled = false
+            connectButton.isEnabled = false
 		}
 	}
 
-    @IBAction func doConnect(sender: UIBarButtonItem) {
+    @IBAction func doConnect(_ sender: UIBarButtonItem) {
         Log.trace( "doConnect from bar button" )
-        connectButton.enabled = false
+        connectButton.isEnabled = false
 
         if let connectingPerp = connectedPerp {
             activityIndicator!.startAnimating()
@@ -146,8 +167,8 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     
     //  MARK: - peripheralConnectionProtocol delegate methods
     
-    func foundPeripheral( peripheral: CBPeripheral, isConnectable connectable: Bool ) {
-        Log.trace( "foundPeripheral: connectable: \(connectable), peripheral: \(peripheral.identifier.UUIDString)" )
+    func foundPeripheral( _ peripheral: CBPeripheral, isConnectable connectable: Bool ) {
+        Log.trace( "foundPeripheral: connectable: \(connectable), peripheral: \(peripheral.identifier.uuidString)" )
         if ( connectable ) {
             activityIndicator!.startAnimating()
             self.connectedPerp = peripheral
@@ -159,7 +180,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 //        setIndicator( connectable, isConnecting: false )
     }
     
-    func connectionStatus( connected: Bool, forPeripheral peripheral: CBPeripheral ) {
+    func connectionStatus( _ connected: Bool, forPeripheral peripheral: CBPeripheral ) {
         Log.trace( "connectionStatus, connected: \(connected)" )
         activityIndicator!.stopAnimating()
 //		interrogator.stopInterrogation() // ?? Is this needed ??
@@ -172,7 +193,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         }
     }
     
-    func servicesDiscovered( peripheral: CBPeripheral ) {
+    func servicesDiscovered( _ peripheral: CBPeripheral ) {
         
 //        Log.trace( "servicesDiscovered with \(peripheral.services?.count) services" )
         
@@ -182,7 +203,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         
     }
     
-    func includedServicesDiscovered( peripheral: CBPeripheral, forService service: CBService ) {
+    func includedServicesDiscovered( _ peripheral: CBPeripheral, forService service: CBService ) {
 
 //        Log.trace( "includedServicesDiscovered for \(service.UUID.UUIDString)" )
         
@@ -195,7 +216,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         
     }
  
-    func characteristicsDiscovered( peripheral: CBPeripheral, forService service: CBService ) {
+    func characteristicsDiscovered( _ peripheral: CBPeripheral, forService service: CBService ) {
 
 //        Log.trace( "characteristicsDiscovered for \(service.UUID.UUIDString)" )
         
@@ -208,7 +229,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     
 //--    ----    ----    ----
 	
-	func updateConnection( peripheral: CBPeripheral ) {
+	func updateConnection( _ peripheral: CBPeripheral ) {
 		
 		Log.trace( "updateConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
 
@@ -216,7 +237,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         
 	}
 	
-	func disconnectConnection( peripheral: CBPeripheral ) {
+	func disconnectConnection( _ peripheral: CBPeripheral ) {
 		
 		Log.trace( "disconnectConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
 
@@ -232,16 +253,16 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     
     // MARK: - Segues
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard selectedService >= 0 else { Log.info( "selectedService invalid" ); return }
         if segue.identifier == "toCharacteristics" {
             Log.info( "Segue to Characteristics" )
 //            interrogator.stopScan()
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 Log.info( "selectedService: \(selectedService), indexPath.row: \(indexPath.row)" )
-                let controller = segue.destinationViewController as! ShowCharacteristics
+                let controller = segue.destination as! ShowCharacteristics
                 controller.serviceIndex = selectedService
-                controller.characteristicsIndex = indexPath.row
+                controller.characteristicsIndex = (indexPath as NSIndexPath).row
                 controller.peripheral = connectedPerp
             }
         }
@@ -250,7 +271,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 
     //  MARK: - UITableViewDelegate methods
     
-    override func numberOfSectionsInTableView( tableView: UITableView ) -> Int {
+    override func numberOfSections( in tableView: UITableView ) -> Int {
         // Return the number of sections
         guard services != nil && selectedService < services!.count else {
             return 0
@@ -265,20 +286,20 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         }
     }
     
-    internal override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    internal override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         return 30.0;
     }
 
-    override func tableView( tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath ) -> CGFloat {
+    override func tableView( _ tableView: UITableView, heightForRowAt indexPath: IndexPath ) -> CGFloat {
         return 66.0
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if indexPath.section == 0 {
+        if (indexPath as NSIndexPath).section == 0 {
             if connected {
-                selectedService = indexPath.row
+                selectedService = (indexPath as NSIndexPath).row
                 tableView.reloadData()
             }
         }
@@ -287,7 +308,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
     
     //  MARK: - UITableViewSource methods
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     
         switch section {
         case 0:
@@ -302,7 +323,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 
     }
 
-    override func tableView( tableView: UITableView, numberOfRowsInSection section: NSInteger ) -> NSInteger {
+    override func tableView( _ tableView: UITableView, numberOfRowsInSection section: NSInteger ) -> NSInteger {
         // Return the number of rows in the section.
         switch section {
         case 0:
@@ -336,9 +357,9 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         }
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath ) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath ) -> UITableViewCell {
         
-        switch indexPath.section {
+        switch (indexPath as NSIndexPath).section {
         case 0:
             return configureMainService( indexPath )
         case 1:
@@ -350,19 +371,19 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         }
     }
 
-    func configureMainService( indexPath: NSIndexPath ) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier( "centralServiceCell", forIndexPath: indexPath ) as! ServiceCell
-        var service = services![indexPath.row]
-        if indexPath.section != 0 {
+    func configureMainService( _ indexPath: IndexPath ) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell( withIdentifier: "centralServiceCell", for: indexPath ) as! ServiceCell
+        var service = services![(indexPath as NSIndexPath).row]
+        if (indexPath as NSIndexPath).section != 0 {
             if let included = service.includedServices {
-                if indexPath.row < included.count {
-                    service = included[indexPath.row]
+                if (indexPath as NSIndexPath).row < included.count {
+                    service = included[(indexPath as NSIndexPath).row]
                 }
             }
         }
     
         cell.nameField.text = cleanName( service.peripheral.name )
-        cell.IDField.text = bluetoothUUID( service.UUID.UUIDString )
+        cell.IDField.text = bluetoothUUID( service.uuid.uuidString )
         cell.primaryIndicator.text = service.isPrimary ? "Primary" : "Secondary"
         let servicesCount = service.includedServices?.count
         if servicesCount > 0 {
@@ -387,38 +408,38 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
         return cell
     }
     
-    func configureCharacteristics( indexPath: NSIndexPath ) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier( "centralDisplayCharacteristic", forIndexPath: indexPath ) as! CharacteristicCell
+    func configureCharacteristics( _ indexPath: IndexPath ) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell( withIdentifier: "centralDisplayCharacteristic", for: indexPath ) as! CharacteristicCell
         let service = services![selectedService]
         if let characteristics = service.characteristics {
             Log.info( "indexPath.row: \(indexPath.row), characteristics.count = \(characteristics.count)" )
-            cell.nameField.text = bluetoothUUID( characteristics[indexPath.row].UUID.UUIDString )
-            let properties = characteristics[indexPath.row].properties
+            cell.nameField.text = bluetoothUUID( characteristics[(indexPath as NSIndexPath).row].uuid.uuidString )
+            let properties = characteristics[(indexPath as NSIndexPath).row].properties
             Log.info( "properties: \(properties)" )
             let rawProperties = properties.rawValue
             var propString = ""
-            if ( CBCharacteristicProperties.Broadcast.rawValue & rawProperties ) != 0 {
+            if ( CBCharacteristicProperties.broadcast.rawValue & rawProperties ) != 0 {
                 propString += "Broadcast "
             }
-            if ( CBCharacteristicProperties.Read.rawValue & rawProperties ) != 0 {
+            if ( CBCharacteristicProperties.read.rawValue & rawProperties ) != 0 {
                 propString += "Read "
             }
-            if ( CBCharacteristicProperties.WriteWithoutResponse.rawValue & rawProperties ) != 0 {
+            if ( CBCharacteristicProperties.writeWithoutResponse.rawValue & rawProperties ) != 0 {
                 propString += "WriteWithoutResponse "
             }
-            if ( CBCharacteristicProperties.Write.rawValue & rawProperties ) != 0 {
+            if ( CBCharacteristicProperties.write.rawValue & rawProperties ) != 0 {
                 propString += "Write "
             }
-            if ( CBCharacteristicProperties.Notify.rawValue & rawProperties ) != 0 {
+            if ( CBCharacteristicProperties.notify.rawValue & rawProperties ) != 0 {
                 propString += "Notify "
             }
-            if ( CBCharacteristicProperties.Indicate.rawValue & rawProperties ) != 0 {
+            if ( CBCharacteristicProperties.indicate.rawValue & rawProperties ) != 0 {
                 propString += "Indicate "
             }
-            if ( CBCharacteristicProperties.AuthenticatedSignedWrites.rawValue & rawProperties ) != 0 {
+            if ( CBCharacteristicProperties.authenticatedSignedWrites.rawValue & rawProperties ) != 0 {
                 propString += "AuthenticatedSignedWrites "
             }
-            if ( CBCharacteristicProperties.ExtendedProperties.rawValue & rawProperties ) != 0 {
+            if ( CBCharacteristicProperties.extendedProperties.rawValue & rawProperties ) != 0 {
                 propString += "ExtendedProperties "
             }
             cell.propertiesField.text = propString

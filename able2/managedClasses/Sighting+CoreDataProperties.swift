@@ -14,7 +14,7 @@ import CoreData
 
 extension Sighting {
 
-    @NSManaged var date: NSDate?
+    @NSManaged var date: Date?
     @NSManaged var latitude: NSNumber?
     @NSManaged var longitude: NSNumber?
     @NSManaged var rssi: NSNumber?

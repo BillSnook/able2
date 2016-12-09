@@ -43,7 +43,7 @@ class buildCharacteristicVC: UIViewController,
 
     var newBackButton: UIBarButtonItem?
     
-    var displayState = DisplayState.Neutral
+    var displayState = DisplayState.neutral
     
     var basicInfoState = true
     
@@ -63,7 +63,7 @@ class buildCharacteristicVC: UIViewController,
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear( animated )
         
@@ -72,7 +72,7 @@ class buildCharacteristicVC: UIViewController,
         navigationItem.title = "Characteristic"
         
         uuidField.text = buildCharacteristic!.uuid
-        uuidField.inputView = UIView.init( frame: CGRectZero );    // No keyboard
+        uuidField.inputView = UIView.init( frame: CGRect.zero );    // No keyboard
         valueView.text = buildCharacteristic!.valueString
         permissionsToControls( buildCharacteristic!.permissions! )
         propertiesToControls( buildCharacteristic!.properties! )
@@ -85,7 +85,7 @@ class buildCharacteristicVC: UIViewController,
     
     // MARK: - Control actions
     
-    @IBAction func saveAction(sender: AnyObject) {
+    @IBAction func saveAction(_ sender: AnyObject) {
         
 //        guard buildCharacteristic != nil else { Log.info( "save failed" ); return }
         
@@ -105,37 +105,37 @@ class buildCharacteristicVC: UIViewController,
     }
     
     
-    @IBAction func makeNewUUIDAction(sender: AnyObject) {
+    @IBAction func makeNewUUIDAction(_ sender: AnyObject) {
         
-        let newuuid = NSUUID.init()
-        uuidField.text = newuuid.UUIDString
-        uuidField.enabled = true    // Allows selection
+        let newuuid = UUID.init()
+        uuidField.text = newuuid.uuidString
+        uuidField.isEnabled = true    // Allows selection
         textFieldBorderSetup( uuidField )
-        buildCharacteristic!.uuid = newuuid.UUIDString
+        buildCharacteristic!.uuid = newuuid.uuidString
         setControlState()
         
     }
     
     func unsavedCancelWarning() {
         
-        if saveButton.enabled {
+        if saveButton.isEnabled {
             // Initialize Alert Controller
-            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to this characteristic. If you return to the service page now you will lose those changes.", preferredStyle: .Alert)
+            let alertController = UIAlertController(title: "Warning", message: "Warning. You have made changes to this characteristic. If you return to the service page now you will lose those changes.", preferredStyle: .alert)
             
             // Configure Alert Controller
-            alertController.addAction(UIAlertAction(title: "Lose Changes", style: .Cancel, handler: { (_) -> Void in
-                self.navigationController?.popViewControllerAnimated(true)
+            alertController.addAction(UIAlertAction(title: "Lose Changes", style: .cancel, handler: { (_) -> Void in
+                let _ = self.navigationController?.popViewController(animated: true)
             }))
             
-            alertController.addAction(UIAlertAction(title: "Save Changes", style: .Default, handler: { (_) -> Void in
+            alertController.addAction(UIAlertAction(title: "Save Changes", style: .default, handler: { (_) -> Void in
                 self.saveDetails()
-                self.navigationController?.popViewControllerAnimated(true)
+                let _ = self.navigationController?.popViewController(animated: true)
             }))
             
             // Present Alert Controller
-            presentViewController(alertController, animated: true, completion: nil)
+            present(alertController, animated: true, completion: nil)
         } else {
-            self.navigationController?.popViewControllerAnimated(true)
+            let _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
@@ -151,49 +151,49 @@ class buildCharacteristicVC: UIViewController,
         
         if buildCharacteristic!.isValid() {
             if buildCharacteristic!.hasChanged() {
-                builder!.buildState = .Unsaved
+                builder!.buildState = .unsaved
                 needSave = true
             } else {
-                builder!.buildState = .Saved
+                builder!.buildState = .saved
             }
         } else {
-            builder!.buildState = .Invalid
+            builder!.buildState = .invalid
         }
         
         if needSave {
             navigationItem.hidesBackButton = true
-            newBackButton = newBackButton != nil ? newBackButton : UIBarButtonItem(title: "Cancel", style: .Plain, target: self, action: #selector(self.unsavedCancelWarning))
+            newBackButton = newBackButton != nil ? newBackButton : UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(self.unsavedCancelWarning))
             navigationItem.leftBarButtonItem = newBackButton
         } else {
             navigationItem.leftBarButtonItem = nil
             navigationItem.hidesBackButton = false
         }
         
-        saveButton.enabled = needSave
+        saveButton.isEnabled = needSave
 
     }
     
     // MARK: - State methods
     
-    func setControlsEnabled( enabled: Bool ) {
+    func setControlsEnabled( _ enabled: Bool ) {
         
-        uuidField.enabled = enabled
-        uuidButton.enabled = enabled
-        valueView.editable = enabled
+        uuidField.isEnabled = enabled
+        uuidButton.isEnabled = enabled
+        valueView.isEditable = enabled
         
-        permReadSwitch.enabled = enabled
-        permWriteSwitch.enabled = enabled
-        permReadWithEncryptionSwitch.enabled = enabled
-        permWriteWithEncryptionSwitch.enabled = enabled
+        permReadSwitch.isEnabled = enabled
+        permWriteSwitch.isEnabled = enabled
+        permReadWithEncryptionSwitch.isEnabled = enabled
+        permWriteWithEncryptionSwitch.isEnabled = enabled
         
-        propReadSwitch.enabled = enabled
-        propWriteSwitch.enabled = enabled
-        propAuthenticateSwitch.enabled = enabled
-        propWriteWithResponseSwitch.enabled = enabled
-        propNotifySwitch.enabled = enabled
-        propIndicateSwitch.enabled = enabled
-        propNotifyWithEncryptionSwitch.enabled = enabled
-        propIndicateWithEncryptionSwitch.enabled = enabled
+        propReadSwitch.isEnabled = enabled
+        propWriteSwitch.isEnabled = enabled
+        propAuthenticateSwitch.isEnabled = enabled
+        propWriteWithResponseSwitch.isEnabled = enabled
+        propNotifySwitch.isEnabled = enabled
+        propIndicateSwitch.isEnabled = enabled
+        propNotifyWithEncryptionSwitch.isEnabled = enabled
+        propIndicateWithEncryptionSwitch.isEnabled = enabled
     }
     
     func stateDidChange() {
@@ -201,23 +201,23 @@ class buildCharacteristicVC: UIViewController,
         setControlState()
     }
     
-    func setBorderOf( textField: (UITextField), toDisplayState: (DisplayState) ) {
+    func setBorderOf( _ textField: (UITextField), toDisplayState: (DisplayState) ) {
         
         textField.layer.borderWidth = 0.5
         textField.layer.cornerRadius = 6.0
         switch toDisplayState {
-        case .Neutral:
-            textField.layer.borderColor = UIColor.lightGrayColor().CGColor
-        case .Valid:
-            textField.layer.borderColor = UIColor.greenColor().CGColor
-        case .Invalid:
-            textField.layer.borderColor = UIColor.redColor().CGColor
+        case .neutral:
+            textField.layer.borderColor = UIColor.lightGray.cgColor
+        case .valid:
+            textField.layer.borderColor = UIColor.green.cgColor
+        case .invalid:
+            textField.layer.borderColor = UIColor.red.cgColor
         }
         
     }
     
     // Verify data is valid for advertising
-    func textFieldNotEmpty( textField: (UITextField) ) -> Bool {
+    func textFieldNotEmpty( _ textField: (UITextField) ) -> Bool {
         
         if let text = textField.text {
             if text.isEmpty {
@@ -230,69 +230,69 @@ class buildCharacteristicVC: UIViewController,
         }
     }
     
-    func textFieldBorderSetup( textField: (UITextField) ) {
+    func textFieldBorderSetup( _ textField: (UITextField) ) {
         
         if let text = textField.text {
             if text.isEmpty {
-                setBorderOf( textField, toDisplayState: .Invalid )
+                setBorderOf( textField, toDisplayState: .invalid )
             } else {
-                setBorderOf( textField, toDisplayState: .Valid )
+                setBorderOf( textField, toDisplayState: .valid )
             }
         } else {
-            setBorderOf( textField, toDisplayState: .Neutral )
+            setBorderOf( textField, toDisplayState: .neutral )
         }
     }
     
-    func textViewBorderSetup( textView: (UITextView) ) {
+    func textViewBorderSetup( _ textView: (UITextView) ) {
         
         if let text = textView.text {
             if text.isEmpty {
-                setTVBorderOf( textView, toDisplayState: .Invalid )
+                setTVBorderOf( textView, toDisplayState: .invalid )
             } else {
-                setTVBorderOf( textView, toDisplayState: .Valid )
+                setTVBorderOf( textView, toDisplayState: .valid )
             }
         } else {
-            setTVBorderOf( textView, toDisplayState: .Neutral )
+            setTVBorderOf( textView, toDisplayState: .neutral )
         }
     }
     
-    func setTVBorderOf( textView: (UITextView), toDisplayState: (DisplayState) ) {
+    func setTVBorderOf( _ textView: (UITextView), toDisplayState: (DisplayState) ) {
         
         textView.layer.borderWidth = 0.5
         textView.layer.cornerRadius = 6.0
         switch toDisplayState {
-        case .Neutral:
-            textView.layer.borderColor = UIColor.lightGrayColor().CGColor
-        case .Valid:
-            textView.layer.borderColor = UIColor.greenColor().CGColor
-        case .Invalid:
-            textView.layer.borderColor = UIColor.redColor().CGColor
+        case .neutral:
+            textView.layer.borderColor = UIColor.lightGray.cgColor
+        case .valid:
+            textView.layer.borderColor = UIColor.green.cgColor
+        case .invalid:
+            textView.layer.borderColor = UIColor.red.cgColor
         }
         
     }
     
     // MARK: - Set Switches
     
-    func permissionsToControls( permissions: CBAttributePermissions ) {
+    func permissionsToControls( _ permissions: CBAttributePermissions ) {
         
-        permReadSwitch.on = permissions.contains( .Readable )
-        permWriteSwitch.on = permissions.contains( .Writeable )
-        permReadWithEncryptionSwitch.on = permissions.contains( .ReadEncryptionRequired )
-        permWriteWithEncryptionSwitch.on = permissions.contains( .WriteEncryptionRequired )
+        permReadSwitch.isOn = permissions.contains( .readable )
+        permWriteSwitch.isOn = permissions.contains( .writeable )
+        permReadWithEncryptionSwitch.isOn = permissions.contains( .readEncryptionRequired )
+        permWriteWithEncryptionSwitch.isOn = permissions.contains( .writeEncryptionRequired )
 
     }
     
-    func propertiesToControls( properties: CBCharacteristicProperties ) {
+    func propertiesToControls( _ properties: CBCharacteristicProperties ) {
         
-        propReadSwitch.on = properties.contains( .Read )
-        propWriteSwitch.on = properties.contains( .WriteWithoutResponse )
-        propAuthenticateSwitch.on = properties.contains( .AuthenticatedSignedWrites )
-        propWriteWithResponseSwitch.on = properties.contains( .Write )
+        propReadSwitch.isOn = properties.contains( .read )
+        propWriteSwitch.isOn = properties.contains( .writeWithoutResponse )
+        propAuthenticateSwitch.isOn = properties.contains( .authenticatedSignedWrites )
+        propWriteWithResponseSwitch.isOn = properties.contains( .write )
         
-        propNotifySwitch.on = properties.contains( .Notify )
-        propIndicateSwitch.on = properties.contains( .Indicate )
-        propNotifyWithEncryptionSwitch.on = properties.contains( .NotifyEncryptionRequired )
-        propIndicateWithEncryptionSwitch.on = properties.contains( .IndicateEncryptionRequired )
+        propNotifySwitch.isOn = properties.contains( .notify )
+        propIndicateSwitch.isOn = properties.contains( .indicate )
+        propNotifyWithEncryptionSwitch.isOn = properties.contains( .notifyEncryptionRequired )
+        propIndicateWithEncryptionSwitch.isOn = properties.contains( .indicateEncryptionRequired )
         
     }
     
@@ -302,17 +302,17 @@ class buildCharacteristicVC: UIViewController,
     func controlsToPermissions() -> CBAttributePermissions {
         
         var permissions = CBAttributePermissions()
-        if permReadSwitch.on {
-            permissions.insert( .Readable )
+        if permReadSwitch.isOn {
+            permissions.insert( .readable )
         }
-        if permWriteSwitch.on {
-            permissions.insert( .Writeable )
+        if permWriteSwitch.isOn {
+            permissions.insert( .writeable )
         }
-        if permReadWithEncryptionSwitch.on {
-            permissions.insert( .ReadEncryptionRequired )
+        if permReadWithEncryptionSwitch.isOn {
+            permissions.insert( .readEncryptionRequired )
         }
-        if permWriteWithEncryptionSwitch.on {
-            permissions.insert( .WriteEncryptionRequired )
+        if permWriteWithEncryptionSwitch.isOn {
+            permissions.insert( .writeEncryptionRequired )
         }
         return permissions
     }
@@ -320,65 +320,65 @@ class buildCharacteristicVC: UIViewController,
     func controlsToProperties() -> CBCharacteristicProperties {
         
         var properties = CBCharacteristicProperties()
-        if propReadSwitch.on {
-            properties.insert( .Read )
+        if propReadSwitch.isOn {
+            properties.insert( .read )
         }
-        if propWriteSwitch.on {
-            properties.insert( .WriteWithoutResponse )
+        if propWriteSwitch.isOn {
+            properties.insert( .writeWithoutResponse )
         }
-        if propAuthenticateSwitch.on {
-            properties.insert( .AuthenticatedSignedWrites )
+        if propAuthenticateSwitch.isOn {
+            properties.insert( .authenticatedSignedWrites )
         }
-        if propWriteWithResponseSwitch.on {
-            properties.insert( .Write )
+        if propWriteWithResponseSwitch.isOn {
+            properties.insert( .write )
         }
-        if propNotifySwitch.on {
-            properties.insert( .Notify )
+        if propNotifySwitch.isOn {
+            properties.insert( .notify )
         }
-        if propIndicateSwitch.on {
-            properties.insert( .Indicate )
+        if propIndicateSwitch.isOn {
+            properties.insert( .indicate )
         }
-        if propNotifyWithEncryptionSwitch.on {
-            properties.insert( .NotifyEncryptionRequired )
+        if propNotifyWithEncryptionSwitch.isOn {
+            properties.insert( .notifyEncryptionRequired )
         }
-        if propIndicateWithEncryptionSwitch.on {
-            properties.insert( .IndicateEncryptionRequired )
+        if propIndicateWithEncryptionSwitch.isOn {
+            properties.insert( .indicateEncryptionRequired )
         }
         return properties
     }
     
     // MARK: - UITextFieldDelegate
     
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         return false	// false because uuidField should never allow changes to its text
     }
     
-    func textFieldDidEndEditing(textField: (UITextField)) {
+    func textFieldDidEndEditing(_ textField: (UITextField)) {
         
         textFieldBorderSetup( textField )
     }
 
     // MARK: - UITextViewDelegate - uuidField
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         
-        var displayState = DisplayState.Neutral
+        var displayState = DisplayState.neutral
         if let viewText = textView.text {
             let nonEmptyText = !viewText.isEmpty && ( range.length != viewText.characters.count )
             let nonEmptyReplacement = !text.isEmpty
             if nonEmptyReplacement || nonEmptyText {
-                displayState = .Valid
+                displayState = .valid
             }
         }
         setTVBorderOf( textView, toDisplayState: displayState )
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
             self.textChanged()
         })
         return true
     }
     
-    func textViewDidEndEditing(textView: (UITextView)) {
+    func textViewDidEndEditing(_ textView: (UITextView)) {
         
 //        textFieldBorderSetup( textField )
 //        let nsString = textView.text as NSString
@@ -388,13 +388,13 @@ class buildCharacteristicVC: UIViewController,
     
     // MARK: - Changing entitys
     
-    @IBAction func permissionControl(sender: UISwitch) {
+    @IBAction func permissionControl(_ sender: UISwitch) {
         
         buildCharacteristic!.permissions = controlsToPermissions()
         stateDidChange()
     }
     
-    @IBAction func propertiesChanged(sender: UISwitch) {
+    @IBAction func propertiesChanged(_ sender: UISwitch) {
         
         buildCharacteristic!.properties = controlsToProperties()
         stateDidChange()

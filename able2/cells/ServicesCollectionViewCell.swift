@@ -20,11 +20,11 @@ class ServicesCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
     
     @IBOutlet weak var deleteButton: UIButton!
     
-    var indexPath: NSIndexPath?
+    var indexPath: IndexPath?
     var delegate: DeleteButtonDelegate?
     
     
-    @IBAction func deleteAction(sender: AnyObject) {
+    @IBAction func deleteAction(_ sender: AnyObject) {
         
         if delegate != nil && indexPath != nil {
             delegate!.deleteCellAt( indexPath! )
@@ -33,7 +33,7 @@ class ServicesCollectionViewCell: UICollectionViewCell, UITextViewDelegate {
 
     func setupButton() {
         
-        deleteButton.layer.borderColor = UIColor.blackColor().CGColor
+        deleteButton.layer.borderColor = UIColor.black.cgColor
         deleteButton.layer.borderWidth = 1.0
         deleteButton.layer.cornerRadius = 6.0
 

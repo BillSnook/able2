@@ -23,17 +23,17 @@ class MasterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+        appDelegate = UIApplication.shared.delegate as? AppDelegate
         managedObjectContext = appDelegate!.managedObjectContext
 //        Log.trace( "MasterViewController, viewDidLoad, managedObjectContext: \(managedObjectContext)" )
         appDelegate!.deleteAllPeripherals()
         messageLabel.text = "\u{26A0}  Warning\n\nThis app uses a lot of power in scan mode. You have been warned."
 //        messageLabel.text = "qwertyuiopasdfghjkl; qwert yuiopasdfghjkl;qwertyuiopas dfghjkl;qwertyuiopasd fghjkl;qwertyuiopasdfghjkl;wertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwe rtyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopas dfghjkl;qwertyuiopasdfghjk l;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuiopasdfghjkl;qwertyuio pasdfghjkl;"
 
-        messageLabel.textColor = UIColor.blackColor()
+        messageLabel.textColor = UIColor.black
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         for nextView in bleList {
@@ -52,8 +52,8 @@ class MasterViewController: UIViewController {
                 let xSize = bleSize + CGFloat(BLEView.randomNumber(-20..<20))
                 let ySize = bleSize + CGFloat(BLEView.randomNumber(-20..<20))
                 let bleViewNext = BLEView( frame: CGRect(x: xOrigin, y: yOrigin, width: xSize, height: ySize ) )
-                let nextColor = UIColor( red: CGFloat(BLEView.randomNumber(128...255))/CGFloat( 256.0), green: CGFloat(BLEView.randomNumber(0...127))/CGFloat( 256.0), blue: CGFloat(BLEView.randomNumber(0...127))/CGFloat( 256.0), alpha: CGFloat( 1.0 ) )
-                bleViewNext.backgroundColor = UIColor.clearColor()
+                let nextColor = UIColor( red: CGFloat(BLEView.randomNumber(Range(uncheckedBounds: (128, 255))))/CGFloat( 256.0), green: CGFloat(BLEView.randomNumber(Range(uncheckedBounds: (0, 127))))/CGFloat( 256.0), blue: CGFloat(BLEView.randomNumber(Range(uncheckedBounds: (0, 127))))/CGFloat( 256.0), alpha: CGFloat( 1.0 ) )
+                bleViewNext.backgroundColor = UIColor.clear
                 bleViewNext.initialColor = nextColor
                 bleList.append(bleViewNext)
                 arenaView.addSubview(bleViewNext)
@@ -66,7 +66,7 @@ class MasterViewController: UIViewController {
 
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         for nextView in bleList {
@@ -84,17 +84,17 @@ class MasterViewController: UIViewController {
 
     // MARK: - Segues
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showCentralDetail" {
             Log.debug( "showCentralDetail" )
-            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! listPeripheralsTVC
-            controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+            let controller = (segue.destination as! UINavigationController).topViewController as! listPeripheralsTVC
+            controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
             controller.navigationItem.leftItemsSupplementBackButton = true
         } else {
             if segue.identifier == "showPeripheralDetail" {
                 Log.debug( "showPeripheralDetail" )
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! makePeripheralsTVC
-                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
+                let controller = (segue.destination as! UINavigationController).topViewController as! makePeripheralsTVC
+                controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem
                 controller.navigationItem.leftItemsSupplementBackButton = true
             }
         }

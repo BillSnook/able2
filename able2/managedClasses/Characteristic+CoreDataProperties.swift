@@ -17,7 +17,7 @@ extension Characteristic {
     @NSManaged var permissions: NSNumber?
     @NSManaged var properties: NSNumber?
     @NSManaged var uuid: String?
-    @NSManaged var value: NSData?
+    @NSManaged var value: Data?
     @NSManaged var service: Service?
 
 }

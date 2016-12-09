@@ -14,32 +14,32 @@ import CoreData
 
 // To test CoreData, it helps to use the InMemoryStore type as it avoids some overhead from using SQLite as the store.
 func setUpInMemoryManagedObjectContext() -> NSManagedObjectContext {
-    let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles([NSBundle.mainBundle()])!
+    let managedObjectModel = NSManagedObjectModel.mergedModel(from: [Bundle.main])!
 //    let modelURL = NSBundle.mainBundle().URLForResource("able2", withExtension: "momd")!
 //    let managedObjectModel =  NSManagedObjectModel(contentsOfURL: modelURL)!
     let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
     
     do {
-        try persistentStoreCoordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil)
+        try persistentStoreCoordinator.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
     } catch {
         Log.info("Adding in-memory persistent store failed")
     }
     
-    let managedContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+    let managedContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     managedContext.persistentStoreCoordinator = persistentStoreCoordinator
     
     return managedContext
 }
 
-func deleteAllPeripherals( managedContext: NSManagedObjectContext ) {
+func deleteAllPeripherals( _ managedContext: NSManagedObjectContext ) {
     let perpRequest = NSFetchRequest()
-    if let entity = NSEntityDescription.entityForName( "Peripheral", inManagedObjectContext: managedContext ) {
+    if let entity = NSEntityDescription.entity( forEntityName: "Peripheral", in: managedContext ) {
         perpRequest.entity = entity
         perpRequest.includesPropertyValues = false
         do {
-            let perps: NSArray = try managedContext.executeFetchRequest( perpRequest )
+            let perps: NSArray = try managedContext.fetch( perpRequest )
             for perp in perps as! [Peripheral] {
-                managedContext.deleteObject( perp )
+                managedContext.delete( perp )
             }
             try managedContext.save()
         } catch let error as NSError {
