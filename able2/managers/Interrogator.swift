@@ -63,12 +63,7 @@ class Interrogator: Scanner, CBPeripheralDelegate {
         deviceUUIDs = deviceList
 		if ( .poweredOn == cbManager.state ) {
             if scanRunning {
-                if #available(iOS 9.0, *) {
-                    if cbManager.isScanning {
-                        cbManager.stopScan()
-                        resetScanList()
-                    }
-                } else {
+                if cbManager.isScanning {
                     cbManager.stopScan()
                     resetScanList()
                 }

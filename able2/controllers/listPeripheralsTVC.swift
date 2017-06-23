@@ -30,6 +30,8 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
     }()
 
     var scanner: Scanner = Scanner.sharedScanner
+    var timer = Timer()
+    
 
 	
     override func viewDidLoad() {
@@ -40,7 +42,7 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
         if didDetectIncompatibleStore {
             // Show Alert
             let applicationName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName")
-            let message = "A serious application error occurred while \(applicationName) tried to read your data. Please contact support for help."
+            let message = "A serious application error occurred while \(applicationName ?? "<missing app name>") tried to read your data. Please contact support for help."
             self.showAlertWithTitle("Warning", message: message, cancelButtonTitle: "OK")
         }
     
@@ -63,6 +65,7 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
 		
         scanner.managedObjectContext = managedObjectContext
 		scanner.startScan()
+        runTimer()
 		
         tableView.reloadData()
     }
@@ -218,7 +221,36 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
         }
     }
     
+    func runTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: (#selector(self.updateTimer)), userInfo: nil, repeats: true)
+    }
+    
+    func updateTimer() {
+        if scanner.scanRunning {
+            tableView.reloadData()
+        } else {
+            timer.invalidate()
+        }
+    }
+
+    
 // MARK: - Segues
+    
+    override func shouldPerformSegue(withIdentifier: String, sender: Any?) -> Bool {
+        if withIdentifier == "toServices" {
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                let peripheral = self.fetchedResultsController.object(at: indexPath)
+                if peripheral.connectable != nil {
+                    if peripheral.connectable!.boolValue {
+                        return true
+                    }
+                    self.tableView.deselectRow(at: indexPath, animated: true)
+                }
+                return false
+            }
+        }
+        return true
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "toServices" {
@@ -255,6 +287,7 @@ class listPeripheralsTVC : UITableViewController, NSFetchedResultsControllerDele
 
         tableView.reloadData()
         scanner.startScan()
+        runTimer()
     }
     
 // MARK: - Table view data source

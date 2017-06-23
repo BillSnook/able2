@@ -230,7 +230,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	
 	func updateConnection( _ peripheral: CBPeripheral ) {
 		
-		DLog.trace( "updateConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
+		DLog.trace( "updateConnection, peripheral; name: \(peripheral.name ?? "?"), state: \(peripheral.state.rawValue)" )
 
         interrogator.startServiceDiscovery( peripheral )
         
@@ -238,7 +238,7 @@ class ListServicesTVC: UITableViewController, peripheralConnectionProtocol {
 	
 	func disconnectConnection( _ peripheral: CBPeripheral ) {
 		
-		DLog.trace( "disconnectConnection, peripheral; name: \(peripheral.name), state: \(peripheral.state.rawValue)" )
+		DLog.trace( "disconnectConnection, peripheral; name: \(peripheral.name ?? "?"), state: \(peripheral.state.rawValue)" )
 
         connected = false
         selectedService = -1

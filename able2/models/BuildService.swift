@@ -24,7 +24,7 @@ class BuildService {
 			service = fromService
 			name = service!.name
 			uuid = service!.uuid
-            DLog.debug("Existing Service managed object named: \(name)")
+            DLog.debug("Existing Service managed object named: \(name ?? "name is missing")")
             if let storedPrimary = service!.primary?.boolValue {
                 primary = storedPrimary
             } else {

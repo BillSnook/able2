@@ -32,7 +32,6 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     
     var managedObjectContext: NSManagedObjectContext?
 
-
     required override init() {
         cbManager = CBCentralManager( delegate: nil, queue: nil )
         
@@ -215,12 +214,7 @@ class Scanner: NSObject, CBCentralManagerDelegate {
 		// We may want to get duplicates
 		//	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool: NO], CBCentralManagerScanOptionAllowDuplicatesKey, nil]
 		if ( .poweredOn == cbManager.state ) && !scanRunning {
-            if #available(iOS 9.0, *) {
-                if cbManager.isScanning {
-                    cbManager.stopScan()
-                    resetScanList()
-                }
-            } else {
+            if cbManager.isScanning {
                 cbManager.stopScan()
                 resetScanList()
             }
@@ -235,17 +229,13 @@ class Scanner: NSObject, CBCentralManagerDelegate {
     func stopScan() {
 		
         if ( .poweredOn == cbManager.state ) {
-            if #available(iOS 9.0, *) {
-                if cbManager.isScanning {
-					DLog.info( "Stopping scanning" )
-                    cbManager.stopScan()
-                }
-            } else {
-				DLog.info( "Stopping scanning" )
+            if cbManager.isScanning {
+                DLog.info( "Stopping scanning" )
                 cbManager.stopScan()
             }
             scanRunning = false
         }
     }
+    
     
 }

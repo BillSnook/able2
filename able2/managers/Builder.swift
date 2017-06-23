@@ -78,7 +78,7 @@ class Builder {
     
     func saveDevice() {
         
-        DLog.debug("currentDevice name: \(currentDevice!.name)")
+        DLog.debug("currentDevice name: \(currentDevice!.name ?? "?")")
         guard currentDevice != nil else { return }
         currentDevice!.prepareToSave()
         save()
@@ -87,7 +87,7 @@ class Builder {
     
     func saveService( _ buildService: BuildService ) {
         
-        DLog.debug("buildService name: \(buildService.name)")
+        DLog.debug("buildService name: \(buildService.name ?? "?")")
         guard currentDevice != nil else { return }
         currentDevice!.appendService( buildService )
         saveDevice()
@@ -96,7 +96,7 @@ class Builder {
     
     func saveCharacteristic( _ buildCharacteristic: BuildCharacteristic ) {
         
-        DLog.debug("buildCharacteristic uuid: \(buildCharacteristic.uuid)")
+        DLog.debug("buildCharacteristic uuid: \(buildCharacteristic.uuid ?? "?")")
         guard currentService != nil else { return }
         currentService!.appendCharacteristic( buildCharacteristic )
         saveService( currentService! )

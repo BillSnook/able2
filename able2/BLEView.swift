@@ -104,7 +104,7 @@ class BLEView: UIView {
     }
  
     override func draw(_ rect: CGRect) {
-        let startAngle: Float = Float(2 * M_PI)
+        let startAngle: Float = Float(2 * Double.pi)
         let endAngle: Float = 0.0
         
         // Drawing code

@@ -59,8 +59,8 @@ class makePeripheralsTVC : UITableViewController {
         } else if segue.identifier == "toShowPeripheral" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 builder.buildState = .saved
-                dest.buildDevice = devices![(indexPath as NSIndexPath).row]
-                DLog.debug("dest.buildDevice is existing BuildDevice instance: \(dest.buildDevice?.name)")
+                dest.buildDevice = devices![indexPath.row]
+                DLog.debug("dest.buildDevice is existing BuildDevice instance: \(dest.buildDevice?.name ?? "oops, no name!")")
             }
         }
     }

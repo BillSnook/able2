@@ -24,7 +24,7 @@ class BuildDevice {
 			device = fromDevice
 			name = device!.name
 			uuid = device!.uuid
-            DLog.debug("Init with existing Device managed object named: \(name)")
+            DLog.debug("Init with existing Device managed object named: \(name!)")
             let services = device!.services
             buildServices = []
             for service in services! {

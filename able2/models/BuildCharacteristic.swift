@@ -24,7 +24,7 @@ class BuildCharacteristic: NSObject, UITextViewDelegate {
         get {
             guard value != nil else { return nil }
             let vString = NSString(data: value!, encoding: String.Encoding.utf8.rawValue )
-            return vString as? String
+            return vString as String?
         }
         set( newDataString ) {
             guard newDataString != nil else {
